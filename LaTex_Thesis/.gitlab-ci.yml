@@ -1,0 +1,22 @@
+compile_all:
+  before_script:
+   - apt-get update
+   - apt install -y xindy
+  image: aergus/latex
+  script:
+    - cd slides-tex
+    - make
+    - cd ../report
+    - make
+    - make clean
+    - cd ..
+  after_script:
+    - cp report/StudentThesis_Template.pdf report.pdf  
+    - cp slides-tex/StudentSlides_Template.pdf slides.pdf
+  artifacts:
+    paths:
+    - slides.pdf
+    - report.pdf
+    expire_in: 4 weeks
+  tags:
+    - tex

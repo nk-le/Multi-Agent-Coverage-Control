@@ -1,0 +1,11 @@
+cmss8/9		author, affils, pagenumber, toc footline, bib 
+cmss10		text, items
+cmss12		boxtitle
+cmssi10		text(italic), bib
+cmssbx10		title, frametitle, text(bold)
+cmtt8			mail
+
+cmsy8/10		bullet, symbols, mathcal letters
+cmmi8/9/10		math letters
+cmr10			math operators
+cmex10
