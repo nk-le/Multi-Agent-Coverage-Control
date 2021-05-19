@@ -16,7 +16,7 @@ VREP = 0;
 TRIANGLE = 1;
 SQUARE = 2;
 
-world = VREP;
+world = TRIANGLE;
 if(world == TRIANGLE)
     A = [-1, 0; 0 , -1; maxY/maxX,1]; 
     b = [0, 0, maxY];    worldVertexes = [0, 0; 0, maxY; maxX, 0; 0, 0]; 

@@ -36,6 +36,7 @@ classdef Class_Controller_Khanh < handle
        
         state = 0;% state == 1 -> stabilizing ; state = 2 -> orbiting
         flag = 0;
+        dVi_dz = 0;
         
         % Output
         boundaries;
@@ -62,6 +63,10 @@ classdef Class_Controller_Khanh < handle
             obj.oldTargetY = obj.targetY;
             obj.targetX = targetX;
             obj.targetY = targetY;
+        end
+        
+        function obj = update_dVi_dz(obj, cur_dVi_dz)
+            obj.dVi_dz = cur_dVi_dz;
         end  
         
         function obj = updateState(obj)
@@ -74,8 +79,7 @@ classdef Class_Controller_Khanh < handle
             obj.ErrorX = obj.virtualMassX - obj.targetX;
             obj.ErrorY = obj.virtualMassY - obj.targetY;  
             obj.distance  = (obj.ErrorX ^ 2 + obj.ErrorY ^ 2) ^ (0.5);
-            obj.L = obj.agent.bodyWidth;
-            
+            obj.L = obj.agent.bodyWidth;         
             cosPhi = (obj.ErrorX * cos(obj.agent.theta) + obj.ErrorY * sin(obj.agent.theta))/((obj.ErrorX ^ 2 + obj.ErrorY ^ 2) ^ (0.5));
             obj.phi = acos(cosPhi);
             
@@ -399,6 +403,36 @@ classdef Class_Controller_Khanh < handle
             obj.agent.translationVelocity = v;
             obj.agent.angleVelocity = w;   
         end
+        
+        function [w] = computeBLFoutput(obj, botID, mu)
+            global dVi_dzMat;
+            %Update State
+            obj.updateState();
+            
+            % Determine Output
+            v = obj.vConst;             
+            cT = cos(obj.Theta);
+            sT = sin(obj.Theta);
+            
+            dVj_di_Matrix = dVi_dzMat(:,botID,:);
+            sumdVj_diX = 0;
+            sumdVj_diY = 0;
+            for i = 1 : size(dVj_di_Matrix, 1)
+                sumdVj_diX = sumdVj_diX + dVj_di_Matrix(i,1);
+                sumdVj_diY = sumdVj_diY + dVj_di_Matrix(i,2);
+            end
+            
+            isFeasible = norm(sumdVj_diX * cT + sumdVj_diY * sT) ~= 0;
+            w = obj.w0 + mu * sign(obj.w0) * sign(sumdVj_diX * cT + sumdVj_diY * sT); 
+            %if(isFeasible == true)
+            %    w = obj.w0 + mu * sign(obj.w0) * (sumdVj_diX * cT + sumdVj_diY * sT) / norm(sumdVj_diX * cT + sumdVj_diY * sT); 
+            %else 
+            %    w = obj.w0;
+            %end
+            obj.agent.translationVelocity = v;
+            obj.agent.angleVelocity = w;          
+        end
+        
     end
 end
 

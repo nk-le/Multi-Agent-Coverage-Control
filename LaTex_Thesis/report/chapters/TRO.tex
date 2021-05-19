@@ -1,0 +1,465 @@
+\documentclass[journal]{IEEEtran}
+
+\ifCLASSINFOpdf
+ 
+\else
+
+ 
+\fi
+
+
+
+
+
+
+% *** MATH PACKAGES ***
+%
+\usepackage{amsmath}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\usepackage{algorithmic}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{array}
+\usepackage{color}
+\newcommand*{\txtspc}[1]{#1\phantom{.}}%
+\newcommand{\twopartdef}[4]
+{
+	\left\{
+	\begin{array}{ll}
+		#1 & #2 \\
+		#3 & #4
+	\end{array}
+	\right.
+}
+
+\newcommand{\threepartdef}[6]
+{
+	\left\{
+	\begin{array}{ll}
+		#1 & #2 \\
+		#3 & #4 \\
+		#5 & #6 
+	\end{array}
+	\right.
+}
+
+%\usepackage[showframe=true]{geometry}
+\usepackage{enumitem}
+
+\hyphenation{op-tical net-works semi-conduc-tor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{mathtools}
+\usepackage{commath}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{caption}
+%\usepackage{subcaption}
+
+\begin{document}
+	
+\title{Optimal Coverage of Unicycle Robots with Constant Speed and Input-Saturation Constraints}
+
+\author{Michael~Shell,~\IEEEmembership{Member,~IEEE,}
+        John~Doe,~\IEEEmembership{Fellow,~OSA,}
+        and~Jane~Doe,~\IEEEmembership{Life~Fellow,~IEEE}% <-this % stops a space
+\thanks{M. Shell was with the Department
+of Electrical and Computer Engineering, Georgia Institute of Technology, Atlanta,
+GA, 30332 USA e-mail: (see http://www.michaelshell.org/contact.html).}% <-this % stops a space
+\thanks{J. Doe and J. Doe are with Anonymous University.}% <-this % stops a space
+\thanks{Manuscript received April 19, 2005; revised August 26, 2015.}}
+
+% The paper headers
+\markboth{Journal of \LaTeX\ Class Files,~Vol.~14, No.~8, August~2015}%
+{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for IEEE Journals}
+
+\maketitle
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract or keywords.
+\begin{abstract}
+The abstract goes here.
+\end{abstract}
+
+% Note that keywords are not normally used for peerreview papers.
+\begin{IEEEkeywords}
+IEEE, IEEEtran, journal, \LaTeX, paper, template.
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%												%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%					INTRODUCTION				%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%												%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+\IEEEPARstart{C}{overage} control targets at deploying a set of mobile agents in a finite domain such that a certain coverage metric is optimized. ...
+
+
+Corresponds to a voronoi tenssellation
+
+The coverage control of fully actuated agents have been widely investigated......
+The classical solution for optimal converge control is based on a gradient-descending paradigm.
+In general, the optimal coverage does not necessarily render a convex programming since the metric function is usually non-convex. This usually indicates that only a local optimal solution can be solved, although it is sufficient to solve most problems in practice. .........
+
+
+In this paper, we consider the coverage control of a set of underactuated unicycle robots......., which renders a more chanllenging problem than the fully actuated agents. The unicycle robots have a fundamental basis to depict the behavior of ...... like Unmanned Aerial Vehicles (UAV) or ground vehicles......... that navigate a cruise with a cruise in a certain task. Compared to drones............ the UAVs are advantagous to the drones.... in terms of reliability or consumption....... In this paper, we consider that the UAVs navigate a cruise within the confined domain with their virtual centers achieve an optimal deployment. In this scenario, the cruise velocity are set as constants..... and the motion of the agents are dominated by the steering angles, which renders a optimal deployment with under-actuation....({\color{red}to be added: Why should we model like this? What is the advantage to keep a constant spped}) A fomulation as such renders an underactuated optimization......... In general, it is not possible to achieve the gradient-descending paradigm.......to ....In .....(cite), a ... basic controller is proposed......  ... This leads to that the virtual centers may exceed the boundary of the finite domain..... Therefore, it is not desired....... The Voroi.... tenssellation is not defined ..... In this paper, without relaxing the constant speed, we involve a barrier function to confine the .......motion of the agents. When the agents.....go beyond the domain, the ...... can be corrected to ........ to resolve the overlarge control input of the ..... close to the boundary of the domain, we ........ a modified controller of ......... A ... is used to prove that for any initial conditions, the ..... are confined within the boundary and asymptotically converge to the local optimal deployment....
+
+
+The main contribution of this paper is ...... The paper is organized as following
+
+
+% needed in second column of first page if using \IEEEpubid
+%\IEEEpubidadjcol
+
+
+
+
+\section{Preliminaries}
+
+\section{Main Results}
+\subsection{Proposed Barrier Lyapunov Function} 
+% MAIN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+For a given $A = [a_1, a_2, ..., a_m] \in ?, b = [b_1, b_2, .... b_m] \in ?$, a convex region is defined as $\Omega = \Omega^o \cup \partial \Omega = \{q \in ?| \left<q, a_j\right> - b_j \leq 0, \forall j\}$. We define the barrier Lyapunov function $V(Z)$
+% BLF Declaration **************************************************************
+\begin{equation}  \label{eqn:V}
+\begin{split}
+V(Z) & = \sum^{n}_{k=1} V_k(Z) \\
+V(Z) & = \sum^{n}_{k=1} \sum^{m}_{j=1} \frac{1}{2} \frac{\left< z_k - C_k(Z), z_k - C_k(Z)\right>}{\left<z_k, a_j \right> - b_j}  \\
+\end{split}
+\end{equation}
+where 
+% Notation using to define the BLF *********************************************
+\begin{equation}
+\begin{split}
+%\Omega & = \bigcup\limits_{i=1}^{n} \Omega_{k} \\
+V_k(Z) & = \sum^{m}_{j=1} \frac{1}{2} \frac{\left< z_k - C_k(Z), z_k - C_k(Z)\right>}{\left<z_k, a_j \right> - b_j} \\ % Partial BLF of each agent
+C_k(Z) & = \frac{\int_{\Omega_{k}(Z)}^{} q\rho(q)dq}{\int_{\Omega_{k}(Z)}^{} \rho(q)dq} \\ % Centroid of k-th Voronoi Cell
+\end{split}
+\end{equation}
+
+% Characteristics of BLF *******************************************************
+\noindent The proposed BLF in (\ref{eqn:V}) has the following properties: 
+\begin{enumerate}
+	\item $ V(Z) $ is positive definite \\
+	\textbf{Proof.}
+	\begin{equation}
+	\begin{split}
+	V_k(Z) & \geq 0 \iff z_k \in \Omega \txtspc{,} \forall  k \in \{1,...,n\} \\
+	V_k(Z) & = 0  \iff z_k \rightarrow C_k(Z) \txtspc{,} \forall  k \in \{1,...,n\}\\
+	\end{split}
+	\end{equation}
+	\item $ V(Z) $ grows to infinity if and only if at least one agent crosses the boundary of the coverage region \\
+	\textbf{Proof.}
+	\begin{equation}
+	\begin{split}
+	V(Z) \xrightarrow{} \infty & \iff \exists k : V_k(Z) \xrightarrow{} \infty \\
+	& \iff \exists k,j : \left<z_k, a_j \right> - b_j \xrightarrow{}{0^+} \\
+	& \iff \exists k : z_k \rightarrow \partial \Omega \\
+	\end{split}
+	\end{equation}
+\end{enumerate}
+\noindent It is shown that $V(Z)$ is a feasible candidate for a Barrier Lyapunov function.
+
+%  CONTROL POLICY *************************************************************************
+\subsection{Control Law for State feasibility}
+\noindent The following control law ensures the state and input feasibility of this coverage problem. 
+\begin{equation}
+\label{eqn:u_k}
+\begin{split}
+u_k = \omega_{k_0} + \frac{\mu_k(\psi_{k})\text{sign}({\omega_{k_0}})}{\norm{\left <\sum_{i \in \tilde{K}}\frac{\partial V_i(Z)}{\partial z_k}, e^{i\theta_k} \right >}} \left <\sum_{i \in \tilde{K}}\frac{\partial V_i(Z)}{\partial z_k}, e^{i\theta_k} \right >
+\end{split}
+\end{equation}
+\noindent where 
+\begin{equation}
+\begin{split}
+\omega_{k_0} &  \text{ : Desired orbiting velocity} \\
+\tilde{K} & \text{ : } \{ j \in {1,...,n}| \Omega_k \cup \Omega_j \neq \emptyset \} \text{: Set of adjacent agents}\\
+\mu(\psi_{k}) & \text{ : Positive control gain} \\
+\psi_{k} & \text{ : Angle ...} 
+\end{split}
+\end{equation}
+% PROOF STATE FEASIBILITY *******************************************************************
+\noindent By using the proposed control law in (\ref{eqn:u_k}), the dynamic of each agent's virtual mass is described as 
+\begin{equation} \label{eqn:z_k}
+\begin{split}
+\dot{z}_{k}  & = v_k e^{i\theta_{k}} - \frac{v_k}{w_0}e^{i\theta_{k}}u_k \\
+%& = v_k e^{i\theta_{k}} - \frac{v_k}{\omega_{k_0}}e^{i\theta_{k}} \left (\omega_{k_0} + \frac{\mu_k(\psi_{k})\text{sign}({\omega_{k_0}})\left <\sum_{i \in \tilde{K}}\frac{\partial V_i(Z)}{\partial z_k}, e^{i\theta_k} \right >}{\norm{\left <\sum_{i \in \tilde{K}}\frac{\partial V_i(Z)}{\partial z_k}, e^{i\theta_k} \right >}}  \right) \\
+& = - \frac{\mu_k(\psi_{k})v_k}{\norm{\omega_{k_0}}}\frac{\left <\sum_{i \in \tilde{K}}\frac{\partial V_i(Z)}{\partial z_k}, e^{i\theta_k} \right >}{\norm{\left <\sum_{i \in \tilde{K}}\frac{\partial V_i(Z)}{\partial z_k}, e^{i\theta_k} \right >}}e^{i\theta_{k}} \\
+\end{split}
+\end{equation}
+
+\noindent In order to study the time derivative of the proposed BLF $V(Z)$, we introduce the partial derivative of the Voronoi Centroidal and each sub BLF $V_i(Z)$. Appendix ... introduced the previous work from Du [5], which determines the partial derivative of the Voronoi Centroidal $C_i$ of the region $\Omega_i$. The region $\Omega_i$ is monitored by agent $i$ and is defined by virtual mass $z_i$ and the virtual masses of the adjacent agents $z_k$. Therefore, each Voronoi Centroidal $C_i(Z)$ is defined from $Z = [z_1, ..., z_i, ... z_n]$ and there exists a partial derivative $\frac{\partial C_i(Z)}{\partial z_k} $. Since the term adjacent is relative, agent $k$ belongs to the adjacent set of agent $i$ also implies that agent $i$ belongs to the adjacent set of agent $k$. 
+\noindent From the appendix ..., we have
+\begin{equation} \notag
+\begin{split}
+\frac{\partial C_i}{\partial z_k} = \threepartdef	{\frac{\partial C_k}{\partial z_k}}			{i = k}
+{\frac{\partial C_i}{\partial z_k}}			{i \in \tilde{K} \text{ or } k \in \tilde{I}}
+{0}											{i \notin \tilde{K} \text{ or } k \notin \tilde{I}} 												
+\end{split}
+\end{equation}
+
+\noindent Furthermore, the partial derivative of $V_i(Z)$ is determined from appendix ... as
+\begin{itemize} [leftmargin=*]
+	\item $ i = k $
+	\begin{equation} \notag
+	\begin{split}
+	\frac{\partial V_k(Z)}{\partial z_k} & = \left<1 -\frac{\partial C_k(Z)}{\partial z_k}, z_k - C_k(Z)\right>     \sum^{m}_{j=1} \frac{1}{\left<z_k, a_j \right> - b_j} \\
+	& - \frac{\left< z_k - C_k(Z), z_k - C_k(Z)\right>}{2} 					\sum^{m}_{j=1} \frac{a_j}{\left (\left<z_k, a_j \right> - b_k \right )^2} 
+	\end{split}
+	\end{equation}
+	
+	\item $ i \in \tilde{K} $
+	\[\frac{\partial V_i(Z)}{\partial z_k} = \left<- \frac{\partial C_i(Z)}{\partial z_k}, z_i - C_i(Z)\right>     \sum^{m}_{j=1} \frac{1}{\left<z_i, a_j \right> - b_j}\]
+	
+	\item $ i \notin \tilde{K} $
+	\[\frac{\partial V_i(Z)}{\partial z_k} = 0 \]
+\end{itemize}
+
+\noindent The time derivative of the introduced BLF $V(Z)$ from (\ref{eqn:V}) is shown to be non-positive
+% TIME DERIVATIVE OF BLF *******************************************************************
+\begin{equation} 
+\begin{split}
+\dot V(Z) & =  \sum^{n}_{k=1} \dot V_k(Z) \\
+& = \sum^{n}_{k=1} \sum^{n}_{i=1} \left< \frac{\partial  V_k(Z)}{\partial z_i}, \dot z_i \right > \\
+& = \sum^{n}_{k=1} \sum^{n}_{i=1} \left< \frac{\partial  V_i(Z)}{\partial z_k}, \dot z_k \right > \\
+& = \sum^{n}_{k=1} \left< \sum^{n}_{i=1} \frac{\partial V_i(Z)}{\partial z_k} , \dot z_k \right > \\
+& = \sum^{n}_{k=1} \left< \sum^{}_{i \in \tilde{K}} \frac{\partial V_i(Z)}{\partial z_k} , \dot z_k \right >
+\end{split}
+\end{equation}
+Substitute $\dot z_k$ from (\ref{eqn:z_k}), we have
+\begin{equation} \label{eqn:V_dot}
+\begin{split}
+%& \dot V(Z) \\
+%& = \sum^{n}_{k=1} -\frac{\mu_k(\psi_{k})v_k}{\norm{\omega_{k_0}}} \left<  \sum^{n}_{i=1} \frac{\partial V_i(Z)}{\partial z_k} ,      \frac{\left <\sum_{i \in \tilde{K}}\frac{\partial V_i(Z)}{\partial z_k}, e^{i\theta_k} \right >}    {\norm{\left <\sum_{i \in \tilde{K}}\frac{\partial V_i(Z)}{\partial z_k}, e^{i\theta_k} \right >}}e^{i\theta_{k}} \right > \\  
+\dot V(Z) = - \sum^{n}_{k=1} 			\frac{\mu_k(\psi_{k})v_k}{\norm{\omega_{k_0}}} 		\frac{\left<\sum^{}_{i \in \tilde{K}} \frac{\partial V_i(Z)}{\partial z_k}, e^{i\theta_{k}} \right >^2}   	 {\norm{\left <\sum_{i \in \tilde{K}}\frac{\partial V_i(Z)}{\partial z_k}, e^{i\theta_k} \right >}} \leq 0\\ 
+\end{split}
+\end{equation}
+
+\textbf{
+TO DO. \\
+- Independence of C and V in relation to the "neighbors of neighbors" in appendix\\
+- Scale factor $ \mu_k $ for feasible control input \\
+- Numerical solution of term dV/dz -> set of K tilde \\ }
+
+
+
+% DESIGN OF CONTROL GAIN ************************************************************
+\subsection{Designing proper scaling factor for input constraint}
+\noindent By designing the proper positive scaling factor $\mu_k(\psi_k)$ as \\
+\begin{equation} \label{adaptive_gain_positive_w0} %***************************************************
+\begin{split}
+\mu_k(\psi_{k}) = \twopartdef {k_1 \in \mathbb{R} \txtspc{,} 0 < k_1 \leq U_{up} - \norm{\omega_{k_0}}} 		{, ${ }$ \psi_{k} \in [\frac{\pi}{2} \txtspc{ } \frac{3\pi}{2}]} 
+{k_2 \in \mathbb{R} \txtspc{,} 0 < k_2 \leq U_{low} + \norm{\omega_{k_0}}} 		{, \text{else} } \\ % ${ }$ \psi_{k} \in [0 \txtspc{ } \frac{\pi}{2}] \cup [\frac{3\pi}{2} \txtspc{ } 2\pi]
+\end{split}
+\end{equation}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Simulation}
+
+\section{Experimental Validation}
+
+
+
+\section{Conclusion}
+The conclusion goes here.
+
+
+\appendices
+\section{Barrier Lyapunov Function for coverage control}
+
+
+
+% \end{equation}
+%\item $ \dot V(Z) \leq 0 $ 
+
+
+\section{Partial derivative of BLF}
+
+%****************** Partial derivative of BLF ****************** \\
+FIRST MULTIPLICAND
+\begin{equation} \label{eqn:distance_der}
+\begin{split}
+& \frac{\partial}{\partial z_k} \left< z_i - C_i(Z), z_i - C_i(Z)\right>  \\
+& = 2 \left<\frac{\partial}{\partial z_k} (z_i - C_i(Z)), z_i - C_i(Z)\right> \\
+& = \threepartdef 	{2 \left<1 - \frac{\partial C_i(Z)}{\partial z_k}, z_i - C_i(Z)\right>}				{i = k}	
+					{2 \left<- \frac{\partial C_i(Z)}{\partial z_k}, z_i - C_i(Z)\right>}					{i \in \tilde{K}}
+					{0}																					{i \notin \tilde{K}}
+\end{split}
+\end{equation}
+SECOND MULTIPLICAND
+\begin{equation} \label{eqn:guard_doc}
+\begin{split}
+& \frac{\partial}{\partial z_k} \left ( \sum^{m}_{j=1} \frac{1}{\left<z_i, a_j \right> - b_j} \right)  \\
+& = \twopartdef 	{- \sum^{m}_{j=1} \frac{a_j}{\left (\left<z_i, a_j \right> - b_j \right )^2} }		{i = k}	
+					{0}																					{i \neq k}
+\end{split}
+\end{equation}
+
+
+Together
+\begin{equation} \label{eqn:Vk_dot_implementation}
+\begin{split}
+& \frac{\partial V_i(Z)}{\partial z_k} \\
+& = \frac{\partial}{\partial z_k} \left ( \sum^{m}_{j=1} \frac{1}{2} \frac{\left< z_i - C_i(Z), z_i - C_i(Z)\right>}{\left<z_i, a_j \right> - b_j} \right) \\ % Partial BLF of each agent
+& = \frac{\partial}{\partial z_k} \left (\frac{1}{2} \left< z_i - C_i(Z), z_i - C_i(Z)\right> \sum^{m}_{j=1} \frac{1}{\left<z_i, a_j \right> - b_j} \right) \\
+& = \left < \frac{\partial z_i}{\partial z_k} - \frac{\partial C_i(Z)}{\partial z_k},   z_i - C_i(Z) \right > \sum^{m}_{j=1} \frac{1}{\left<z_i, a_j \right> - b_j} \\
+& - ...
+\end{split}
+\end{equation}
+
+
+% Parital derivative of Vk ************************
+
+\section{Partial Derivative of Voronoi Centroidal}
+\noindent ALGORITHM IMPLEMENTATION \\
+% Gradient of Centroid in relation to Agents' positions ************************
+\noindent \textbf{NOTE. CHANGE TO COMPLEX PLANE} \\
+\noindent In [5], Lee formulated the term $\frac{\partial C_i}{\partial z_k}$ as 
+\begin{equation} 
+\begin{split}
+\frac{\partial {C}^{(a)}_i}{\partial {z}^{(b)}_k} = & \frac{\int_{\partial \Omega_{i,k}} \rho(q)q^{(a)} \frac{q^{(b)} - {z}^{(b)}_k}{\norm{z_k - z_i}} dq}{m_i} \\ 
+& - \frac{(\int_{\partial \Omega_{i,k}} \rho(q)\frac{q^{(b)} - {z_k}^{(b)}}{\norm{z_k - z_i}} dq)(\int_{\Omega_i(Z)}^{} \rho(q)q^{(a)}dq)}{m_i^2} \\
+\end{split}
+\end{equation}
+with 
+\begin{equation}
+\begin{split}
+& a,b \in \{ x,y \}   \\
+& m_k = something \\ 
+\end{split}
+\end{equation}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%												%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%					APPENDIX					%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%												%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% you can choose not to have a title for an appendix
+% if you want by leaving the argument blank
+\section{}
+Appendix two text goes here.
+
+It is known that
+
+\begin{equation}
+\frac{\partial \left< z,a \right>}{\partial z} =a,
+\end{equation}
+\begin{equation}
+\frac{\partial \left< C_v(z),a \right>}{\partial z} = 
+\end{equation}
+
+\begin{equation}
+\dot{V}(z) = \left< \frac{\partial V}{\partial z}, \dot{z} \right>,
+\end{equation}
+where 
+\begin{equation}
+\begin{split}
+\frac{\partial V}{\partial z} =& \sum^n_{k=1} \sum^m_{j=1} \frac{\left< z-C_v(z),a \right>}{\left<z,a \right> -b}  \left( \frac{1}{\left< z,a \right>-b} \frac{\partial \left< z-Cv,a \right>}{\partial z} \right. \\
+& -\left. \frac{\left< z-C_v, a \right>}{\left(\left< z,a \right>-b \right)^2} \frac{\partial \left<z,a \right>}{\partial z} \right)
+\end{split}
+\end{equation}
+Therefore
+\begin{equation}
+\frac{\partial V}{\partial z} = \sum^n_{k=1} \sum^m_{j=1} \frac{\left< z-C_v(z),a \right>}{\left(\left<z,a \right> -b\right)^3}
+\end{equation}
+
+
+% use section* for acknowledgment
+\section*{Acknowledgment}
+
+
+The authors would like to thank...
+
+
+% Can use something like this to put references on a page
+% by themselves when using endfloat and the captionsoff option.
+\ifCLASSOPTIONcaptionsoff
+  \newpage
+\fi
+
+
+
+% trigger a \newpage just before the given reference
+% number - used to balance the columns on the last page
+% adjust value as needed - may need to be readjusted if
+% the document is modified later
+%\IEEEtriggeratref{8}
+% The "triggered" command can be changed if desired:
+%\IEEEtriggercmd{\enlargethispage{-5in}}
+
+% references section
+
+% can use a bibliography generated by BibTeX as a .bbl file
+% BibTeX documentation can be easily obtained at:
+% http://mirror.ctan.org/biblio/bibtex/contrib/doc/
+% The IEEEtran BibTeX style support page is at:
+% http://www.michaelshell.org/tex/ieeetran/bibtex/
+%\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+%\bibliography{IEEEabrv,../bib/paper}
+%
+% <OR> manually copy in the resultant .bbl file
+% set second argument of \begin to the number of references
+% (used to reserve space for the reference number labels box)
+\begin{thebibliography}{1}
+
+\bibitem{IEEEhowto:kopka}
+H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
+  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+
+\end{thebibliography}
+
+% biography section
+% 
+% If you have an EPS/PDF photo (graphicx package needed) extra braces are
+% needed around the contents of the optional argument to biography to prevent
+% the LaTeX parser from getting confused when it sees the complicated
+% \includegraphics command within an optional argument. (You could create
+% your own custom macro containing the \includegraphics command to make things
+% simpler here.)
+%\begin{IEEEbiography}[{\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{mshell}}]{Michael Shell}
+% or if you just want to reserve a space for a photo:
+
+\begin{IEEEbiography}{Michael Shell}
+Biography text here.
+\end{IEEEbiography}
+
+% if you will not have a photo at all:
+\begin{IEEEbiographynophoto}{John Doe}
+Biography text here.
+\end{IEEEbiographynophoto}
+
+% insert where needed to balance the two columns on the last page with
+% biographies
+%\newpage
+
+\begin{IEEEbiographynophoto}{Jane Doe}
+Biography text here.
+\end{IEEEbiographynophoto}
+
+% You can push biographies down or up by placing
+% a \vfill before or after them. The appropriate
+% use of \vfill depends on what kind of text is
+% on the last page and whether or not the columns
+% are being equalized.
+
+%\vfill
+
+% Can be used to pull up biographies so that the bottom of the last one
+% is flush with the other column.
+%\enlargethispage{-5in}
+
+
+
+% that's all folks
+\end{document}
+
+
