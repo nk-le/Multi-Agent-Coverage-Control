@@ -14,6 +14,8 @@ classdef Class_Centralized_Controller < handle
         
         % State variable
         adjacentMat
+        CVTpartialDerivativeMat
+        vmPose
         
         setPoint
         v
@@ -65,7 +67,8 @@ classdef Class_Centralized_Controller < handle
         %       - Adjacent matrix   --> information about the adjacent
         %                               agents
         %
-        function [CVTs, adjacentMat] = updateVoronoi(obj, newCoord)
+        function [CVTs, outdVMat, adjacentMat] = updateVoronoi(obj, newCoord)
+            obj.vmPose = newCoord;
             % The used methods are developed by Aaron_Becker
             [obj.v,obj.c]= Function_VoronoiBounded(newCoord(:,1), newCoord(:,2), obj.boundaries);
             % Compute the new setpoint for each agent
@@ -78,8 +81,9 @@ classdef Class_Centralized_Controller < handle
                     obj.setPoint(i,2) = cy;
                 end
             end    
-            obj.adjacentMat = getAdjacentList(obj.v ,obj.c, obj.setPoint);
-
+            [obj.CVTpartialDerivativeMat, obj.adjacentMat] = ComputeVoronoiProperty(obj.setPoint, obj.v, obj.c);
+            outdVMat = computeLyapunovDerivative();
+           
             % Return 
             CVTs = obj.setPoint;
             adjacentMat = obj.adjacentMat;
@@ -145,6 +149,53 @@ classdef Class_Centralized_Controller < handle
             global dVi_dzMat;
             dVi_dzMat = obj.dVk_dzj;
         end
+        
+        %% 
+        function outdVMat = computeLyapunovDerivative(obj)
+            outdVMat = zeros(obj.nAgents, obj.nAgents, 5); % Checkflag - dVi/dzx - dVi/dzy
+            % CVTCoord      : CVT information of each agent
+            % adjacentList  : 
+            for thisCell = 1: obj.nAgents
+                % One shot computation 
+                Q = eye(2);
+                Ci = obj.setPoint(thisCell,:);
+                zi = obj.vmPose(thisCell, :);
+                sumHj = 0;
+                sum_aj_HjSquared = 0;
+                for j = 1: size(obj.boundariesCoeff)
+                    hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1) * zi(1) + obj.boundariesCoeff(j,2) * z(2))); 
+                    sumHj = sumHj + 1/hj;
+                    sum_aj_HjSquared = sum_aj_HjSquared + [obj.boundariesCoeff(j,1), obj.boundariesCoeff(j,2)] / hj^2 / 2; 
+                end
+                Q_zDiff_hj = Q * (zi - Ci) / sumHj;
+                 
+                %% Compute the Partial dVi_dzi of itself
+                dCi_dzi = [obj.CVTpartialDerivativeMat(thisCell, thisCell, 2), obj.CVTpartialDerivativeMat(thisCell, thisCell, 3);
+                           obj.CVTpartialDerivativeMat(thisCell, thisCell, 4), obj.CVTpartialDerivativeMat(thisCell, thisCell, 5)];
+                
+                dVidi = (eye(2) - dCi_dzi')*Q_zDiff_hj + sum_aj_HjSquared;
+                outdVMat(thisCell, thisCell, 2) = dVidi(1);    % dVi_dzix 
+                outdVMat(thisCell, thisCell, 3) = dVidi(2);    % dVi_dziy 
+                   
+                %% Scan over the adjacent list and assign the information
+                flagAdj =  obj.adjacentMat(thisCell,:,1);
+                thisAdjList = find(flagAdj);
+                for i = 1: numel(thisAdjList)
+                    adjIndex = thisAdjList(i);
+                    % Compute these term once to save computation cost
+                 
+                    dCi_dzj = [obj.CVTpartialDerivativeMat(thisCell, adjIndex, 2), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 3);
+                               obj.CVTpartialDerivativeMat(thisCell, adjIndex, 4), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 5)];
+                     
+                    dVidj = -dCi_dzj' * Q_zDiff_hj;
+                    % Assign the new value
+                    outdVMat(thisCell, adjIndex, 2) = dVidj(1);       % dVi_dzjx 
+                    outdVMat(thisCell, adjIndex, 3) = dVidj(2);       % dVi_dzjy
+                end
+            end 
+        end
+        
+        
         
         % This method executes the control policy. 
         % [@in]  --
