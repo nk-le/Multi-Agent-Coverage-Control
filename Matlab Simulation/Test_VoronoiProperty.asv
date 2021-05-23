@@ -1,0 +1,51 @@
+nAgent = 6;    
+centerX = 50;
+centerY = 50;
+rXY = 10;
+startX = centerX + rXY * cos(0 : 2*pi/nAgent : 2*pi);
+startY = centerY + rXY * sin(0 : 2*pi/nAgent : 2*pi);
+Pose = [startX', startY'];
+
+CVTs = zeros(nAgent, 2);
+offset = 20;
+maxX = 100;
+maxY = 200;
+
+A = [-1 , 0; 1 , 0; 0 , 1; 0 , -1];
+b = [0, maxX, maxY, 0];
+bndCoeff = [A, b'];
+bndVertexes = [0, 0; 0,maxY; maxX,maxY; maxX, 0; 0, 0];
+
+%% Visualization
+figure()
+hold on; grid on; 
+for i = 1: size(bndVertexes,1)-1                
+   plot([bndVertexes(i,1) bndVertexes(i+1,1)],[bndVertexes(i,2) bndVertexes(i+1,2)], '-r', 'LineWidth',4);                    
+end   
+
+
+%% Get Voronoi centroids
+[vertexes, vertexHandler]= Function_VoronoiBounded(Pose(:,1), Pose(:,2), bndVertexes);
+plot(vertexes(vertexHandler{:,1},1),vertexes(vertexHandler{:},2), 'o')
+for i = 1:nAgent
+    [cx,cy] = Function_PolyCentroid(vertexes(vertexHandler{i},1),vertexes(vertexHandler{i},2));
+    cx = min(max(bndVertexes(:,1)),max(0, cx));
+    cy = min(max(bndVertexes(:,2)),max(0, cy));
+    if ~isnan(cx) && inpolygon(cx,cy, bndVertexes(:,1), bndVertexes(:,2))
+        CVTs(i,1) = cx;  %don't update if goal is outside the polygon
+        CVTs(i,2) = cy;
+        plot(cx, cy, '*');
+    end
+end 
+
+%% Get the adjacent list
+adjacentList = getAdjacentList(vertexes, vertexHandler, CVTs);
+
+
+disp(adjacentList)
+
+%figure()
+%plot()
+%fo
+
+

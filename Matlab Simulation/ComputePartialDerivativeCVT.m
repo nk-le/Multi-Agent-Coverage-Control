@@ -1,4 +1,4 @@
-function [dCi_dzi_AdjacentJ, dCi_dzj] = ComputePartialDerivativeCVT(currentPosition, neighborAgentPosition, vertexes, mVi, denseViX, denseViY)
+function [dCi_dzi_AdjacentJ, dCi_dzj] = ComputePartialDerivativeCVT(thisPos, thatPos, vertexes, mVi, denseViX, denseViY)
 % Function definition for partial derivative
 rho = @(x,y) x;
 gradZjOfQ = @(q, zjXorY, ziXorY) ((zjXorY - ziXorY)/2 - (q - (ziXorY + zjXorY)/2)); 
@@ -17,10 +17,10 @@ dCiy_dziy_func      = @(t, a, b, zjy, ziy) rho(t,a*t+b) .* ((a * t + b)    .* gr
 gradZiOfQ_intFunc   = @(t, a, b, zj, zi)   rho(t,a*t+b) .* ((zj - zi)/2 + (t - (zj + zi)/2)) .* (1 + a^2)^(1/2); 
 
 % Name convention
-zix = currentPosition(1);
-ziy = currentPosition(2);
-zjx = neighborAgentPosition(1);
-zjy = neighborAgentPosition(2);
+zix = thisPos(1);
+ziy = thisPos(2);
+zjx = thatPos(1);
+zjy = thatPos(2);
 
 % Temporary save the vertexes of the adjacent boundary. Boundary line is
 % defined by 2 points, we use the "start" and "end" notation for the
@@ -39,7 +39,7 @@ else
 end
 
 % Distance to the neighbor agent
-dZiZj = norm(currentPosition - neighborAgentPosition);
+dZiZj = norm(thisPos - thatPos);
    
 % Partial derivative computation
 dCix_dzjx = (integral(@(x) dCix_dzjx_func(x,a,b,zjx,zix), startVx, endVx) / mVi  -  integral(@(x)gradZjOfQ_intFunc(x    ,a,b,zjx,zix), startVx, endVx) * denseViX / mVi ^ 2) / dZiZj;
