@@ -1,14 +1,6 @@
-%close all;
+%% SETTINGS
 clear all;
 close all;
-
-% SETTINGS OF SIMULATION
-visualization = true;
-BLFThres = 1;
-global botColors;
-global dt;
-dt = 0.005;
-rng(4);
 
 % CONFIGURATE COVERAGE REGION AND STARTING POSITION
 Environment_Configuration
@@ -17,13 +9,18 @@ Environment_Configuration
 Agent_Configuration
 
 % DEBUGGER AND LOGGER
-logger = Class_Logger(amountAgent, 50000);
+% Creat a data logger to visualize offline, which helps debugging and
+% plotting more convenient. The 
+logger = Class_Logger(amountAgent, 50000); 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% VISUALIZATION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+pose = zeros(3, amountAgent);
+poseVM = zeros(amountAgent, 3);
+
+%% VISUALIZATION
 % Init Visualizer
 showColorPlot = true;
-botColors = spring(amountAgent);
 if(visualization == true)
+    % Turn on the simulation environment --> package required
     env = MultiRobotEnv(amountAgent);
     for i  = 1:amountAgent
         pose(:,i) = bot_handle(i).pose;
@@ -40,7 +37,7 @@ if(visualization == true)
     str = str + newline + "x: WMR's Virtual Mass, o: Centroid of Voronoi Partition";
     title(str);
     for i = 1:amountAgent
-        controller_handle(i).updateTarget(com.setPoint(1,i), com.setPoint(2,i)); 
+        controller_handle(i).updateTarget(com.setPoint(i,1), com.setPoint(i,2)); 
         poseVM(i,:) = [controller_handle(i).virtualMassX, controller_handle(i).virtualMassY, controller_handle(i).Theta];
     end
     vmPlotHandle = [];
@@ -48,13 +45,13 @@ if(visualization == true)
 
     for i = 1:amountAgent    
        vmHandle =  plot(controller_handle(i).virtualMassX, controller_handle(i).virtualMassY, '-x', 'Color', botColors(i,:), 'LineWidth',2);
-       spHandle =  plot(com.setPoint(1,i), com.setPoint(2,i), '-o','Color', botColors(i,:), 'LineWidth',2);   
+       spHandle =  plot(com.setPoint(i,1), com.setPoint(i,2), '-o','Color', botColors(i,:), 'LineWidth',2);   
        vmPlotHandle = [vmPlotHandle vmHandle];
        spPlotHandle = [spPlotHandle spHandle];
     end
 end
 
-% SIMULATION STARTS HERE
+%% SIMULATION 
 global dVi_dzMat;
 dVi_dzMat = zeros(amountAgent, amountAgent, 2);
 
@@ -66,11 +63,11 @@ while (loopCnt == 0 || totalV == 0 || totalV > BLFThres)
     filterUsed = 1;
     if(filterUsed)
         if(mod(loopCnt, 5) == 0)
-            com.compute(poseVM);
+            com.updateState(poseVM);
         end
     else
         if (loopCnt > 3)
-            com.compute(poseVM);
+            com.updateState(poseVM);
         end
     end
     % Update BLF
@@ -80,14 +77,14 @@ while (loopCnt == 0 || totalV == 0 || totalV > BLFThres)
         % Control Method
         bot_handle(i).move(); 
 
-        controller_handle(i).updateTarget(com.setPoint(1,i), com.setPoint(2,i));
+        controller_handle(i).updateTarget(com.setPoint(i,1), com.setPoint(i,2));
         %[~,~] = controller_handle(i).BLF_Controller_Log(k_inputScale(i,1),k_inputScale(i,2), A, b, 0.2);
 
         % Testing new controller here
         newWk = controller_handle(i).computeBLFoutput(i,kMu(i)); % or kmu(i)
 
         newVM   = [bot_handle(i).virtualMassX, bot_handle(i).virtualMassY];
-        newCVT  = [com.setPoint(1,i), com.setPoint(2,i)];
+        newCVT  = [com.setPoint(i,1), com.setPoint(i,2)];
         logger.updateBot(i, newVM, newWk, newCVT); % curBot, newPoseVM, newWk, newCVT
 
         % Update
@@ -96,7 +93,7 @@ while (loopCnt == 0 || totalV == 0 || totalV > BLFThres)
         
         % Update Setpoints and virtual mass position
         if(visualization == true)
-            set(spPlotHandle(i),'XData', com.setPoint(1,i) ,'YData', com.setPoint(2,i)); %plot current position
+            set(spPlotHandle(i),'XData', com.setPoint(i,1) ,'YData', com.setPoint(i,2)); %plot current position
             set(vmPlotHandle(i),'XData', bot_handle(i).virtualMassX ,'YData', bot_handle(i).virtualMassY); 
         end 
     end
@@ -120,9 +117,9 @@ while (loopCnt == 0 || totalV == 0 || totalV > BLFThres)
                 vmPlotColorHandle = [];
                 spPlotColorHandle = [];
                 for i = 1:amountAgent % color according to
-                    verCellHandle(i) = patch(com.setPoint(1,i),com.setPoint(2,i), cellColors(i,:)); % use color i  -- no robot assigned yet
+                    verCellHandle(i) = patch(com.setPoint(i,1),com.setPoint(i,2), cellColors(i,:)); % use color i  -- no robot assigned yet
                     vmHandle =  plot(controller_handle(i).virtualMassX, controller_handle(i).virtualMassY,'x','Color', botColors(i,:), 'LineWidth',2);
-                    spHandle =  plot(com.setPoint(1,i), com.setPoint(2,i), '-o','Color', botColors(i,:), 'LineWidth',2);   
+                    spHandle =  plot(com.setPoint(i,1), com.setPoint(i,2), '-o','Color', botColors(i,:), 'LineWidth',2);   
                     vmPlotColorHandle = [vmPlotColorHandle vmHandle];
                     spPlotColorHandle = [spPlotColorHandle spHandle];
                 end
@@ -155,5 +152,6 @@ while (loopCnt == 0 || totalV == 0 || totalV > BLFThres)
     end       
 end
 
+%% POST SIMULATION
 disp("Converged!")
 

@@ -12,7 +12,7 @@ startPose = [startX', startY', zeros(numel(startX),1)];
 
 pose = zeros(3, amountAgent);
 poseVM = zeros(amountAgent, 3);
-com = Class_Mission_Computer(amountAgent, worldVertexes(1:end-1,:), xrange, yrange);
+com = Class_Centralized_Controller(amountAgent, worldVertexes(1:end-1,:), xrange, yrange);
 com.boundariesCoeff = [A(:,1), A(:,2), b'];
 
 % BOT & CONTROLLER

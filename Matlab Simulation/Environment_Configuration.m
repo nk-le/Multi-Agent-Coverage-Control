@@ -37,3 +37,17 @@ yrange = max(worldVertexes(:,2));
 flag = 0;
 
 % STARTING POSITION
+
+
+% SETTINGS OF SIMULATION
+global visualization;
+visualization = true;
+global botColors;
+botColors = spring(amountAgent);
+global dt;
+dt = 0.005;
+BLFThres = 1;
+rng(4);
+
+
+
