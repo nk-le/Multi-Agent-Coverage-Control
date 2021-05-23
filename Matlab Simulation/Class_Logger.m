@@ -6,6 +6,7 @@ classdef Class_Logger < handle
         nAgent
         maxCnt 
         curCnt
+        PoseAgent
         PoseVM 
         ControlOutput 
         CVT
@@ -18,6 +19,7 @@ classdef Class_Logger < handle
             obj.nAgent = amountAgent;
             obj.maxCnt = maxIter;
             obj.curCnt = 0;
+            obj.PoseAgent = zeros(amountAgent, 3, maxIter);
             obj.PoseVM = zeros(amountAgent, 2, maxIter);
             obj.ControlOutput = zeros(amountAgent, maxIter);
             obj.CVT = zeros(amountAgent, 2, maxIter);
@@ -25,8 +27,9 @@ classdef Class_Logger < handle
             obj.V_BLF_Den = zeros(amountAgent, maxIter);
         end
         
-        function updateBot(obj, curBot, newPoseVM, newWk, newCVT)
+        function updateBot(obj, curBot, newPoseAgent, newPoseVM, newWk, newCVT)
             if(obj.curCnt <= obj.maxCnt)
+                obj.PoseAgent(curBot, :,obj.curCnt) = newPoseAgent(:,:,:);
                 obj.PoseVM(curBot, :,obj.curCnt)           = newPoseVM(:,:);
                 obj.ControlOutput(curBot, obj.curCnt)    = newWk(:);
                 obj.CVT(curBot,:, obj.curCnt)              = newCVT(:,:);

@@ -12,6 +12,8 @@ classdef Class_Centralized_Controller < handle
         xrange;         % Max range of x Axis
         yrange;         % Max range of y Axis
         
+        % State variable
+        adjacentMat
         
         setPoint
         v
@@ -55,12 +57,17 @@ classdef Class_Centralized_Controller < handle
             obj.setPoint(:,bot) = [x;y]; 
         end    
         
-        function [vOut,cOut, dVidz] = computeTarget(obj, agentPosition)
-            [obj.v,obj.c]= Function_VoronoiBounded(agentPosition(:,1),agentPosition(:,2), obj.boundaries);
-            % Calculate the neighbor list for each agent and update to each
-            % agent
-            %adjacentList = getAdjacentList(obj.v ,obj.c, agentPosition(:,1:2));
-            
+        % This method updates all neccessary states of the agents and
+        % [@newCoord]  Current coordinates of virtual center of all agents
+        % [@out]:
+        %
+        %       - List of centroid  --> new target for each agent
+        %       - Adjacent matrix   --> information about the adjacent
+        %                               agents
+        %
+        function [CVTs, adjacentMat] = updateVoronoi(obj, newCoord)
+            % The used methods are developed by Aaron_Becker
+            [obj.v,obj.c]= Function_VoronoiBounded(newCoord(:,1), newCoord(:,2), obj.boundaries);
             % Compute the new setpoint for each agent
             for i = 1:obj.nAgents
                 [cx,cy] = Function_PolyCentroid(obj.v(obj.c{i},1),obj.v(obj.c{i},2));
@@ -70,23 +77,16 @@ classdef Class_Centralized_Controller < handle
                     obj.setPoint(i,1) = cx;  %don't update if goal is outside the polygon
                     obj.setPoint(i,2) = cy;
                 end
-                
-                % Calculate the dVi_dz and send them to each agent
-                %adjacentMatrixOfZi = zeros(obj.nAgents, 7);
-                %adjacentMatrixOfZi(:,:) = adjacentList(i,:,:);
-                %listVertexesVi = [obj.v(obj.c{i}(1:end-1),1)' ; obj.v(obj.c{i}(1:end-1),2)'];
-                % obj.dVi_dz(:,i) = Compute_dVi_dz(agentPosition(i,1:2),[cx, cy], adjacentMatrixOfZi, listVertexesVi, obj.boundariesCoeff);
-                %[tmp_dVi_dzi , tmp_dVi_dzj_Vector] = Compute_dVi_dz(agentPosition(i,1:2),[cx, cy], adjacentMatrixOfZi, listVertexesVi, obj.boundariesCoeff);
-                %obj.dVk_dzj(i, :, :) = tmp_dVi_dzj_Vector(:,:);   
-                %obj.dVk_dzj(i, i, :) = tmp_dVi_dzi;
-            end
-            vOut = obj.v;
-            cOut = obj.c;
-            %dVidz = obj.dVk_dzj;
+            end    
+            obj.adjacentMat = getAdjacentList(obj.v ,obj.c, obj.setPoint);
+
+            % Return 
+            CVTs = obj.setPoint;
+            adjacentMat = obj.adjacentMat;
         end
         
         function [Vk, den] = computeV(obj, Zk, Ck)
-            tol = 1;
+            tol = 0.001;
             a = obj.boundariesCoeff(:, 1:2);
             b = obj.boundariesCoeff(:, 3);
             m = numel(b);
@@ -105,54 +105,51 @@ classdef Class_Centralized_Controller < handle
         %       - Adjacent matrix   --> information about the adjacent
         %                               agents
         %
-        function updateState(obj, vmPos)
-            global dVi_dzMat;
-            % Compute the new setpoint for each agent
-            % The used method is developed by Aaron_Becker
-            [obj.v,obj.c]= Function_VoronoiBounded(vmPos(:,1),vmPos(:,2), obj.boundaries);
-           
-            for i = 1:numel(obj.c) 
-                [cx,cy] = Function_PolyCentroid(obj.v(obj.c{i},1),obj.v(obj.c{i},2));
-                cx = min(obj.xrange,max(0, cx));
-                cy = min(obj.yrange,max(0, cy));
-                % Don't update if goal is outside the polygon
-                if ~isnan(cx) && inpolygon(cx,cy, obj.boundaries(:,1), obj.boundaries(:,2))
-                    obj.setPoint(i,1) = cx;  
-                    obj.setPoint(i,2) = cy;
-                end       
-            end
-            
-             % Calculate the neighbor list for each agent and update to each
-            % agent
-            adjacentList = getAdjacentList(obj.v ,obj.c, vmPos(:,:));
+        function updateState(obj, newVMCoord)
+            %% Coverage update - Voronoi partitions and CVTs
+            % Compute the new setpoint for each agent adn determine the
+            % current neighbor matrix
+            [~ , ~] = obj.updateVoronoi(newVMCoord);
            
             % Compute Lyapunov function and the gradient
             newV = zeros(obj.nAgents, 1);
             for k = 1:obj.nAgents
-                zk = [vmPos(k,1), vmPos(k,2)];
+                zk = [newVMCoord(k,1), newVMCoord(k,2)];
                 ck = [obj.setPoint(k,1), obj.setPoint(k,2)];
                 [newV(k), obj.BLFden(k)] = obj.computeV(zk, ck);
             end
             
-            % Computation of Gradient: Euler numerical method
+            % Computation of Gradient: dV/dz: Euler numerical method
+            % Currently there are some problems with the integration so we
+            % use this one temporarily. TODO: Check file "ComputeGradientCVT.m"
             obj.dVk_dzj(:,:,:) = 0;  % Reset
             for k = 1:obj.nAgents
                 % Get the neighbors of the current bot
-                flagNeighbor = adjacentList(k,:,1);
+                flagNeighbor = obj.adjacentMat(k,:,1);
+                %obj.adjacentMat(:,:,1)
                 nNeighbor = numel(flagNeighbor(flagNeighbor ~= 0));
                 neighborIndex = find(flagNeighbor);
                 for j = 1: nNeighbor 
-                    curNeighbor = neighborIndex(j);
-                    obj.dVk_dzj(k,curNeighbor,:) = (newV(k) - obj.lastV(k)) ./ (vmPos(curNeighbor, 1:2) - obj.lastPosition(curNeighbor, 1:2)) ;
+                    neighborPtr = neighborIndex(j);
+                    obj.dVk_dzj(k,neighborPtr,:) = (newV(k) - obj.lastV(k)) ./ (newVMCoord(neighborPtr, 1:2) - obj.lastPosition(neighborPtr, 1:2)) ;
                 end
-                obj.dVk_dzj(k,k,:) = (newV(k) - obj.lastV(k)) ./ (vmPos(k, 1:2) - obj.lastPosition(k, 1:2)) ;
+                obj.dVk_dzj(k,k,:) = (newV(k) - obj.lastV(k)) ./ (newVMCoord(k, 1:2) - obj.lastPosition(k, 1:2)) ;
             end
             
-            dVi_dzMat = obj.dVk_dzj;
             % Update values
-            obj.lastPosition(:,:) = vmPos(:,:);
+            obj.lastPosition(:,:) = newVMCoord(:,:);
             obj.lastCVT(:,:) = obj.setPoint(:,:);
             obj.lastV = newV;
+            
+            % Publish the values to all agents
+            global dVi_dzMat;
+            dVi_dzMat = obj.dVk_dzj;
+        end
+        
+        function executeControl(obj)
+            
+            
+            
         end
     end
 end

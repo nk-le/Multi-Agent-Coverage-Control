@@ -423,7 +423,11 @@ classdef Class_Controller_Khanh < handle
             end
             
             isFeasible = norm(sumdVj_diX * cT + sumdVj_diY * sT) ~= 0;
-            w = obj.w0 + mu * sign(obj.w0) * sign(sumdVj_diX * cT + sumdVj_diY * sT); 
+            %w = obj.w0 + mu * sign(obj.w0) * sign(sumdVj_diX * cT + sumdVj_diY * sT); 
+            % Try sigmoid function here
+            epsSigmoid = 4;
+            w = obj.w0 + mu * sign(obj.w0) * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
+            
             %if(isFeasible == true)
             %    w = obj.w0 + mu * sign(obj.w0) * (sumdVj_diX * cT + sumdVj_diY * sT) / norm(sumdVj_diX * cT + sumdVj_diY * sT); 
             %else 

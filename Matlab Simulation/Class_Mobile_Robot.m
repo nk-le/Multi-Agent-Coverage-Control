@@ -3,7 +3,7 @@ classdef Class_Mobile_Robot < handle
    properties
    % Constant Configuration
        offsetBodyAxes = 0.00;
-       dt = 0.02;
+       dt = 0;
        
    % Input
        tLeftWheel = 0; % Left Torque 
@@ -78,8 +78,9 @@ classdef Class_Mobile_Robot < handle
        
        function obj = updateVirtualMass(obj)
             %[r, theta] = obj.getPolar();
-            obj.virtualMassX = obj.posX - obj.translationVelocity / obj.w0 * sin(obj.theta);
-            obj.virtualMassY = obj.posY + obj.translationVelocity / obj.w0 * cos(obj.theta);
+            rDistance = obj.translationVelocity / obj.w0; %10; % 
+            obj.virtualMassX = obj.posX - rDistance * sin(obj.theta);
+            obj.virtualMassY = obj.posY + rDistance * cos(obj.theta);
        end
        
        function [vmX, vmY] = getNextVirtualMass(obj)
@@ -104,13 +105,10 @@ classdef Class_Mobile_Robot < handle
            [obj.translationVelocity, obj.angleVelocity] = FWK(obj, wL, wR);
        end
        
-       function obj = move(obj) % Robot Dynamic
+       function obj = move(obj) % Unicycle Dynamic
             obj.posX = obj.posX + obj.dt * (obj.translationVelocity * cos(obj.theta) - obj.offsetBodyAxes * obj.angleVelocity * sin(obj.theta));
             obj.posY = obj.posY + obj.dt * (obj.translationVelocity * sin(obj.theta) + obj.offsetBodyAxes * obj.angleVelocity * cos(obj.theta));
             obj.theta = obj.theta + obj.dt * obj.angleVelocity;
-            obj.virtualMassX = obj.posX - obj.translationVelocity / obj.w0 * sin(obj.theta); % wo is fixed orbiting angular velocity
-            obj.virtualMassY = obj.posY + obj.translationVelocity / obj.w0 * cos(obj.theta);
-            
             obj.pose = [obj.posX; obj.posY; obj.theta];
        end
    end

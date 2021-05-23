@@ -4,6 +4,8 @@ close all;
 
 % CONFIGURATE COVERAGE REGION AND STARTING POSITION
 Environment_Configuration
+global visualization;
+
 
 % SETTINGS OF AGENTS
 Agent_Configuration
@@ -57,12 +59,13 @@ dVi_dzMat = zeros(amountAgent, amountAgent, 2);
 
 loopCnt = 0;
 totalV = 0;
+BLFThres = 0.3;
 while (loopCnt == 0 || totalV == 0 || totalV > BLFThres)
     loopCnt = loopCnt + 1;
     % Update mission
-    filterUsed = 1;
+    filterUsed = 0;
     if(filterUsed)
-        if(mod(loopCnt, 5) == 0)
+        if(mod(loopCnt, 3) == 0)
             com.updateState(poseVM);
         end
     else
@@ -82,10 +85,10 @@ while (loopCnt == 0 || totalV == 0 || totalV > BLFThres)
 
         % Testing new controller here
         newWk = controller_handle(i).computeBLFoutput(i,kMu(i)); % or kmu(i)
-
+        newPos = [bot_handle(i).posX, bot_handle(i).posY, bot_handle(i).theta];
         newVM   = [bot_handle(i).virtualMassX, bot_handle(i).virtualMassY];
         newCVT  = [com.setPoint(i,1), com.setPoint(i,2)];
-        logger.updateBot(i, newVM, newWk, newCVT); % curBot, newPoseVM, newWk, newCVT
+        logger.updateBot(i, newPos, newVM, newWk, newCVT); % botID, newPoseAgent, newPoseVM, newWk, newCVT
 
         % Update
         poseVM(i,:) = [bot_handle(i).virtualMassX, bot_handle(i).virtualMassY, bot_handle(i).theta];

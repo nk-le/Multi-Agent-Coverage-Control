@@ -12,7 +12,7 @@ for i = 1:amountAgent
     V(xAxis) = V(xAxis) + logger.V_BLF(i,xAxis);
 end
 plot(xAxis, V(xAxis), '-r', 'LineWidth',4);
-ylim([0, 80]);
+ylim([0, 500]);
 xlim([startId, len]);
 xlabel("Iteration");
 ylabel("V_k");
