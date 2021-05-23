@@ -5,13 +5,13 @@ function [logger] = main()
 
     %% PARAMETER
     rng(4);
-    nAgent = 6;
-    dt = 0.001;
+    nAgent = 3;
+    dt = 0.0001;
 
     
     % BOT & CONTROLLER
-    vConstList =  linspace(50, 80, nAgent) .* ones(1,nAgent);
-    wOrbitList = linspace(1, 1.6, nAgent) .* ones(1,nAgent);
+    vConstList =  linspace(10, 20, nAgent) .* ones(1,nAgent);
+    wOrbitList = linspace(0.2, 0.4, nAgent) .* ones(1,nAgent);
     wMax = 3.2;
     K1 = wMax - wOrbitList;
     K2 = 1;
@@ -43,13 +43,16 @@ function [logger] = main()
     
     %% Visualization handler
     env = MultiRobotEnv(nAgent);
-    
+    env((1:nAgent), startPose');
+    hold on; grid on; axis equal
+    xlim([0 - offset, maxX + offset]);
+    ylim([0 - offset, maxY + offset]);
     while(1)
         % Main process
         newPose = masterCom.loop();
         
         % Update Visualization
-        env((1:nAgent), newPose');
+        % env((1:nAgent), newPose');
         
         % Logging
         logger = masterCom;

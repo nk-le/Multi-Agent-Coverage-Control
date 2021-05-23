@@ -1,4 +1,4 @@
-classdef Agent_Controller
+classdef Agent_Controller < handle
     %AGENT_CONTROLLER Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -9,9 +9,8 @@ classdef Agent_Controller
         curCVTPose      % [x y]
         
         regionCoeff     % [a1 a2 b] --> a1*x + a2*y - b <= 0
-    end
-    
-    properties (Access = private)
+        
+        %% Should be private
         vConst          % const float
         wOrbit          % const float
         
@@ -21,22 +20,27 @@ classdef Agent_Controller
         currentSubV
     end
     
+    properties (Access = private)
+        
+    end
+    
     methods
         %% Initalize class handler
         function obj = Agent_Controller()
-
+            obj.v = 0;
+            obj.w = 0;
         end
         
         %% One time configuration
         %   Assign a fix ID for each controller for communication broadcasting and easy debugging
         %   Assign the coefficient of the closed convex region: [coverageRegionCoeff] = [a1 a2 b] --> a1*x + a2*y - b <= 0
-        function obj = begin(botID, coverageRegionCoeff, initPose, v0, w0)
+        function obj = begin(obj, botID, coverageRegionCoeff, initPose, v0, w0)
             obj.ID = botID;
             obj.regionCoeff = coverageRegionCoeff;
             obj.vConst = v0;
             obj.wOrbit = w0;
             
-            % Update 
+            % Update initial position
             obj.updateState(initPose);
         end
         
@@ -48,12 +52,12 @@ classdef Agent_Controller
             [curVM] = obj.updateVirtualCenter();
             
             %% To be updated
-            obj.ErrorX = obj.virtualMassX - obj.targetX;
-            obj.ErrorY = obj.virtualMassY - obj.targetY;  
-            obj.distance  = (obj.ErrorX ^ 2 + obj.ErrorY ^ 2) ^ (0.5);
-            obj.L = obj.agent.bodyWidth;         
-            cosPhi = (obj.ErrorX * cos(obj.agent.theta) + obj.ErrorY * sin(obj.agent.theta))/((obj.ErrorX ^ 2 + obj.ErrorY ^ 2) ^ (0.5));
-            obj.phi = acos(cosPhi);   
+%             obj.ErrorX = obj.virtualMassX - obj.targetX;
+%             obj.ErrorY = obj.virtualMassY - obj.targetY;  
+%             obj.distance  = (obj.ErrorX ^ 2 + obj.ErrorY ^ 2) ^ (0.5);
+%             obj.L = obj.agent.bodyWidth;         
+%             cosPhi = (obj.ErrorX * cos(obj.agent.theta) + obj.ErrorY * sin(obj.agent.theta))/((obj.ErrorX ^ 2 + obj.ErrorY ^ 2) ^ (0.5));
+%             obj.phi = acos(cosPhi);   
             
             %% Return
             newVMPose = curVM;
@@ -81,25 +85,32 @@ classdef Agent_Controller
             
             % Update the new target
             obj.curCVTPose = newCVTPose;
-            obj.currentSubV = obj.computeCurrentV;
+            %obj.currentSubV = obj.computeCurrentV();
            
             % Determine Output
-            v = obj.vConst;             
-            cT = cos(obj.Theta);
-            sT = sin(obj.Theta);
-            
-            dVj_di_Matrix = neighborInformation(:,obj.ID,:);
-            sumdVj_diX = 0;
-            sumdVj_diY = 0;
-            for i = 1 : size(dVj_di_Matrix, 1)
-                sumdVj_diX = sumdVj_diX + dVj_di_Matrix(i,1);
-                sumdVj_diY = sumdVj_diY + dVj_di_Matrix(i,2);
-            end
-            
-            %w = obj.w0 + mu * sign(obj.w0) * sign(sumdVj_diX * cT + sumdVj_diY * sT); 
-            % Try sigmoid function here - changeable epsilon
-            epsSigmoid = 4;
-            wOut = obj.w0 + mu * sign(obj.w0) * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
+%             v = obj.vConst;             
+%             cT = cos(obj.Theta);
+%             sT = sin(obj.Theta);
+%             
+%             dVj_di_Matrix = neighborInformation(:,obj.ID,:);
+%             sumdVj_diX = 0;
+%             sumdVj_diY = 0;
+%             for i = 1 : size(dVj_di_Matrix, 1)
+%                 sumdVj_diX = sumdVj_diX + dVj_di_Matrix(i,1);
+%                 sumdVj_diY = sumdVj_diY + dVj_di_Matrix(i,2);
+%             end
+%             
+%             %w = obj.w0 + mu * sign(obj.w0) * sign(sumdVj_diX * cT + sumdVj_diY * sT); 
+%             % Try sigmoid function here - changeable epsilon
+%             epsSigmoid = 4;
+%             wOut = obj.w0 + mu * sign(obj.w0) * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
+            wOut = obj.wOrbit;
+            obj.w = wOut;
+        end
+        
+        function setOuput(v, w)
+            obj.v = v
+            obj
         end
         
         function [V] = computeCurrentV(obj)
@@ -130,11 +141,8 @@ classdef Agent_Controller
             newPose(1) = obj.curPose(1) + dt * (obj.vConst * cos(obj.curPose(3)));
             newPose(2) = obj.curPose(2) + dt * (obj.vConst * sin(obj.curPose(3)));
             newPose(3) = obj.curPose(3) + dt * obj.w;
+            obj.curPose = newPose;
         end
-  
-        
-        
-        
     end
 end
 

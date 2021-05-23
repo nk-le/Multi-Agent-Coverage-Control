@@ -6,28 +6,27 @@ close all;
 Environment_Configuration
 global visualization;
 
-
 % SETTINGS OF AGENTS
-Agent_Configuration
+%Agent_Configuration
 
 % DEBUGGER AND LOGGER
 % Creat a data logger to visualize offline, which helps debugging and
 % plotting more convenient. The 
-logger = Class_Logger(amountAgent, 50000); 
+logger = Class_Logger(nAgent, 50000); 
 
-pose = zeros(3, amountAgent);
-poseVM = zeros(amountAgent, 3);
+pose = zeros(3, nAgent);
+poseVM = zeros(nAgent, 3);
 
 %% VISUALIZATION
 % Init Visualizer
 showColorPlot = true;
 if(visualization == true)
     % Turn on the simulation environment --> package required
-    env = MultiRobotEnv(amountAgent);
-    for i  = 1:amountAgent
+    env = MultiRobotEnv(nAgent);
+    for i  = 1:nAgent
         pose(:,i) = bot_handle(i).pose;
     end
-    env((1:amountAgent), pose);
+    env((1:nAgent), pose);
     hold on; grid on; axis equal
     % Plot Boundaries
     for i = 1: size(worldVertexes,1)-1                
@@ -38,14 +37,14 @@ if(visualization == true)
     str =  "Coverage Control of Multi-Unicycle System";
     str = str + newline + "x: WMR's Virtual Mass, o: Centroid of Voronoi Partition";
     title(str);
-    for i = 1:amountAgent
+    for i = 1:nAgent
         controller_handle(i).updateTarget(com.setPoint(i,1), com.setPoint(i,2)); 
         poseVM(i,:) = [controller_handle(i).virtualMassX, controller_handle(i).virtualMassY, controller_handle(i).Theta];
     end
     vmPlotHandle = [];
     spPlotHandle = [];
 
-    for i = 1:amountAgent    
+    for i = 1:nAgent    
        vmHandle =  plot(controller_handle(i).virtualMassX, controller_handle(i).virtualMassY, '-x', 'Color', botColors(i,:), 'LineWidth',2);
        spHandle =  plot(com.setPoint(i,1), com.setPoint(i,2), '-o','Color', botColors(i,:), 'LineWidth',2);   
        vmPlotHandle = [vmPlotHandle vmHandle];
@@ -55,7 +54,7 @@ end
 
 %% SIMULATION 
 global dVi_dzMat;
-dVi_dzMat = zeros(amountAgent, amountAgent, 2);
+dVi_dzMat = zeros(nAgent, nAgent, 2);
 
 loopCnt = 0;
 totalV = 0;
@@ -76,7 +75,7 @@ while (loopCnt == 0 || totalV == 0 || totalV > BLFThres)
     % Update BLF
     logger.updateBLF(com.lastV(:), com.BLFden(:));
 
-    for i = 1:amountAgent
+    for i = 1:nAgent
         % Control Method
         bot_handle(i).move(); 
 
@@ -114,12 +113,12 @@ while (loopCnt == 0 || totalV == 0 || totalV > BLFThres)
                plot([worldVertexes(i,1) worldVertexes(i+1,1)],[worldVertexes(i,2) worldVertexes(i+1,2)], '-r', 'LineWidth',4);                    
             end   
             % Color Patch
-            verCellHandle = zeros(amountAgent,1);
-            cellColors = cool(amountAgent);         
+            verCellHandle = zeros(nAgent,1);
+            cellColors = cool(nAgent);         
             if(showColorPlot == true)
                 vmPlotColorHandle = [];
                 spPlotColorHandle = [];
-                for i = 1:amountAgent % color according to
+                for i = 1:nAgent % color according to
                     verCellHandle(i) = patch(com.setPoint(i,1),com.setPoint(i,2), cellColors(i,:)); % use color i  -- no robot assigned yet
                     vmHandle =  plot(controller_handle(i).virtualMassX, controller_handle(i).virtualMassY,'x','Color', botColors(i,:), 'LineWidth',2);
                     spHandle =  plot(com.setPoint(i,1), com.setPoint(i,2), '-o','Color', botColors(i,:), 'LineWidth',2);   
@@ -132,7 +131,7 @@ while (loopCnt == 0 || totalV == 0 || totalV > BLFThres)
         
         if(totalV < 1)
             %Visualitation   
-            env((1:amountAgent), pose);
+            env((1:nAgent), pose);
 
             if(showColorPlot == true)
                 figure(2);

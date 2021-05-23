@@ -110,6 +110,7 @@ classdef Class_Mobile_Robot < handle
             obj.posY = obj.posY + obj.dt * (obj.translationVelocity * sin(obj.theta) + obj.offsetBodyAxes * obj.angleVelocity * cos(obj.theta));
             obj.theta = obj.theta + obj.dt * obj.angleVelocity;
             obj.pose = [obj.posX; obj.posY; obj.theta];
+            obj.updateVirtualMass();
        end
    end
 end

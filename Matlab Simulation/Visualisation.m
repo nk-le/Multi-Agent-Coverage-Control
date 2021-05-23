@@ -1,6 +1,6 @@
 len = logger.curCnt;
 
-env = MultiRobotEnv(amountAgent);
+env = MultiRobotEnv(nAgent);
 
 spX = logger.CVT(:,1,:);
 spY = logger.CVT(:,2,:);
@@ -10,11 +10,11 @@ poseX =  logger.PoseAgent(:,1,:);
 poseY =  logger.PoseAgent(:,2,:);
 poseTheta =  logger.PoseAgent(:,3,:);
 
-% for i  = 1:amountAgent
+% for i  = 1:nAgent
 %     pose(:,i) = bot_handle(i).pose;
 % end
-poseInit = zeros(3, amountAgent);
-env((1:amountAgent), poseInit);
+poseInit = zeros(3, nAgent);
+env((1:nAgent), poseInit);
 hold on; grid on; %axis equal
 
 % Plot Boundaries
@@ -30,7 +30,7 @@ title(str);
 vmPlotHandle = [];
 spPlotHandle = [];
 
-% for i = 1:amountAgent    
+% for i = 1:nAgent    
 %    vmHandle =  plot(vmX(i,loopCnt), vmY(i,loopCnt), '-x', 'Color', botColors(i,:), 'LineWidth',2);
 %    spHandle =  plot(spX(i,loopCnt), spY(i,loopCnt), '-o','Color', botColors(i,:), 'LineWidth',2);   
 %    vmPlotHandle = [vmPlotHandle vmHandle];
@@ -47,12 +47,12 @@ for loopCnt = 1:len
                plot([worldVertexes(i,1) worldVertexes(i+1,1)],[worldVertexes(i,2) worldVertexes(i+1,2)], '-r', 'LineWidth',4);                    
             end   
             % Color Patch
-            verCellHandle = zeros(amountAgent,1);
-            cellColors = cool(amountAgent);         
+            verCellHandle = zeros(nAgent,1);
+            cellColors = cool(nAgent);         
             if(showColorPlot == true)
                 vmPlotColorHandle = [];
                 spPlotColorHandle = [];
-                for i = 1:amountAgent % color according to
+                for i = 1:nAgent % color according to
                     verCellHandle(i) = patch(spX(1,i),spY(2,i), cellColors(i,:)); % use color i  -- no robot assigned yet
                     vmHandle =  plot(vmX(i,loopCnt), vmY(i,loopCnt),'x','Color', botColors(i,:), 'LineWidth',2);
                     spHandle =  plot(spX(i,loopCnt), spY(i,loopCnt), '-o','Color', botColors(i,:), 'LineWidth',2);   
@@ -62,12 +62,12 @@ for loopCnt = 1:len
             end
      end
         
-    if(mod(loopCnt-1, 10) == 0)
+    if(mod(loopCnt-1, 5) == 0)
         % Update the position in engine
-        for i = 1:amountAgent
+        for i = 1:nAgent
             pose(:,i) = [poseX(i, loopCnt), poseY(i, loopCnt), poseTheta(i, loopCnt)];
         end
-        env((1:amountAgent), pose);
+        env((1:nAgent), pose);
         
         if(showColorPlot == true)
             %figure(2);
@@ -77,7 +77,7 @@ for loopCnt = 1:len
             str =  "Voronoi Tessellation";
             str = str + newline + "x: WMR's Virtual Mass, o: Centroid of Voronoi Partition";
             title(str);
-            for i = 1:amountAgent % update Voronoi cells
+            for i = 1:nAgent % update Voronoi cells
                set(spPlotColorHandle(i),'XData', spX(i,loopCnt) ,'YData', spY(i,loopCnt)); %plot current position
                set(vmPlotColorHandle(i),'XData', vmX(i,loopCnt) ,'YData', vmY(i,loopCnt)); 
                %set(verCellHandle(i), 'XData',com.v(com.c{i},1),'YData',com.v(com.c{i},2));

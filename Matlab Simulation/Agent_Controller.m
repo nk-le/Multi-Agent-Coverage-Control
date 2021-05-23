@@ -75,37 +75,40 @@ classdef Agent_Controller < handle
         %% Execute the control policy 
         % [@in]
         %      curCVTPose   : New Voronoi centroid
-        %
         % [@out]
         %      wOut         : desired control ouput   
-        function [wOut] = executeControl(obj, newCVTPose)
+        function [v, wOut] = executeControl(obj, newCVTPose)
             % Pseudo communication matrix that used to exchange information
             % between agents
-            global neighborInformation;
+            % global neighborInformation;
+            global dVi_dzMat;
             
             % Update the new target
             obj.curCVTPose = newCVTPose;
             %obj.currentSubV = obj.computeCurrentV();
            
             % Determine Output
-%             v = obj.vConst;             
-%             cT = cos(obj.Theta);
-%             sT = sin(obj.Theta);
-%             
-%             dVj_di_Matrix = neighborInformation(:,obj.ID,:);
-%             sumdVj_diX = 0;
-%             sumdVj_diY = 0;
-%             for i = 1 : size(dVj_di_Matrix, 1)
-%                 sumdVj_diX = sumdVj_diX + dVj_di_Matrix(i,1);
-%                 sumdVj_diY = sumdVj_diY + dVj_di_Matrix(i,2);
-%             end
-%             
-%             %w = obj.w0 + mu * sign(obj.w0) * sign(sumdVj_diX * cT + sumdVj_diY * sT); 
-%             % Try sigmoid function here - changeable epsilon
-%             epsSigmoid = 4;
-%             wOut = obj.w0 + mu * sign(obj.w0) * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
-            wOut = obj.wOrbit;
+            v = obj.vConst;             
+            cT = cos(obj.curPose(3));
+            sT = sin(obj.curPose(3));
+            
+            dVj_di_Matrix = dVi_dzMat(:,obj.ID,:);
+            sumdVj_diX = 0;
+            sumdVj_diY = 0;
+            for i = 1 : size(dVj_di_Matrix, 1)
+                sumdVj_diX = sumdVj_diX + dVj_di_Matrix(i,1);
+                sumdVj_diY = sumdVj_diY + dVj_di_Matrix(i,2);
+            end
+            
+            %w = obj.w0 + mu * sign(obj.w0) * sign(sumdVj_diX * cT + sumdVj_diY * sT); 
+            % Try sigmoid function here - changeable epsilon
+            epsSigmoid = 5;
+            wOut = obj.wOrbit + 1 * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
             obj.w = wOut;
+        end
+        
+        function setAngularVel(obj, w)
+            obj.w = w;
         end
         
         function [V] = computeCurrentV(obj)
