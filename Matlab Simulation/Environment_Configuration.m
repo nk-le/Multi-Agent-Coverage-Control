@@ -9,9 +9,9 @@
 
 offset = 20;
 maxX = 100;
-maxY = 200;
+maxY = 150;
 global nAgent;
-nAgent = 3;
+nAgent = 6;
 
 VREP = 0;
 TRIANGLE = 1;
@@ -46,7 +46,7 @@ visualization = false;
 global botColors;
 botColors = spring(nAgent);
 global dt;
-dt = 0.001;
+dt = 0.005;
 BLFThres = 1;
 rng(4);
 

@@ -437,6 +437,35 @@ classdef Class_Controller_Khanh < handle
             obj.agent.angleVelocity = w;          
         end
         
+        function [w] = computeLFadvanced(obj, botID, mu)
+            global neighborInfo;
+            %Update State
+            obj.updateState();
+            
+            % Determine Output
+            v = obj.vConst;             
+            cT = cos(obj.Theta);
+            sT = sin(obj.Theta);
+            
+            sumdVj_diX = 0;
+            sumdVj_diY = 0;
+            for i = 1 : size(neighborInfo, 1)
+                % If the considering cell affects us, add it to the
+                % gradient
+                if(neighborInfo(i, botID, 1) == true)
+                    sumdVj_diX = sumdVj_diX + neighborInfo(i,botID,2);
+                    sumdVj_diY = sumdVj_diY + neighborInfo(i,botID,3);
+                end
+            end
+
+            % Try sigmoid function here
+            epsSigmoid = 4;
+            w = obj.w0 + mu * sign(obj.w0) * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
+    
+            obj.agent.translationVelocity = v;
+            obj.agent.angleVelocity = w;          
+        end
+        
     end
 end
 

@@ -68,7 +68,7 @@ classdef Class_Centralized_Controller < handle
         %                               agents
         %
         function [CVTs, outdVMat, adjacentMat] = updateVoronoi(obj, newCoord)
-            obj.vmPose = newCoord;
+            obj.vmPose = newCoord(:,1:2);
             % The used methods are developed by Aaron_Becker
             [obj.v,obj.c]= Function_VoronoiBounded(newCoord(:,1), newCoord(:,2), obj.boundaries);
             % Compute the new setpoint for each agent
@@ -82,7 +82,7 @@ classdef Class_Centralized_Controller < handle
                 end
             end    
             [obj.CVTpartialDerivativeMat, obj.adjacentMat] = ComputeVoronoiProperty(obj.setPoint, obj.v, obj.c);
-            outdVMat = computeLyapunovDerivative();
+            outdVMat = obj.computeLyapunovDerivative();
            
             % Return 
             CVTs = obj.setPoint;
@@ -113,7 +113,8 @@ classdef Class_Centralized_Controller < handle
             %% Coverage update - Voronoi partitions and CVTs
             % Compute the new setpoint for each agent adn determine the
             % current neighbor matrix
-            [~ , ~] = obj.updateVoronoi(newVMCoord);
+            global neighborInfo;
+            [~, neighborInfo, ~] = obj.updateVoronoi(newVMCoord);
            
             % Compute Lyapunov function and the gradient
             newV = zeros(obj.nAgents, 1);
@@ -156,16 +157,17 @@ classdef Class_Centralized_Controller < handle
             % CVTCoord      : CVT information of each agent
             % adjacentList  : 
             for thisCell = 1: obj.nAgents
-                % One shot computation 
+                %% One shot computation for each agent
                 Q = eye(2);
-                Ci = obj.setPoint(thisCell,:);
-                zi = obj.vmPose(thisCell, :);
+                Ci = obj.setPoint(thisCell,:)';
+                zi = obj.vmPose(thisCell, :)';
                 sumHj = 0;
                 sum_aj_HjSquared = 0;
                 for j = 1: size(obj.boundariesCoeff)
-                    hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1) * zi(1) + obj.boundariesCoeff(j,2) * z(2))); 
+                    tol = 10;
+                    hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1) * zi(1) + obj.boundariesCoeff(j,2) * zi(2) + tol)); 
                     sumHj = sumHj + 1/hj;
-                    sum_aj_HjSquared = sum_aj_HjSquared + [obj.boundariesCoeff(j,1), obj.boundariesCoeff(j,2)] / hj^2 / 2; 
+                    sum_aj_HjSquared = sum_aj_HjSquared + [obj.boundariesCoeff(j,1); obj.boundariesCoeff(j,2)] / hj^2 / 2; 
                 end
                 Q_zDiff_hj = Q * (zi - Ci) / sumHj;
                  
@@ -174,21 +176,19 @@ classdef Class_Centralized_Controller < handle
                            obj.CVTpartialDerivativeMat(thisCell, thisCell, 4), obj.CVTpartialDerivativeMat(thisCell, thisCell, 5)];
                 
                 dVidi = (eye(2) - dCi_dzi')*Q_zDiff_hj + sum_aj_HjSquared;
+                outdVMat(thisCell, thisCell, 1) = true;   
                 outdVMat(thisCell, thisCell, 2) = dVidi(1);    % dVi_dzix 
                 outdVMat(thisCell, thisCell, 3) = dVidi(2);    % dVi_dziy 
-                   
                 %% Scan over the adjacent list and assign the information
                 flagAdj =  obj.adjacentMat(thisCell,:,1);
                 thisAdjList = find(flagAdj);
                 for i = 1: numel(thisAdjList)
                     adjIndex = thisAdjList(i);
-                    % Compute these term once to save computation cost
-                 
                     dCi_dzj = [obj.CVTpartialDerivativeMat(thisCell, adjIndex, 2), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 3);
                                obj.CVTpartialDerivativeMat(thisCell, adjIndex, 4), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 5)];
-                     
                     dVidj = -dCi_dzj' * Q_zDiff_hj;
                     % Assign the new value
+                    outdVMat(thisCell, adjIndex, 1) = true;
                     outdVMat(thisCell, adjIndex, 2) = dVidj(1);       % dVi_dzjx 
                     outdVMat(thisCell, adjIndex, 3) = dVidj(2);       % dVi_dzjy
                 end
