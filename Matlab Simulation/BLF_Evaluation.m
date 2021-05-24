@@ -1,4 +1,4 @@
-global botColors;
+botColors = cool(nAgent);
 len = logger.curCnt - 1;
 startId = 5;
 xAxis = startId:len;
@@ -12,7 +12,7 @@ for i = 1:nAgent
     V(xAxis) = V(xAxis) + logger.V_BLF(i,xAxis);
 end
 plot(xAxis, V(xAxis), '-r', 'LineWidth',4);
-ylim([0, 500]);
+ylim([0, 100000]);
 xlim([startId, len]);
 xlabel("Iteration");
 ylabel("V_k");

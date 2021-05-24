@@ -8,6 +8,9 @@ vmY = logger.PoseVM(:,2,:);
 poseX =  logger.PoseAgent(:,1,:);
 poseY =  logger.PoseAgent(:,2,:);
 poseTheta =  logger.PoseAgent(:,3,:);
+bndVertexes = logger.bndVertexes;
+
+
 
 poseInit = zeros(3, nAgent);
 env((1:nAgent), poseInit);

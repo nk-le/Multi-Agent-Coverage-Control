@@ -10,7 +10,7 @@ function [outList, adjacentList] = ComputeVoronoiProperty(pointCoord, CVTCoord, 
     % CVTCoord      : CVT information of each agent
     % adjacentList  : 
     for thisCell = 1:n
-        thisCVT = CVTCoord(thisCell, :);
+        thisCoord = pointCoord(thisCell, :);
         verThisCell = verPtr{thisCell}(1:end-1);
         coordVertexX = verList(verThisCell,1);
         coordVertexY = verList(verThisCell,2);
@@ -23,14 +23,14 @@ function [outList, adjacentList] = ComputeVoronoiProperty(pointCoord, CVTCoord, 
         ownParitialDerivative = zeros(2,2);
         for i = 1: numel(thisAdjList)
             adjIndex = thisAdjList(i);
-            curAdjCoord = CVTCoord(adjIndex, :);
+            curAdjCoord = pointCoord(adjIndex, :);
             commonVertex1 = [adjacentList(thisCell, adjIndex, 6), adjacentList(thisCell, adjIndex, 7)];
             commonVertex2 = [adjacentList(thisCell, adjIndex, 8), adjacentList(thisCell, adjIndex, 9)];
             % Debugging
             %if(1)
             %    plot([commonVertex1(1) commonVertex2(1)] , [commonVertex1(2) commonVertex2(2)], 'Color', cellColors(thisCell,:));
             %end
-            [tmpdCidZi, adjacentPartialDerivative] = ComputePartialDerivativeCVT(thisCVT, curAdjCoord, commonVertex1, commonVertex2, mOmegai, denseXi, denseYi);
+            [tmpdCidZi, adjacentPartialDerivative] = ComputePartialDerivativeCVT(thisCoord, curAdjCoord, commonVertex1, commonVertex2, mOmegai, denseXi, denseYi);
             ownParitialDerivative = ownParitialDerivative + tmpdCidZi;
             % Update the desired information
             outList(thisCell, adjIndex, 1) = true; % Is neighbor ?

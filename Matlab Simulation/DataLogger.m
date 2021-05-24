@@ -11,7 +11,8 @@ classdef DataLogger < handle
         ControlOutput 
         CVT
         V_BLF 
-        V_BLF_Den 
+        V_BLF_Den
+        bndVertexes
     end
     
     methods

@@ -1,8 +1,8 @@
 function [nAgent, vConstList, wOrbitList, bndVertexes, bndCoeff, startPose, visualizationOn, maxIter] = Config()
     %% Simulation configuration
     global dt;                  % Global simulation time to avoid undefined behaviour    
-    dt = 0.005;
-    maxIter = 50000;            % Maximum iteration of simulation
+    dt = 0.01;
+    maxIter = 10000;            % Maximum iteration of simulation
 
     %% SIMULATION CONFIGURATION
     rng(4);
@@ -20,8 +20,8 @@ function [nAgent, vConstList, wOrbitList, bndVertexes, bndCoeff, startPose, visu
    
     %% Region Config - Shape of the coverage region
     % Adjust the range to varying the region with the same shape
-    maxX = 100;
-    maxY = 200;
+    maxX = 1000;
+    maxY = 2000;
     % Adjust the edges of the coverage region. The using one is specific
     % for the rectangle shape
     bndVertexes = [0, 0; 0,maxY; maxX,maxY; maxX, 0; 0, 0];

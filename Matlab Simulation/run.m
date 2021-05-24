@@ -5,6 +5,7 @@
 % Instance of logger for data post processing
 global logger;
 logger = DataLogger(nAgent, maxIter);
+logger.bndVertexes = bndVertexes;
 
 %% Centralized Controller
 masterCom = Centralized_Controller(nAgent, bndCoeff, bndVertexes, startPose, vConstList, wOrbitList);
@@ -29,10 +30,10 @@ for iteration = 1: maxIter
     if(visualizationOn)
         env((1:nAgent), newPose');
     end
-
+    
     % Displaying for debugging
     % fprintf('Iter: %d Lyp: %f \n',iteration,outLypCost);
-    if(mod(iteration, 100) == 0)
+    if(mod(iteration, 10) == 0)
         fprintf('Iter: %d Lyp: %f \n',iteration,outLypCost);
     end
     

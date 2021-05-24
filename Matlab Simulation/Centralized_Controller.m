@@ -150,14 +150,14 @@ classdef Centralized_Controller < handle
             % CVTCoord      : CVT information of each agent
             % adjacentList  : 
             for thisCell = 1: obj.nAgent
-                %% One shot computation for each agent
+                %% One shot computation before scanning over the adjacent matrix
                 Q = eye(2);
                 Ci = obj.CurPoseCVT(thisCell,:)';
                 zi = obj.CurPoseVM(thisCell, :)';
                 sumHj = 0;
                 sum_aj_HjSquared = 0;
                 for j = 1: size(obj.boundariesCoeff)
-                    tol = 2; % Tolerance to relax the state constraint
+                    tol = 0.1; % Tolerance to relax the state constraint
                     hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1)*zi(1) + obj.boundariesCoeff(j,2)*zi(2) + tol)); 
                     sumHj = sumHj + 1/hj;
                     sum_aj_HjSquared = sum_aj_HjSquared + [obj.boundariesCoeff(j,1); obj.boundariesCoeff(j,2)] / hj^2 / 2; 
@@ -168,18 +168,19 @@ classdef Centralized_Controller < handle
                 dCi_dzi = [obj.CVTpartialDerivativeMat(thisCell, thisCell, 2), obj.CVTpartialDerivativeMat(thisCell, thisCell, 3);
                            obj.CVTpartialDerivativeMat(thisCell, thisCell, 4), obj.CVTpartialDerivativeMat(thisCell, thisCell, 5)];
                 
-                dVidi = (eye(2) - dCi_dzi')*Q_zDiff_hj + sum_aj_HjSquared;
+                dVidi = (eye(2) - dCi_dzi')*Q_zDiff_hj + sum_aj_HjSquared * (zi - Ci)' * Q * (zi - Ci);
                 outdVMat(thisCell, thisCell, 1) = true;   
                 outdVMat(thisCell, thisCell, 2) = dVidi(1);    % dVi_dzix 
                 outdVMat(thisCell, thisCell, 3) = dVidi(2);    % dVi_dziy 
+                
                 %% Scan over the adjacent list and compute the corresponding partial derivative
                 flagAdj =  obj.adjacentMat(thisCell,:,1);
                 thisAdjList = find(flagAdj);
-                for i = 1: numel(thisAdjList)
-                    adjIndex = thisAdjList(i);
-                    dCi_dzj = [obj.CVTpartialDerivativeMat(thisCell, adjIndex, 2), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 3);
+                for nextAdj = 1: numel(thisAdjList)
+                    adjIndex = thisAdjList(nextAdj);
+                    dCi_dzk = [obj.CVTpartialDerivativeMat(thisCell, adjIndex, 2), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 3);
                                obj.CVTpartialDerivativeMat(thisCell, adjIndex, 4), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 5)];
-                    dVidj = -dCi_dzj' * Q_zDiff_hj;
+                    dVidj = -dCi_dzk' * Q_zDiff_hj;
                     % Assign the new adjacent partial derivative
                     outdVMat(thisCell, adjIndex, 1) = true;
                     outdVMat(thisCell, adjIndex, 2) = dVidj(1);       % dVi_dzjx 
@@ -221,7 +222,7 @@ classdef Centralized_Controller < handle
                     end
                 end      
                 % Compute the control input
-                epsSigmoid = 6;
+                epsSigmoid = 1;
                 mu = 1/w0; % Control gain %% ADJUST THE CONTROL GAIN HERE
                 w = w0 + mu * w0 * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
                 % Logging
