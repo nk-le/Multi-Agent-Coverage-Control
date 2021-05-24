@@ -1,8 +1,12 @@
-function [outList, adjacentList] = ComputeVoronoiProperty(CVTCoord, verList, verPtr)
+function [outList, adjacentList] = ComputeVoronoiProperty(trueCoord, CVTCoord, verList, verPtr)
     n = numel(verPtr);
     outList = zeros(n, n, 5); % Checkflag - dCix/dzjx - dCix/dzjy - dCiy/dzjx - dCiy/dzjy 
     [adjacentList] = computeAdjacentList(CVTCoord, verList, verPtr);
-    
+    if(1)
+        global cellColors;
+        cellColors = summer(n);
+        [ax] = Plot_Cell(trueCoord, CVTCoord, verList, verPtr);
+    end
     % CVTCoord      : CVT information of each agent
     % adjacentList  : 
     for thisCell = 1:n
@@ -22,6 +26,10 @@ function [outList, adjacentList] = ComputeVoronoiProperty(CVTCoord, verList, ver
             curAdjCoord = CVTCoord(adjIndex, :);
             commonVertex1 = [adjacentList(thisCell, adjIndex, 6), adjacentList(thisCell, adjIndex, 7)];
             commonVertex2 = [adjacentList(thisCell, adjIndex, 8), adjacentList(thisCell, adjIndex, 9)];
+            % Debugging
+            %if(1)
+            %    plot([commonVertex1(1) commonVertex2(1)] , [commonVertex1(2) commonVertex2(2)], 'Color', cellColors(thisCell,:));
+            %end
             [tmpdCidZi, adjacentPartialDerivative] = ComputePartialDerivativeCVT(thisCVT, curAdjCoord, commonVertex1, commonVertex2, mOmegai, denseXi, denseYi);
             ownParitialDerivative = ownParitialDerivative + tmpdCidZi;
             % Update the desired information
@@ -84,16 +92,16 @@ function [dCi_dzi_AdjacentJ, dCi_dzj] = ComputePartialDerivativeCVT(thisPos, tha
     % Temporary save the vertexes of the adjacent boundary. Boundary line is
     % defined by 2 points, we use the "start" and "end" notation for the
     % integration
-    startVx     = vertex1(1);
-    startVy     = vertex1(2);
+    x1     = vertex1(1);
+    y1     = vertex1(2);
     
-    endVx       = vertex2(1);
-    endVy       = vertex2(2);
+    x2       = vertex2(1);
+    y2       = vertex2(2);
     % 2 cases to determine the line y = ax + b
     dsIsdy = 0;
-    if(startVx ~= endVx)
-       a = (endVy - startVy) / (endVx - startVx); 
-       b = startVy - a * startVx;
+    if(x1 ~= x2)
+       a = (y2 - y1) / (x2 - x1); 
+       b = y1 - a * x1;
     else       
        dsIsdy = 1;
     end
@@ -102,15 +110,15 @@ function [dCi_dzi_AdjacentJ, dCi_dzj] = ComputePartialDerivativeCVT(thisPos, tha
     dZiZj = norm(thisPos - thatPos);
 
     % Partial derivative computation
-    dCix_dzjx = (integral(@(x) dCix_dzjx_func(x,a,b,zjx,zix), startVx, endVx) / mVi  -  integral(@(x)gradZjOfQ_intFunc(x    ,a,b,zjx,zix), startVx, endVx) * denseViX / mVi ^ 2) / dZiZj;
-    dCix_dzjy = (integral(@(x) dCix_dzjy_func(x,a,b,zjy,ziy), startVx, endVx) / mVi  -  integral(@(x)gradZjOfQ_intFunc(a*x+b,a,b,zjy,ziy), startVx, endVx) * denseViY / mVi ^ 2) / dZiZj;
-    dCiy_dzjx = (integral(@(x) dCiy_dzjx_func(x,a,b,zjx,zix), startVx, endVx) / mVi  -  integral(@(x)gradZjOfQ_intFunc(x    ,a,b,zjx,zix), startVx, endVx) * denseViX / mVi ^ 2) / dZiZj;
-    dCiy_dzjy = (integral(@(x) dCiy_dzjy_func(x,a,b,zjy,ziy), startVx, endVx) / mVi  -  integral(@(x)gradZjOfQ_intFunc(a*x+b,a,b,zjy,ziy), startVx, endVx) * denseViY / mVi ^ 2) / dZiZj;
+    dCix_dzjx = (integral(@(x) dCix_dzjx_func(x,a,b,zjx,zix), x1, x2) / mVi  -  integral(@(x)gradZjOfQ_intFunc(x    ,a,b,zjx,zix), x1, x2) * denseViX / mVi ^ 2) / dZiZj;
+    dCix_dzjy = (integral(@(x) dCix_dzjy_func(x,a,b,zjy,ziy), x1, x2) / mVi  -  integral(@(x)gradZjOfQ_intFunc(a*x+b,a,b,zjy,ziy), x1, x2) * denseViY / mVi ^ 2) / dZiZj;
+    dCiy_dzjx = (integral(@(x) dCiy_dzjx_func(x,a,b,zjx,zix), x1, x2) / mVi  -  integral(@(x)gradZjOfQ_intFunc(x    ,a,b,zjx,zix), x1, x2) * denseViX / mVi ^ 2) / dZiZj;
+    dCiy_dzjy = (integral(@(x) dCiy_dzjy_func(x,a,b,zjy,ziy), x1, x2) / mVi  -  integral(@(x)gradZjOfQ_intFunc(a*x+b,a,b,zjy,ziy), x1, x2) * denseViY / mVi ^ 2) / dZiZj;
 
-    dCix_dzix = (integral(@(x) dCix_dzix_func(x,a,b,zjx,zix), startVx, endVx) / mVi  -  integral(@(x)gradZiOfQ_intFunc(x    ,a,b,zjx,zix), startVx, endVx) * denseViX / mVi ^ 2) / dZiZj;
-    dCix_dziy = (integral(@(x) dCix_dziy_func(x,a,b,zjy,ziy), startVx, endVx) / mVi  -  integral(@(x)gradZiOfQ_intFunc(a*x+b,a,b,zjy,ziy), startVx, endVx) * denseViY / mVi ^ 2) / dZiZj;
-    dCiy_dzix = (integral(@(x) dCiy_dzix_func(x,a,b,zjx,zix), startVx, endVx) / mVi  -  integral(@(x)gradZiOfQ_intFunc(x    ,a,b,zjx,zix), startVx, endVx) * denseViX / mVi ^ 2) / dZiZj;
-    dCiy_dziy = (integral(@(x) dCiy_dziy_func(x,a,b,zjy,ziy), startVx, endVx) / mVi  -  integral(@(x)gradZiOfQ_intFunc(a*x+b,a,b,zjy,ziy), startVx, endVx) * denseViY / mVi ^ 2) / dZiZj; 
+    dCix_dzix = (integral(@(x) dCix_dzix_func(x,a,b,zjx,zix), x1, x2) / mVi  -  integral(@(x)gradZiOfQ_intFunc(x    ,a,b,zjx,zix), x1, x2) * denseViX / mVi ^ 2) / dZiZj;
+    dCix_dziy = (integral(@(x) dCix_dziy_func(x,a,b,zjy,ziy), x1, x2) / mVi  -  integral(@(x)gradZiOfQ_intFunc(a*x+b,a,b,zjy,ziy), x1, x2) * denseViY / mVi ^ 2) / dZiZj;
+    dCiy_dzix = (integral(@(x) dCiy_dzix_func(x,a,b,zjx,zix), x1, x2) / mVi  -  integral(@(x)gradZiOfQ_intFunc(x    ,a,b,zjx,zix), x1, x2) * denseViX / mVi ^ 2) / dZiZj;
+    dCiy_dziy = (integral(@(x) dCiy_dziy_func(x,a,b,zjy,ziy), x1, x2) / mVi  -  integral(@(x)gradZiOfQ_intFunc(a*x+b,a,b,zjy,ziy), x1, x2) * denseViY / mVi ^ 2) / dZiZj; 
 
     dCi_dzi_AdjacentJ   = [dCix_dzix, dCix_dziy; dCiy_dzix, dCiy_dziy];
     dCi_dzj             = [dCix_dzjx, dCix_dzjy; dCiy_dzjx, dCiy_dzjy];

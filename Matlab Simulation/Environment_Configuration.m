@@ -44,7 +44,7 @@ flag = 0;
 global visualization;
 visualization = false;
 global botColors;
-botColors = spring(nAgent);
+botColors = winter(nAgent);
 global dt;
 dt = 0.005;
 BLFThres = 1;

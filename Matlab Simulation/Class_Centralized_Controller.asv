@@ -164,7 +164,7 @@ classdef Class_Centralized_Controller < handle
                 sumHj = 0;
                 sum_aj_HjSquared = 0;
                 for j = 1: size(obj.boundariesCoeff)
-                    tol = 2; % Tolerance to relax the state constraint
+                    tol = 2; % Tolerance to relax the state c
                     hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1)*zi(1) + obj.boundariesCoeff(j,2)*zi(2) + tol)); 
                     sumHj = sumHj + 1/hj;
                     sum_aj_HjSquared = sum_aj_HjSquared + [obj.boundariesCoeff(j,1); obj.boundariesCoeff(j,2)] / hj^2 / 2; 
@@ -179,7 +179,7 @@ classdef Class_Centralized_Controller < handle
                 outdVMat(thisCell, thisCell, 1) = true;   
                 outdVMat(thisCell, thisCell, 2) = dVidi(1);    % dVi_dzix 
                 outdVMat(thisCell, thisCell, 3) = dVidi(2);    % dVi_dziy 
-                %% Scan over the adjacent list and compute the corresponding partial derivative
+                %% Scan over the adjacent list and assign the information
                 flagAdj =  obj.adjacentMat(thisCell,:,1);
                 thisAdjList = find(flagAdj);
                 for i = 1: numel(thisAdjList)
@@ -187,7 +187,7 @@ classdef Class_Centralized_Controller < handle
                     dCi_dzj = [obj.CVTpartialDerivativeMat(thisCell, adjIndex, 2), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 3);
                                obj.CVTpartialDerivativeMat(thisCell, adjIndex, 4), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 5)];
                     dVidj = -dCi_dzj' * Q_zDiff_hj;
-                    % Assign the new adjacent partial derivative
+                    % Assign the new value
                     outdVMat(thisCell, adjIndex, 1) = true;
                     outdVMat(thisCell, adjIndex, 2) = dVidj(1);       % dVi_dzjx 
                     outdVMat(thisCell, adjIndex, 3) = dVidj(2);       % dVi_dzjy
