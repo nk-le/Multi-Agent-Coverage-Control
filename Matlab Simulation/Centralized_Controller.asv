@@ -1,15 +1,8 @@
 %% Centralized_Controller
 % Centralized controller for multiple unicycle agents, which contains a
 % list of agent_controller handles to send command to unicycle
-% Brief
-% - The unicycle kinmematic is implmented directly in class
-%  "agent_controller", which is performed by method "move()". Whenever
-%  "agent_controller.move()" method is called, the unicycle simulates the next time step position
-%   according to the commaned control input. 
-% - Centralized_controllers update the desired control input to
-%   agent_controller by calling "agent_controller.setAngularVel()"
-%   The work flow of centralized_controller is described further in the
-%   method "loop(obj)"
+% The unicycle dynamic  
+%
 
 classdef Centralized_Controller < handle
     properties
@@ -35,10 +28,12 @@ classdef Centralized_Controller < handle
         CurAngularVel
         
         %% Tmp
+        dVk_dzj
         lastPoseVM 
         lastPoseCVT 
         LyapunovCost 
         lastV
+        BLFden 
     end
     
     properties (Access = private)
@@ -61,11 +56,13 @@ classdef Centralized_Controller < handle
             obj.adjacentMat = zeros(obj.nAgent, obj.nAgent);
             obj.CurAngularVel = zeros(obj.nAgent, 1);
             
-            % record of last timestamp
+            % Reconsider this
+            obj.dVk_dzj = zeros(nAgent, nAgent,2);
             obj.lastPoseVM = zeros(nAgent, 3);
             obj.lastPoseCVT = zeros(nAgent, 2);
             obj.lastV = zeros(nAgent,1);
             obj.LyapunovCost = zeros(nAgent, 1);
+            obj.BLFden = zeros(nAgent, 1);
             
             % Init list of controller
             obj.agentList = Agent_Controller.empty(obj.nAgent, 0);
@@ -81,16 +78,41 @@ classdef Centralized_Controller < handle
             % TBD
         end
         
-        %% Methods related to coverage control       
+        %% Methods related to coverage control
         % This method updates all neccessary states of the agents and
-        % [@newPoseVM]  Current coordinates of virtual center of all agents
-        % [@out]:  
-        %       - infoOut           --> total required coverage
-        %                           information, which is ...
-        %                           ...
-        %                           ...
-        %       - LypOut            --> Current Lyapunov cost
-        %       - CVTsOut           --> List of new centroids asnew target for each agent
+        % [@newCoord]  Current coordinates of virtual center of all agents
+        % [@out]:
+        %
+        %       - List of centroid  --> new target for each agent
+        %       - Adjacent matrix   --> information about the adjacent
+        %                               agents
+        %
+%         function [CVTs, adjacentMat] = updateVoronoi(obj, newCoord)
+%             % The used methods are developed by Aaron_Becker
+%             [obj.v,obj.c]= Function_VoronoiBounded(newCoord(:,1), newCoord(:,2), obj.boundariesVertexes);
+%             % Compute the new setpoint for each agent
+%             for i = 1:obj.nAgent
+%                 [cx,cy] = Function_PolyCentroid(obj.v(obj.c{i},1),obj.v(obj.c{i},2));
+%                 cx = min(obj.xrange,max(0, cx));
+%                 cy = min(obj.yrange,max(0, cy));
+%                 if ~isnan(cx) && inpolygon(cx,cy, obj.boundariesVertexes(:,1), obj.boundariesVertexes(:,2))
+%                     obj.CurPoseCVT(i,1) = cx;  %don't update if goal is outside the polygon
+%                     obj.CurPoseCVT(i,2) = cy;
+%                 end
+%             end    
+%             obj.adjacentMat = getAdjacentList(obj.v ,obj.c, obj.CurPoseCVT);
+%             % Return 
+%             CVTs = obj.CurPoseCVT;
+%             adjacentMat = obj.adjacentMat;
+%         end
+        
+        % This method updates all neccessary states of the agents and
+        % [@vmPos]  Current coordinates of virtual center of all agents
+        % [@out]:    
+        %       - List of centroid  --> new target for each agent
+        %       - Adjacent matrix   --> information about the adjacent
+        %                               agents
+        %
         function [infoOut, LypOut, CVTsOut] = updateCoverage(obj, newPoseVM)
             % Save all the current VM
             obj.CurPoseVM = newPoseVM;          
@@ -111,12 +133,12 @@ classdef Centralized_Controller < handle
             [obj.CVTpartialDerivativeMat, obj.adjacentMat] = ComputeVoronoiProperty(obj.CurPoseVM, obj.CurPoseCVT, obj.v, obj.c);
             obj.CoverageStateInfo = obj.computeLyapunovDerivative();
          
-            %% This will be updated - Update Lyapunov function 
+            % Update Lyapunov function 
             newV = zeros(obj.nAgent, 1);
             for k = 1:obj.nAgent
                 zk = obj.CurPoseVM(k,:);
                 ck = obj.CurPoseCVT(k,:);
-                [newV(k)] = obj.computeVLyp(zk, ck);
+                [newV(k), obj.BLFden(k)] = obj.computeV(zk, ck);
             end   
             obj.lastPoseVM = obj.CurPoseVM;
             obj.lastPoseCVT = obj.CurPoseCVT;
@@ -173,7 +195,7 @@ classdef Centralized_Controller < handle
             end 
         end
         
-        function [Vk] = computeVLyp(obj, Zk, Ck)
+        function [Vk, den] = computeV(obj, Zk, Ck)
             tol = 0.001;
             a = obj.boundariesCoeff(:, 1:2);
             b = obj.boundariesCoeff(:, 3);
@@ -182,9 +204,7 @@ classdef Centralized_Controller < handle
             for j = 1 : m
                 Vk = Vk +  1 / ( b(j) - (a(j,1) * Zk(1) + a(j,2) * Zk(2) + tol)) / 2 ;
             end
-            if(Vk < 0)
-                error("State constraint is violated. Check inital position of virtual centers or the control algorithm");
-            end
+            den = Vk;
             Vk =  (norm(Zk - Ck))^2 * Vk;
         end
         
@@ -219,6 +239,9 @@ classdef Centralized_Controller < handle
             end
         end
 
+        
+        
+        
         %% MAIN
         % Main loop of the simulation 
         % [@in]  --
@@ -242,9 +265,9 @@ classdef Centralized_Controller < handle
             end
             
             %% Update the broadcasted information
-            [obj.CoverageStateInfo, curLypCost, newCVTs] = obj.updateCoverage(newPoseVM);
+            [CoverageStateInfo, curLypCost, newCVTs] = obj.updateCoverage(newPoseVM);
             global globalInformation;
-            globalInformation = obj.CoverageStateInfo;
+            globalInformation = CoverageStateInfo;
             
             %% Update the control policy for each agent
 %% DISTRIBUTED CONTROLL POLICY

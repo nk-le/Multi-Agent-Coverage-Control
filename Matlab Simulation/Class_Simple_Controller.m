@@ -2,7 +2,7 @@
 % Input: Error of Position (Reference and feedback) of Bot
 % Output: Angular Velocity of Left and Right Wheel
 
-classdef Class_Controller_Khanh < handle
+classdef Class_Simple_Controller < handle
     properties
         agent % Carrier of agent 
         
@@ -48,7 +48,7 @@ classdef Class_Controller_Khanh < handle
         
     methods
         % Init Controller
-        function obj = Class_Controller_Khanh(gamma, w0, vConst, boundaries, bot)
+        function obj = Class_Simple_Controller(gamma, w0, vConst, boundaries, bot)
             obj.agent = bot; % Now controller will carry agent Handler
             obj.gamma = gamma;
             obj.w0 = w0;
@@ -403,69 +403,7 @@ classdef Class_Controller_Khanh < handle
             obj.agent.translationVelocity = v;
             obj.agent.angleVelocity = w;   
         end
-        
-        function [w] = computeBLFoutput(obj, botID, mu)
-            global dVi_dzMat;
-            %Update State
-            obj.updateState();
-            
-            % Determine Output
-            v = obj.vConst;             
-            cT = cos(obj.Theta);
-            sT = sin(obj.Theta);
-            
-            dVj_di_Matrix = dVi_dzMat(:,botID,:);
-            sumdVj_diX = 0;
-            sumdVj_diY = 0;
-            for i = 1 : size(dVj_di_Matrix, 1)
-                sumdVj_diX = sumdVj_diX + dVj_di_Matrix(i,1);
-                sumdVj_diY = sumdVj_diY + dVj_di_Matrix(i,2);
-            end
-            
-            isFeasible = norm(sumdVj_diX * cT + sumdVj_diY * sT) ~= 0;
-            %w = obj.w0 + mu * sign(obj.w0) * sign(sumdVj_diX * cT + sumdVj_diY * sT); 
-            % Try sigmoid function here
-            epsSigmoid = 4;
-            w = obj.w0 + mu * sign(obj.w0) * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
-            
-            %if(isFeasible == true)
-            %    w = obj.w0 + mu * sign(obj.w0) * (sumdVj_diX * cT + sumdVj_diY * sT) / norm(sumdVj_diX * cT + sumdVj_diY * sT); 
-            %else 
-            %    w = obj.w0;
-            %end
-            obj.agent.translationVelocity = v;
-            obj.agent.angleVelocity = w;          
-        end
-        
-        function [w] = computeLFadvanced(obj, botID, mu)
-            global neighborInfo;
-            %Update State
-            obj.updateState();
-            
-            % Determine Output
-            v = obj.vConst;             
-            cT = cos(obj.Theta);
-            sT = sin(obj.Theta);
-            
-            sumdVj_diX = 0;
-            sumdVj_diY = 0;
-            for i = 1 : size(neighborInfo, 1)
-                % If the considering cell affects us, add it to the
-                % gradient
-                if(neighborInfo(i, botID, 1) == true)
-                    sumdVj_diX = sumdVj_diX + neighborInfo(i,botID,2);
-                    sumdVj_diY = sumdVj_diY + neighborInfo(i,botID,3);
-                end
-            end
-
-            % Try sigmoid function here
-            epsSigmoid = 4;
-            w = obj.w0 + mu * sign(obj.w0) * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
-    
-            obj.agent.translationVelocity = v;
-            obj.agent.angleVelocity = w;          
-        end
-        
+       
     end
 end
 

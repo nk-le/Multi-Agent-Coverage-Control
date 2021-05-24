@@ -1,3 +1,6 @@
+%% Agent_Controller - distributed controller for unicycle agent
+%
+
 classdef Agent_Controller < handle
     %AGENT_CONTROLLER Summary of this class goes here
     %   Detailed explanation goes here
@@ -135,6 +138,9 @@ classdef Agent_Controller < handle
         function [newPose] = move(obj) % Unicycle Dynamic
             % Universal time step
             global dt;
+            if(dt == 0)
+               error("Simulation time step dt was not assigned"); 
+            end
             newPose = zeros(3,1); % [X Y Theta]
             newPose(1) = obj.curPose(1) + dt * (obj.vConst * cos(obj.curPose(3)));
             newPose(2) = obj.curPose(2) + dt * (obj.vConst * sin(obj.curPose(3)));

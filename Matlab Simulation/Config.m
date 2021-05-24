@@ -15,13 +15,11 @@ function [nAgent, vConstList, wOrbitList, bndVertexes, bndCoeff, startPose, visu
     vConstList = 30 .* ones(1,nAgent);
     wOrbitList = 1.2 .* ones(1,nAgent);
     wMax = 3.2;
-    K1 = wMax - wOrbitList;
-    K2 = 1;
    
     %% Region Config - Shape of the coverage region
     % Adjust the range to varying the region with the same shape
-    maxX = 1000;
-    maxY = 2000;
+    maxX = 800;
+    maxY = 600;
     % Adjust the edges of the coverage region. The using one is specific
     % for the rectangle shape
     bndVertexes = [0, 0; 0,maxY; maxX,maxY; maxX, 0; 0, 0];
@@ -35,7 +33,7 @@ function [nAgent, vConstList, wOrbitList, bndVertexes, bndCoeff, startPose, visu
     %% Initial state - Initial Poses of agent.
     % Feel free to modify the [startX] and [startY]
     % The following example deploys a group of agents around the coord          
-    % [50,50] initally
+    % [80,50] initally
     centerCoord = [50, 50];    % deploy all agents near this coord
     rXY = 10;                   % agents formualates a circle at the beginning
     startX = centerCoord(1) + rXY * cos(0 : 2*pi/nAgent : 2*pi);
