@@ -11,7 +11,7 @@ offset = 20;
 maxX = 100;
 maxY = 150;
 global nAgent;
-nAgent = 6;
+nAgent = 8;
 
 VREP = 0;
 TRIANGLE = 1;
@@ -54,8 +54,8 @@ randLow = 2*pi;
 randUp  = 0;
 startTheta = randLow + rand(nAgent,2)*(randUp-randLow);
 
-centerX = 50;
-centerY = 50;
+centerX = 15;
+centerY = 15;
 rXY = 1;
 
 startX = centerX + rXY * cos(0 : 2*pi/nAgent : 2*pi);
@@ -68,8 +68,11 @@ com = Class_Centralized_Controller(nAgent, worldVertexes(1:end-1,:), xrange, yra
 com.boundariesCoeff = [A(:,1), A(:,2), b'];
 
 % BOT & CONTROLLER
-v =  linspace(50, 80, nAgent) .* ones(1,nAgent);
+v =  linspace(10, 16, nAgent) .* ones(1,nAgent);
 w0 = linspace(1, 1.6, nAgent) .* ones(1,nAgent);
+
+v =  10 .* ones(1,nAgent);
+w0 = 1.6 .* ones(1,nAgent);
 wMax = 3.2;
 K1 = 3.2 - w0;
 K2 = 1;

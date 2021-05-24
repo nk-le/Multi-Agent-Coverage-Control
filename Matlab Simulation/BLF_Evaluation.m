@@ -7,7 +7,7 @@ V = zeros(1, len);
 % BLF
 figure(1)
 hold on; grid on;
-for i = 1:amountAgent
+for i = 1:nAgent
     plot(xAxis, logger.V_BLF(i,xAxis), 'Color', botColors(i,:), 'LineWidth',4);
     V(xAxis) = V(xAxis) + logger.V_BLF(i,xAxis);
 end
@@ -23,7 +23,7 @@ set(gca,'FontSize',18)
 % Control input
 figure(2)
 hold on; grid on;
-for i = 1:amountAgent
+for i = 1:nAgent
     plot(xAxis, logger.ControlOutput(i,xAxis), 'Color', botColors(i,:), 'LineWidth',2);
 end
 plot(xAxis, -wMax*ones(1, numel(xAxis)), '-r', 'LineWidth',4);
@@ -42,9 +42,9 @@ hold on; grid on;
 for i = 1: size(worldVertexes,1)-1                
    plot([worldVertexes(i,1) worldVertexes(i+1,1)],[worldVertexes(i,2) worldVertexes(i+1,2)],'Color','r','LineWidth',4);                    
 end
-for i = 1:amountAgent
-   dataVMX = zeros(amountAgent, loopCnt);
-   dataVMY = zeros(amountAgent, loopCnt);
+for i = 1:nAgent
+   dataVMX = zeros(nAgent, loopCnt);
+   dataVMY = zeros(nAgent, loopCnt);
    
    dataVMX(i,xAxis) =  logger.PoseVM(i,1,xAxis);
    dataVMY(i,xAxis) =  logger.PoseVM(i,2,xAxis);

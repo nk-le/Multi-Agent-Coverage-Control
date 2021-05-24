@@ -84,7 +84,7 @@ while (loopCnt == 0 || totalV == 0 || totalV > BLFThres)
 
         % Testing new controller here
         % newWk = controller_handle(i).computeBLFoutput(i,kMu(i)); % or kmu(i)
-        newWk = controller_handle(i).computeLFadvanced(i,kMu(i)); % or kmu(i)
+        newWk = controller_handle(i).computeLFadvanced(i,1); % or kmu(i)
         newPos = [bot_handle(i).posX, bot_handle(i).posY, bot_handle(i).theta];
         newVM   = [bot_handle(i).virtualMassX, bot_handle(i).virtualMassY];
         newCVT  = [com.setPoint(i,1), com.setPoint(i,2)];

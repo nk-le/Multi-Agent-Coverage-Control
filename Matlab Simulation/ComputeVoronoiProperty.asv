@@ -177,25 +177,21 @@ function [adjacentList] = computeAdjacentList(centroidPos, vertexes, vertexHandl
                                     % whether it is a different vertex in
                                     % comparison to the saved one
                                     tol = 0.0001;
-                                    isValidVertex =  (abs(vertexes(thisVertexList(l),1)  - adjacentList(thisCVT, nextCVT, 6))+ ...        % Check with the first saved vertex
-                                                abs(vertexes(thisVertexList(l),2)  - adjacentList(thisCVT, nextCVT, 7)) > tol);                 
-                                    if(isValidVertex)
+                                    checkFlag = abs(vertexes(thisVertexList(l),1) - adjacentList(thisCVT, nextCVT, 6))+ ... 
+                                                abs(vertexes(thisVertexList(l),2) - adjacentList(thisCVT, nextCVT, 7)) > tol) | ...
+                                       
+                                    if(abs(vertexes(thisVertexList(l),1) - adjacentList(thisCVT, nextCVT, 6))+ ... 
+                                       abs(vertexes(thisVertexList(l),2) - adjacentList(thisCVT, nextCVT, 7)) > tol)
                                         adjacentList(thisCVT, nextCVT, 8) = vertexes(thisVertexList(l),1); % Second vertex
                                         adjacentList(thisCVT, nextCVT, 9) = vertexes(thisVertexList(l),2); % Second vertex  
+                                    elseif(abs(vertexes(thisVertexList(l),1) - adjacentList(thisCVT, nextCVT, 6))+ ... 
+                                           abs(vertexes(thisVertexList(l),2) - adjacentList(thisCVT, nextCVT, 7)) > tol)
+                                        
                                     else
                                         cnt = cnt - 1; % Keep scanning to ensure they only have 2 common vertexes
                                     end 
                                 elseif cnt >= 3
-                                    % Final check to ensure that exactly 2
-                                    % vertexes can be found
-                                    tol = 0.0001;
-                                    isSavedVertex =     (abs(vertexes(thisVertexList(l),1)  - adjacentList(thisCVT, nextCVT, 6))+ ...        % Check with the first saved vertex
-                                                        abs(vertexes(thisVertexList(l),2)  - adjacentList(thisCVT, nextCVT, 7)) < tol) | ...
-                                                        (abs(vertexes(thisVertexList(l),1)  - adjacentList(thisCVT, nextCVT, 8))+ ...        % Check with the second saved vertex
-                                                        abs(vertexes(thisVertexList(l),2)  - adjacentList(thisCVT, nextCVT, 9)) < tol);
-                                    if(~isSavedVertex) % If this vertex is valid, assert
-                                        error("More than 3 vertexes for 1 common line detected");
-                                    end
+                                    error("More than 3 vertexes for 1 common line detected");
                                 end
                              end
                           end
