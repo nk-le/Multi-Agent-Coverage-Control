@@ -1,5 +1,8 @@
 function [logger] = main()
-    global visualization;
+    %% Simulation configuration    
+    Config
+    global visualisation;
+    global logger;
     global nAgent;
     global dt;
 
@@ -18,9 +21,10 @@ function [logger] = main()
    
     %% Region Config
     offset = 20;
+    % The cooeficient of the convex region that satisfies 
+    % A(j,1)x + A(j,2)y - b(j)
     maxX = 100;
     maxY = 200;
-
     A = [-1 , 0; 1 , 0; 0 , 1; 0 , -1];
     b = [0, maxX, maxY, 0];
     bndCoeff = [A, b'];

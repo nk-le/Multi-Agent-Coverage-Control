@@ -12,7 +12,7 @@ global visualization;
 % DEBUGGER AND LOGGER
 % Creat a data logger to visualize offline, which helps debugging and
 % plotting more convenient. The 
-logger = Class_Logger(nAgent, 50000); 
+logger = DataLogger(nAgent, 50000); 
 
 pose = zeros(3, nAgent);
 poseVM = zeros(nAgent, 3);

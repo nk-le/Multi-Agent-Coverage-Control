@@ -1,4 +1,4 @@
-classdef Class_Logger < handle
+classdef DataLogger < handle
     %CLASS_LOGGER Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -15,7 +15,7 @@ classdef Class_Logger < handle
     end
     
     methods
-        function obj = Class_Logger(amountAgent, maxIter)
+        function obj = DataLogger(amountAgent, maxIter)
             obj.nAgent = amountAgent;
             obj.maxCnt = maxIter;
             obj.curCnt = 0;
@@ -47,6 +47,21 @@ classdef Class_Logger < handle
                 disp('Max CNT already, logging stopped!');
             end
         end
+        
+        function log(obj, newPoseAgent, newPoseVM, newCVT, newW, newV)
+            obj.curCnt = obj.curCnt + 1;
+            if(obj.curCnt <= obj.maxCnt)
+                obj.V_BLF(:, obj.curCnt)            = newV(:);
+                obj.PoseAgent(:, :,obj.curCnt)      = newPoseAgent(:,:);
+                obj.PoseVM(:, :,obj.curCnt)    = newPoseVM(:,:);
+                obj.ControlOutput(:, obj.curCnt)    = newW(:);
+                obj.CVT(:,:, obj.curCnt)       = newCVT(:,:);
+            else 
+                disp('Max CNT already, logging stopped!');
+            end
+        end
+        
+        
     end
 end
 

@@ -19,6 +19,7 @@ classdef Centralized_Controller < handle
         adjacentMat
         CVTpartialDerivativeMat
         CoverageStateInfo % Some information here
+        CurAngularVel
         
         %% Tmp
         dVk_dzj
@@ -47,6 +48,7 @@ classdef Centralized_Controller < handle
             obj.CurPoseCVT = zeros(obj.nAgent, 2);
             obj.CurPoseVM = zeros(obj.nAgent, 2);
             obj.adjacentMat = zeros(obj.nAgent, obj.nAgent);
+            obj.CurAngularVel = zeros(obj.nAgent, 1);
             
             % Reconsider this
             obj.dVk_dzj = zeros(nAgent, nAgent,2);
@@ -222,6 +224,8 @@ classdef Centralized_Controller < handle
                 epsSigmoid = 6;
                 mu = 1/w0; % Control gain %% ADJUST THE CONTROL GAIN HERE
                 w = w0 + mu * w0 * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
+                % Logging
+                obj.CurAngularVel(i) = w;
                 
                 % Set the computed output for this agent
                 agentHandle.setAngularVel(w);  
@@ -272,7 +276,7 @@ classdef Centralized_Controller < handle
             
             %% Final update for the next process
             % ...
-            disp(curLypCost)
+            % disp(curLypCost)
             
             %% Return
             outLypCost = curLypCost;

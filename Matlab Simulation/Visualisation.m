@@ -1,7 +1,6 @@
-len = logger.curCnt;
-
+cellColors = cool(nAgent);    
 env = MultiRobotEnv(nAgent);
-
+iter = logger.curCnt;
 spX = logger.CVT(:,1,:);
 spY = logger.CVT(:,2,:);
 vmX = logger.PoseVM(:,1,:);
@@ -10,17 +9,17 @@ poseX =  logger.PoseAgent(:,1,:);
 poseY =  logger.PoseAgent(:,2,:);
 poseTheta =  logger.PoseAgent(:,3,:);
 
-% for i  = 1:nAgent
-%     pose(:,i) = bot_handle(i).pose;
-% end
 poseInit = zeros(3, nAgent);
 env((1:nAgent), poseInit);
 hold on; grid on; %axis equal
 
 % Plot Boundaries
-for i = 1: size(worldVertexes,1)-1                
-   plot([worldVertexes(i,1) worldVertexes(i+1,1)],[worldVertexes(i,2) worldVertexes(i+1,2)], '-r', 'LineWidth',2);
-end
+% for i = 1: size(bndVertexes,1)-1                
+%    plot([bndVertexes(i,1) bndVertexes(i+1,1)],[bndVertexes(i,2) bndVertexes(i+1,2)], '-r', 'LineWidth',2);
+% end
+xrange = max(bndVertexes(:,1));
+yrange = max(bndVertexes(:,2));
+offset = 20;
 xlim([0 - offset, xrange + offset]);
 ylim([0 - offset, yrange + offset]);
 str =  "Coverage Control of Multi-Unicycle System";
@@ -29,22 +28,15 @@ title(str);
 
 vmPlotHandle = [];
 spPlotHandle = [];
+showColorPlot = true;
 
-% for i = 1:nAgent    
-%    vmHandle =  plot(vmX(i,loopCnt), vmY(i,loopCnt), '-x', 'Color', botColors(i,:), 'LineWidth',2);
-%    spHandle =  plot(spX(i,loopCnt), spY(i,loopCnt), '-o','Color', botColors(i,:), 'LineWidth',2);   
-%    vmPlotHandle = [vmPlotHandle vmHandle];
-%    spPlotHandle = [spPlotHandle spHandle];
-% end
-
-for loopCnt = 1:len    
+for loopCnt = 1:iter    
     if(loopCnt == 1) % Plot only once
             %figure(2);
             %hold on;  grid on;
-            
             % Boundaries
-            for i = 1: size(worldVertexes,1)-1                
-               plot([worldVertexes(i,1) worldVertexes(i+1,1)],[worldVertexes(i,2) worldVertexes(i+1,2)], '-r', 'LineWidth',4);                    
+            for i = 1: size(bndVertexes,1)-1                
+               plot([bndVertexes(i,1) bndVertexes(i+1,1)],[bndVertexes(i,2) bndVertexes(i+1,2)], '-r', 'LineWidth',4);                    
             end   
             % Color Patch
             verCellHandle = zeros(nAgent,1);
@@ -54,8 +46,8 @@ for loopCnt = 1:len
                 spPlotColorHandle = [];
                 for i = 1:nAgent % color according to
                     verCellHandle(i) = patch(spX(1,i),spY(2,i), cellColors(i,:)); % use color i  -- no robot assigned yet
-                    vmHandle =  plot(vmX(i,loopCnt), vmY(i,loopCnt),'x','Color', botColors(i,:), 'LineWidth',2);
-                    spHandle =  plot(spX(i,loopCnt), spY(i,loopCnt), '-o','Color', botColors(i,:), 'LineWidth',2);   
+                    vmHandle =  plot(vmX(i,loopCnt), vmY(i,loopCnt),'x','Color', cellColors(i,:), 'LineWidth',2);
+                    spHandle =  plot(spX(i,loopCnt), spY(i,loopCnt), '-o','Color', cellColors(i,:), 'LineWidth',2);   
                     vmPlotColorHandle = [vmPlotColorHandle vmHandle];
                     spPlotColorHandle = [spPlotColorHandle spHandle];
                 end
