@@ -1,3 +1,5 @@
+%% This function returns ...
+%
 function [outList, adjacentList] = ComputeVoronoiProperty(pointCoord, CVTCoord, verList, verPtr)
     n = numel(verPtr);
     outList = zeros(n, n, 5); % Checkflag - dCix/dzjx - dCix/dzjy - dCiy/dzjx - dCiy/dzjy 
@@ -30,7 +32,7 @@ function [outList, adjacentList] = ComputeVoronoiProperty(pointCoord, CVTCoord, 
             %if(1)
             %    plot([commonVertex1(1) commonVertex2(1)] , [commonVertex1(2) commonVertex2(2)], 'Color', cellColors(thisCell,:));
             %end
-            [tmpdCidZi, adjacentPartialDerivative] = ComputePartialDerivativeCVT(thisCoord, curAdjCoord, commonVertex1, commonVertex2, mOmegai, denseXi, denseYi);
+            [tmpdCidZi, adjacentPartialDerivative] = computePartialDerivativeCVT(thisCoord, curAdjCoord, commonVertex1, commonVertex2, mOmegai, denseXi, denseYi);
             ownParitialDerivative = ownParitialDerivative + tmpdCidZi;
             % Update the desired information
             outList(thisCell, adjIndex, 1) = true; % Is neighbor ?
@@ -65,7 +67,7 @@ function [mOmega, denseX, denseY] = computePartitionMass(coordVertexX, coordVert
 end
 
 %% Compute the partial derivative of CVTs to adjacent CVT
-function [dCi_dzi_AdjacentJ, dCi_dzj] = ComputePartialDerivativeCVT(thisPos, thatPos, vertex1, vertex2, mVi, denseViX, denseViY)
+function [dCi_dzi_AdjacentJ, dCi_dzj] = computePartialDerivativeCVT(thisPos, thatPos, vertex1, vertex2, mVi, denseViX, denseViY)
     %% Function definition for partial derivative
     rho = @(x,y) 1;
     dq_dZj_x_n = @(q, zjXorY, ziXorY) ((zjXorY - ziXorY)/2 - (q - (ziXorY + zjXorY)/2)); 
@@ -219,3 +221,4 @@ function [adjacentList] = computeAdjacentList(centroidPos, vertexes, vertexHandl
          end
     end
 end
+

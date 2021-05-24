@@ -1,3 +1,5 @@
+%%
+%
 % Modelling kinematic of agent
 classdef Class_Mobile_Robot < handle
    properties
@@ -99,8 +101,7 @@ classdef Class_Mobile_Robot < handle
        % 3) myBot perform movement through his dynamic by calulated
        % velocities -> update Position
        % ===>   myBot.move()
-       % 4) Visualization by feeding myBot.pose into Visualizer
-       
+       % 4) Visualization by feeding myBot.pose into Visualizer 
        function obj = updateVelocity(obj, wL,wR)
            [obj.translationVelocity, obj.angleVelocity] = FWK(obj, wL, wR);
        end
