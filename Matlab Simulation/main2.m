@@ -7,7 +7,6 @@ function [logger] = main()
     rng(4);
     nAgent = 3;
     dt = 0.0001;
-
     
     % BOT & CONTROLLER
     vConstList =  linspace(10, 20, nAgent) .* ones(1,nAgent);

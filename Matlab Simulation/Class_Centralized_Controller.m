@@ -153,7 +153,7 @@ classdef Class_Centralized_Controller < handle
         
         %% 
         function outdVMat = computeLyapunovDerivative(obj)
-            outdVMat = zeros(obj.nAgents, obj.nAgents, 5); % Checkflag - dVi/dzx - dVi/dzy
+            outdVMat = zeros(obj.nAgents, obj.nAgents, 3); % Checkflag - dVi/dzx - dVi/dzy
             % CVTCoord      : CVT information of each agent
             % adjacentList  : 
             for thisCell = 1: obj.nAgents

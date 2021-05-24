@@ -214,8 +214,8 @@ classdef Centralized_Controller < handle
                 for j = 1 : obj.nAgent % Scan to see which are the adjacent agents
                     % If the considering cell affects us, add it to the gradient
                     if(obj.CoverageStateInfo(j, i, 1) == true) % Is neighbor or itself ?
-                        sumdVj_diX = sumdVj_diX + obj.CoverageStateInfo(j,i,2); % dVj_dzix
-                        sumdVj_diY = sumdVj_diY + obj.CoverageStateInfo(j,i,3); % dVj_dziy
+                        sumdVj_diX = sumdVj_diX + neighborInfo(j,i,2); % dVj_dzx
+                        sumdVj_diY = sumdVj_diY + neighborInfo(j,i,3); 
                     end
                 end      
                 % Compute the control input
