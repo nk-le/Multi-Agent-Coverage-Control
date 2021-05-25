@@ -40,12 +40,7 @@ classdef Centralized_Controller < handle
         LyapunovCost 
         lastV
     end
-    
-    properties (Access = private)
-        % Agent handler
-       
-    end
-    
+
     methods
         %% Initialization constant variables
         function obj = Centralized_Controller(nAgent, bndCoeff, bndVertexes, initPose, vConstList, wOrbitList)
@@ -174,13 +169,10 @@ classdef Centralized_Controller < handle
         end
         
         function [Vk] = computeVLyp(obj, Zk, Ck)
-            tol = 0.001;
-            a = obj.boundariesCoeff(:, 1:2);
-            b = obj.boundariesCoeff(:, 3);
-            m = numel(b);
+            tol = 0;
             Vk = 0;
-            for j = 1 : m
-                Vk = Vk +  1 / ( b(j) - (a(j,1) * Zk(1) + a(j,2) * Zk(2) + tol)) / 2 ;
+            for j = 1 : size(obj.boundariesCoeff, 1)
+                Vk = Vk +  1 / (obj.boundariesCoeff(j,3) - (obj.boundariesCoeff(j,1)*Zk(1) + obj.boundariesCoeff(j,2)* Zk(2) + tol)) / 2 ;
             end
             if(Vk < 0)
                 error("State constraint is violated. Check inital position of virtual centers or the control algorithm");
@@ -192,7 +184,6 @@ classdef Centralized_Controller < handle
             % Update all the control policy for all agents
             for i = 1 : obj.nAgent
                 agentHandle = obj.agentList(i);        
-                v0 = agentHandle.vConst;
                 w0 = agentHandle.wOrbit;
                 cT = cos(agentHandle.curPose(3));   % agentStatus.curPose(3): Actual Orientation
                 sT = sin(agentHandle.curPose(3));

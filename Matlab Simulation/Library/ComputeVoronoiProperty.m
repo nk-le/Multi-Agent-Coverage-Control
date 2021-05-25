@@ -54,7 +54,7 @@ function [mOmega, denseX, denseY] = computePartitionMass(coordVertexX, coordVert
         param = struct('method','gauss','points',6); 
         %param = struct('method','dblquad','tol',1e-6);
         %% The total mass of the region
-        func = @(x,y) x*y;
+        func = @(x,y) 1;
         mOmega = doubleintegral(func, IntDomain, param);
         
         %% The density over X axis

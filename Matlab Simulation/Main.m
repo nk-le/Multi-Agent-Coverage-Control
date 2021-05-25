@@ -1,6 +1,7 @@
 %% GLOBAL PARAMETER
-global masterCom;
-global logger;
+global masterCom;           % centralized Controller operates all the simulation process (dynamics, control, ...)
+global logger;              % log instance of all time step of the centralized controller for post processing
+global globalInformation;   % pseudo broadcasted information over all agents (if applied in distributed scheme)
 %global env; % Simulation environment
 
 %% Setup
@@ -18,7 +19,7 @@ for iteration = 1: maxIter
     end
     
     % Displaying for debugging
-    if(mod(iteration, 10) == 0)
+    if(mod(iteration, 1) == 0)
         fprintf('Iter: %d Lyp: %f \n',iteration, currentLyapunov);
     end
     % Logging
