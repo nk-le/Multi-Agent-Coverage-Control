@@ -136,7 +136,7 @@ classdef Centralized_Controller < handle
                 sumHj = 0;
                 sum_aj_HjSquared = 0;
                 for j = 1: size(obj.boundariesCoeff)
-                    tol = 0.1; % Tolerance to relax the state constraint
+                    tol = 0; % Tolerance to relax the state constraint
                     hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1)*zi(1) + obj.boundariesCoeff(j,2)*zi(2) + tol)); 
                     sumHj = sumHj + 1/hj;
                     sum_aj_HjSquared = sum_aj_HjSquared + [obj.boundariesCoeff(j,1); obj.boundariesCoeff(j,2)] / hj^2 / 2; 

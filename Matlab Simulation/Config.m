@@ -1,8 +1,8 @@
 function [nAgent, vConstList, wOrbitList, bndVertexes, bndCoeff, startPose, visualizationOn, maxIter] = Config()
     %% Simulation configuration
     global dt;                  % Global simulation time to avoid undefined behaviour    
-    dt = 0.01;
-    maxIter = 10000;            % Maximum iteration of simulation
+    dt = 0.005;
+    maxIter = 40000;            % Maximum iteration of simulation
 
     %% SIMULATION CONFIGURATION
     rng(4);

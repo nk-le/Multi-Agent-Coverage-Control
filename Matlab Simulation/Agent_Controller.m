@@ -44,11 +44,11 @@ classdef Agent_Controller < handle
             obj.wOrbit = w0;
             
             % Update initial position
-            obj.updateState(initPose);
+            obj.setState(initPose);
         end
         
         %% Position feedback and internal state update
-        function [newVMPose] = updateState(obj, newPose)
+       function [newVMPose] = setState(obj, newPose)
             % Update Current state
             obj.curPose = newPose;
             % Update virtual center, save internally
@@ -80,57 +80,57 @@ classdef Agent_Controller < handle
         %      curCVTPose   : New Voronoi centroid
         % [@out]
         %      wOut         : desired control ouput   
-        function [v, wOut] = executeControl(obj, newCVTPose)
-            % Pseudo communication matrix that used to exchange information
-            % between agents
-            % global neighborInformation;
-            global dVi_dzMat;
-            
-            % Update the new target
-            obj.curCVTPose = newCVTPose;
-            %obj.currentSubV = obj.computeCurrentV();
-           
-            % Determine Output
-            v = obj.vConst;             
-            cT = cos(obj.curPose(3));
-            sT = sin(obj.curPose(3));
-            
-            dVj_di_Matrix = dVi_dzMat(:,obj.ID,:);
-            sumdVj_diX = 0;
-            sumdVj_diY = 0;
-            for i = 1 : size(dVj_di_Matrix, 1)
-                sumdVj_diX = sumdVj_diX + dVj_di_Matrix(i,1);
-                sumdVj_diY = sumdVj_diY + dVj_di_Matrix(i,2);
-            end
-            
-            %w = obj.w0 + mu * sign(obj.w0) * sign(sumdVj_diX * cT + sumdVj_diY * sT); 
-            % Try sigmoid function here - changeable epsilon
-            epsSigmoid = 5;
-            wOut = obj.wOrbit + 1 * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
-            obj.w = wOut;
-        end
+%         function [v, wOut] = executeControl(obj, newCVTPose)
+%             % Pseudo communication matrix that used to exchange information
+%             % between agents
+%             % global neighborInformation;
+%             global dVi_dzMat;
+%             
+%             % Update the new target
+%             obj.curCVTPose = newCVTPose;
+%             %obj.currentSubV = obj.computeCurrentV();
+%            
+%             % Determine Output
+%             v = obj.vConst;             
+%             cT = cos(obj.curPose(3));
+%             sT = sin(obj.curPose(3));
+%             
+%             dVj_di_Matrix = dVi_dzMat(:,obj.ID,:);
+%             sumdVj_diX = 0;
+%             sumdVj_diY = 0;
+%             for i = 1 : size(dVj_di_Matrix, 1)
+%                 sumdVj_diX = sumdVj_diX + dVj_di_Matrix(i,1);
+%                 sumdVj_diY = sumdVj_diY + dVj_di_Matrix(i,2);
+%             end
+%             
+%             %w = obj.w0 + mu * sign(obj.w0) * sign(sumdVj_diX * cT + sumdVj_diY * sT); 
+%             % Try sigmoid function here - changeable epsilon
+%             epsSigmoid = 5;
+%             wOut = obj.wOrbit + 1 * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
+%             obj.w = wOut;
+%         end
         
         function setAngularVel(obj, w)
             obj.w = w;
         end
         
-        function [V] = computeCurrentV(obj)
-            % The postitive tol parameter prevents agent from jumping over the
-            % bounded region (discontinuity)
-            % bj - (a1*x + a2*) > 0 <-- bj - (a1*x - a2*y + tol) > 0 
-            tol = 0.001;
-            a = obj.regionCoeff(:, 1:2);
-            b = obj.regionCoeff(:, 3);
-            m = numel(b);
-            Vtmp = 0;
-            for j = 1:m
-                Vtmp = Vtmp +  1 / ( b(j) - (a(j,1) * Zk(1) + a(j,2) * Zk(2) + tol)) / 2 ;
-            end
-            if(Vtmp < 0)
-               error("VBLF is violated. Agent: ...: Current Info"); 
-            end  
-            V =  (norm(Zk - Ck))^2 * Vtmp;
-        end
+%         function [V] = computeCurrentV(obj)
+%             % The postitive tol parameter prevents agent from jumping over the
+%             % bounded region (discontinuity)
+%             % bj - (a1*x + a2*) > 0 <-- bj - (a1*x - a2*y + tol) > 0 
+%             tol = 0.001;
+%             a = obj.regionCoeff(:, 1:2);
+%             b = obj.regionCoeff(:, 3);
+%             m = numel(b);
+%             Vtmp = 0;
+%             for j = 1:m
+%                 Vtmp = Vtmp +  1 / ( b(j) - (a(j,1) * Zk(1) + a(j,2) * Zk(2) + tol)) / 2 ;
+%             end
+%             if(Vtmp < 0)
+%                error("VBLF is violated. Agent: ...: Current Info"); 
+%             end  
+%             V =  (norm(Zk - Ck))^2 * Vtmp;
+%         end
         
         %% Simulate dynamic model 
         % Call this function once every time the control policy is updated
