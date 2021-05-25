@@ -1,0 +1,33 @@
+{
+"geoglobe":
+ {
+     "inputs":
+     [
+         {"name":"parent","kind":"required","type":[["matlab.ui.Figure"], ["matlab.ui.container.Panel"], ["matlab.ui.container.Tab"]]},
+         {"name":"Basemap","kind":"namevalue","type":"choices=matlab.graphics.chart.internal.maps.basemapNames"},
+         {"name":"Terrain","kind":"namevalue","type":"choices=terrain.internal.TerrainSource.terrainchoices()"},
+         {"name":"options", "kind":"properties", "type":"globe.graphics.GeographicGlobe"}
+     ],
+     "outputs":
+     [
+         {"name":"gl", "kind":"ordered", "type":"globe.graphics.GeographicGlobe"}
+     ]
+ },
+"geoplot3":
+ {
+    "inputs":
+    [
+        {"name":"gl", "kind":"required", "type":"globe.graphics.GeographicGlobe"},
+        {"name":"lat", "kind":"required", "type":"numeric"},
+        {"name":"lon", "kind":"required", "type":"numeric"},
+        {"name":"height", "kind":"required", "type":"numeric"},
+        {"name":"LineSpec", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+        {"name":"HeightReference","kind":"namevalue","type":"choices={'ellipsoid','geoid','terrain'}"},
+        {"name":"options", "kind":"properties", "type":"map.graphics.primitive.Line"}
+    ],
+    "outputs":
+    [
+        {"name":"h", "type":"map.graphics.primitive.Line"}
+    ]
+ }
+}

@@ -1,0 +1,1523 @@
+{
+"axesm":
+{
+	"inputs":
+	[
+		{"name":"projid", "kind":"ordered", "type":"char"},
+		{"name":"MapProjection", "kind":"namevalue", "type":[["choices=cellstr(maps('idlist'))"],["char"]]},
+		{"name":"AngleUnits", "kind":"namevalue", "type":"choices={'degrees','radians'}"},
+		{"name":"Aspect", "kind":"namevalue", "type":"choices={'normal','transverse'}"},
+		{"name":"FalseEasting", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"FalseNorthing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"Geoid", "kind":"namevalue", "type":[["numeric","numel=2"],["referenceSphere"],["referenceEllipsoid"],["oblateSpheroid"]]},
+		{"name":"MapLatLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"MapLonLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"MapParallels", "kind":"namevalue", "type":"numeric"},
+		{"name":"Origin", "kind":"namevalue", "type":"numeric"},
+		{"name":"ScaleFactor", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"Zone", "kind":"namevalue", "type":"char"},
+		{"name":"Frame", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"FFill", "kind":"namevalue", "type":"numeric"},
+		{"name":"FEdgeColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FFaceColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FLatLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"FLineWidth", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"FLonLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"Grid", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"GAltitude", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"GColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"GLineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"GLineWidth", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"MLineException", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"MLineFill", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"MLineLimit", "kind":"namevalue", "type":"numeric"},
+		{"name":"MLineLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"PLineException", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"PLineFill", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"PLineLimit", "kind":"namevalue", "type":"numeric"},
+		{"name":"PLineLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"FontColor", "kind":"namevalue", "type":[[ "choices={'yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FontAngle", "kind":"namevalue", "type":"choices={'normal','italic'}"},
+		{"name":"FontName", "kind":"namevalue", "type":"char"},
+		{"name":"FontSize", "kind":"namevalue", "type":["numeric","scalar","positive"]},
+		{"name":"FontUnits", "kind":"namevalue", "type":"choices={'inches','centimeters','normalized','points','pixels'}"},
+		{"name":"FontWeight", "kind":"namevalue", "type":"choices={'normal','bold'}"},
+		{"name":"LabelFormat", "kind":"namevalue", "type":"choices={'compass','signed','none'}"},
+		{"name":"LabelRotation", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"LabelUnits", "kind":"namevalue", "type":"choices={'degrees','dm','dms','radians'}"},
+		{"name":"MeridianLabel", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"MLabelLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"MLabelParallel", "kind":"namevalue", "type":[["choices={'north','south','equator'}"],["numeric", "scalar"]]},
+		{"name":"MLabelRound", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"ParallelLabel", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"PLabelLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"PLabelMeridian", "kind":"namevalue", "type":[["choices={'east','west','prime'}"],["numeric", "scalar"]]},
+		{"name":"PLabelRound", "kind":"namevalue", "type":["numeric","scalar"]}
+	]
+},
+"clma":
+{
+	"inputs":
+	[
+		{"name":"opts", "kind":"ordered", "type":"choices={'all','purge'}"}
+	]
+},
+"gcm":
+{
+	"inputs":
+	[
+		{"name":"hndl", "kind":"ordered", "type":"matlab.graphics.axis.Axes"}
+	],
+	"outputs":
+	[
+		{"name":"mstruct", "type":"mstruct"}
+	]
+},
+"getm":
+{
+	"inputs":
+	[
+		{"name":"h", "kind":"required", "type":"matlab.graphics.axis.Axes"},
+		{"name":"MapPropertyName", "kind":"ordered", "type":[["string","scalar"], ["char"]]}
+	],
+	"outputs":
+	[
+		{"name":"mstruct", "type":"mstruct"}
+	]
+},
+"getm":
+{
+	"inputs":
+	[
+		{"name":"opts", "kind":"required", "type":"choices={'MapProjection','axes','units'}"}
+	]
+},
+"handlem":
+{
+	"inputs":
+	[
+		{"name":"opts", "kind":"ordered", "type":"choices={'taglist','prompt'}"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"handlem":
+{
+	"inputs":
+	[
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"object", "kind":"required", "type":"choices={'all','allimage','alllight','allline','allpatch','allsurface','alltext','clabel','contour','fillcontour','frame','grid','hggroup','image','light','line','map','meridian','mlabel','parallel','plabel','patch','scaleruler','surface','text','tissot','visible'}"},
+				{"name":"object", "kind":"required", "type":"char"}
+			]
+		},
+		{"name":"axesh", "kind":"positional", "type":["matlab.graphics.axis.Axes","@(ax) logical(ismap(ax))"]},
+		{"name":"searchmethod", "kind":"ordered", "type":"choices={'exact','strmatch','findstr'}"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"ismap":
+{
+	"inputs":
+	[
+		{"name":"hndl", "kind":"ordered", "type":"matlab.graphics.axis.Axes"}
+	],
+	"outputs":
+	[
+		{"name":"mflag", "type":"double"},
+		{"name":"msg", "type":"char"}
+	]
+},
+"setm":
+{
+	"inputs":
+	[
+		{"name":"h", "kind":"required", "type":["matlab.graphics.axis.Axes","@(ax) logical(ismap(ax))"]},
+		{"name":"MapProjection", "kind":"namevalue", "type":[["choices=cellstr(maps('idlist'))"],["char"]]},
+		{"name":"AngleUnits", "kind":"namevalue", "type":"choices={'degrees','radians'}"},
+		{"name":"Aspect", "kind":"namevalue", "type":"choices={'normal','transverse'}"},
+		{"name":"FalseEasting", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"FalseNorthing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"Geoid", "kind":"namevalue", "type":[["numeric","numel=2"],["referenceSphere"],["referenceEllipsoid"],["oblateSpheroid"]]},
+		{"name":"MapLatLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"MapLonLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"MapParallels", "kind":"namevalue", "type":"numeric"},
+		{"name":"Origin", "kind":"namevalue", "type":"numeric"},
+		{"name":"ScaleFactor", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"Zone", "kind":"namevalue", "type":"char"},
+		{"name":"Frame", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"FFill", "kind":"namevalue", "type":"numeric"},
+		{"name":"FEdgeColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FFaceColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FLatLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"FLineWidth", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"FLonLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"Grid", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"GAltitude", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"GColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"GLineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"GLineWidth", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"MLineException", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"MLineFill", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"MLineLimit", "kind":"namevalue", "type":"numeric"},
+		{"name":"MLineLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"PLineException", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"PLineFill", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"PLineLimit", "kind":"namevalue", "type":"numeric"},
+		{"name":"PLineLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"FontColor", "kind":"namevalue", "type":[[ "choices={'yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FontAngle", "kind":"namevalue", "type":"choices={'normal','italic'}"},
+		{"name":"FontName", "kind":"namevalue", "type":"char"},
+		{"name":"FontSize", "kind":"namevalue", "type":["numeric","scalar","positive"]},
+		{"name":"FontUnits", "kind":"namevalue", "type":"choices={'inches','centimeters','normalized','points','pixels'}"},
+		{"name":"FontWeight", "kind":"namevalue", "type":"choices={'normal','bold'}"},
+		{"name":"LabelFormat", "kind":"namevalue", "type":"choices={'compass','signed','none'}"},
+		{"name":"LabelRotation", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"LabelUnits", "kind":"namevalue", "type":"choices={'degrees','dm','dms','radians'}"},
+		{"name":"MeridianLabel", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"MLabelLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"MLabelParallel", "kind":"namevalue", "type":[["choices={'north','south','equator'}"],["numeric", "scalar"]]},
+		{"name":"MLabelRound", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"ParallelLabel", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"PLabelLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"PLabelMeridian", "kind":"namevalue", "type":[["choices={'east','west','prime'}"],["numeric", "scalar"]]},
+		{"name":"PLabelRound", "kind":"namevalue", "type":["numeric","scalar"]}
+	]
+},
+"setm":
+{
+	"inputs":
+	[
+		{"name":"texthndl", "kind":"required", "type":"matlab.graphics.primitive.Text"},
+		{"name":"'MapPosition'", "kind":"required", "type":"choices={'MapPosition'}"},
+		{"name":"position", "kind":"required", "type":["numeric","vector"]}
+	]
+},
+"setm":
+{
+	"inputs":
+	[
+		{"name":"surfhndl", "kind":"required", "type":"matlab.graphics.primitive.Surface"},
+		{"name":"'Graticule'", "kind":"required", "type":"choices={'Graticule'}"},
+		{"name":"lat", "kind":"required", "type":"numeric"},
+		{"name":"lon", "kind":"required", "type":"numeric"},
+		{"name":"alt", "kind":"required", "type":"numeric"}
+	]
+},
+"setm":
+{
+	"inputs":
+	[
+		{"name":"surfhndl", "kind":"required", "type":"matlab.graphics.primitive.Surface"},
+		{"name":"'MeshGrat'", "kind":"required", "type":"choices={'MeshGrat'}"},
+		{"name":"npts", "kind":"required", "type":"numeric"},
+		{"name":"alt", "kind":"required", "type":"numeric"}
+	]
+},
+"showaxes":
+{
+	"inputs":
+	[
+		{"name":"action", "kind":"ordered", "type":[["choices={'on','off','hide','show','reset','boxoff','white','black','red','green','blue','yellow','magenta','cyan'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"]]}
+	]
+},
+"usamap":
+{
+	"inputs":
+	[
+		{"name":"state", "kind":"required", "type":[["choices={'all','conus'}"],["char"]]}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.axis.Axes"}
+	]
+},
+"worldmap":
+{
+	"inputs":
+	[
+		{"name":"region", "kind":"required", "type":[["choices={'World','Africa','Asia','Antarctica','Europe','North America','South America','North Pole','South Pole','Pacific','United States'}"],["char"]]}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.axis.Axes"}
+	]
+},
+"namem":
+{
+	"inputs":
+	[
+		{"name":"h", "kind":"ordered", "type":["handle", "@ishghandle"]}
+	],
+	"outputs":
+	[
+		{"name":"obj_names", "type":"char"}
+	]
+},
+"tagm":
+{
+	"inputs":
+	[
+		{"name":"hndl", "kind":"required", "type":["handle", "@ishghandle"]},
+		{"name":"tagstr", "kind":"required", "type":"char"}
+	]
+},
+"framem":
+{
+	"inputs":
+	[
+		{"name":"opts", "kind":"required", "type":"choices={'on','off','reset'}"}
+	]
+},
+"framem":
+{
+	"inputs":
+	[
+		{"name":"linespec", "kind":"required", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"Frame", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"FFill", "kind":"namevalue", "type":"numeric"},
+		{"name":"FEdgeColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FFaceColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FLatLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"FLineWidth", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"FLonLimit", "kind":"namevalue", "type":["numeric","numel=2"]}
+	]
+},
+"gridm":
+{
+	"inputs":
+	[
+		{"name":"opts", "kind":"required", "type":"choices={'on','off','reset'}"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"gridm":
+{
+	"inputs":
+	[
+		{"name":"linespec", "kind":"required", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"Grid", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"GAltitude", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"GColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"GLineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"GLineWidth", "kind":"namevalue", "type":["numeric","scalar"]}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"mlabel":
+{
+	"inputs":
+	[
+		{"name":"opts", "kind":"required", "type":"choices={'on','off','reset'}"}
+	]
+},
+"mlabel":
+{
+	"inputs":
+	[
+		{"name":"parallel", "kind":"required", "type":[["choices={'north','south','equator'}"],["numeric","scalar"]]},
+		{"name":"MLineException", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"MLineFill", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"MLineLimit", "kind":"namevalue", "type":"numeric"},
+		{"name":"MLineLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"MeridianLabel", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"MLabelLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"MLabelParallel", "kind":"namevalue", "type":[["choices={'north','south','equator'}"],["numeric", "scalar"]]},
+		{"name":"MLabelRound", "kind":"namevalue", "type":["numeric","scalar"]}
+	]
+},
+"northarrow":
+{
+	"inputs":
+	[
+		{"name":"latitude", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"longitude", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"facecolor", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"edgecolor", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"linewidth", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"scaleratio", "kind":"namevalue", "type":["numeric","scalar"]}
+	]
+},
+"plabel":
+{
+	"inputs":
+	[
+		{"name":"opts", "kind":"required", "type":"choices={'on','off','reset'}"}
+	]
+},
+"plabel":
+{
+	"inputs":
+	[
+		{"name":"meridian", "kind":"required", "type":[["choices={'east','west','prime'}"],["numeric","scalar"]]},
+		{"name":"PLineException", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"PLineFill", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"PLineLimit", "kind":"namevalue", "type":"numeric"},
+		{"name":"PLineLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"ParallelLabel", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"PLabelLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"PLabelMeridian", "kind":"namevalue", "type":[["choices={'east','west','prime'}"],["numeric", "scalar"]]},
+		{"name":"PLabelRound", "kind":"namevalue", "type":["numeric","scalar"]}
+	]
+},
+"rotatetext":
+{
+	"inputs":
+	[
+		{"name":"objects", "kind":"required", "type":[["choices={'all','allimage','alllight','allline','allpatch','allsurface','alltext','clabel','contour','fillcontour','frame','grid','hggroup','image','light','line','map','meridian','mlabel','parallel','plabel','patch','scaleruler','surface','text','tissot','visible'}"],["matlab.graphics.primitive.Text"]]},
+		{"name":"rotation", "kind":"flag", "type":"choices={'forward','inverse'}"}
+	]
+},
+"scaleruler":
+{
+	"inputs":
+	[
+		{"name":"opts", "kind":"ordered", "type":"choices={'on','off'}"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Group"}
+	]
+},
+"scaleruler":
+{
+	"inputs":
+	[
+		{"name":"Azimuth", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"Color", "kind":"namevalue", "type":[[ "choices={'yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FontAngle", "kind":"namevalue", "type":"choices={'normal','italic'}"},
+		{"name":"FontName", "kind":"namevalue", "type":"char"},
+		{"name":"FontSize", "kind":"namevalue", "type":["numeric","scalar",">0"]},
+		{"name":"FontUnits", "kind":"namevalue", "type":"choices={'inches','centimeters','normalized','points','pixels'}"},
+		{"name":"FontWeight", "kind":"namevalue", "type":"choices={'normal','bold'}"},
+		{"name":"Label", "kind":"namevalue", "type":"char"},
+		{"name":"Lat", "kind":"namevalue", "type":"numeric"},
+		{"name":"Long", "kind":"namevalue", "type":"numeric"},
+		{"name":"LineWidth", "kind":"namevalue", "type":["numeric","scalar",">=0"]},
+		{"name":"MajorTick", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"MajorTickLabel", "kind":"namevalue", "type":[["cellstr"],["string"]]},
+		{"name":"MajorTickLength", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"MinorTick", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"MinorTickLabel", "kind":"namevalue", "type":[["cellstr"],["string"]]},
+		{"name":"MinorTickLength", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"Radius", "kind":"namevalue", "type":[["choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"],["numeric","scalar"]]},
+		{"name":"RulerStyle", "kind":"namevalue", "type":"choices={'ruler','lines','patches'}"},
+		{"name":"TickDir", "kind":"namevalue", "type":"choices={'up','down'}"},
+		{"name":"TickMode", "kind":"namevalue", "type":"choices={'auto','manual'}"},
+		{"name":"Units", "kind":"namevalue", "type":"choices={'meter','centimeter','millimeter','micron','kilometer','nautical mile','foot','inch','yard','mile','U.S. survey foot','U.S. survey mile','Clarkes foot','German legal metre','Indian foot'}"},
+		{"name":"XLoc", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"YLoc", "kind":"namevalue", "type":["numeric","scalar"]}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Group"}
+	]
+},
+"grid2image":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Image"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Image"}
+	]
+},
+"fillm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"cdata", "kind":"ordered", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Patch"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Patch"}
+	]
+},
+"fill3m":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"z", "kind":"required", "type":"numeric"},
+		{"name":"cdata", "kind":"ordered", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Patch"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Patch"}
+	]
+},
+"linem":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"z", "kind":"ordered", "type":[["single"],["double"]]},
+		{"name":"linetype", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"meshm":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"gratsize", "kind":"ordered", "type":"numeric"},
+		{"name":"alt", "kind":"ordered", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"H", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"patchesm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"z", "kind":"ordered", "type":"numeric"},
+		{"name":"cdata", "kind":"ordered", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Patch"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Patch"}
+	]
+},
+"patchm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"z", "kind":"ordered", "type":"numeric"},
+		{"name":"cdata", "kind":"ordered", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Patch"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Patch"}
+	]
+},
+"pcolorm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"pcolorm":
+{
+	"inputs":
+	[
+		{"name":"latlim", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lonlim", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"plotm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"linetype", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"plotm":
+{
+	"inputs":
+	[
+		{"name":"[lat lon]", "kind":"required", "type":[["single","ncols=2"],["double","ncols=2"]]},
+		{"name":"linetype", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"plot3m":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"z", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"linespec", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"surfm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single","vector"],["double","vector"]]},
+		{"name":"lon", "kind":"required", "type":[["single","vector"],["double","vector"]]},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"alt", "kind":"ordered", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"surfm":
+{
+	"inputs":
+	[
+		{"name":"latlim", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lonlim", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"alt", "kind":"ordered", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"camposm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"long", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"alt", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"x", "type":"numeric"},
+		{"name":"y", "type":"numeric"},
+		{"name":"z", "type":"numeric"}
+	]
+},
+"camtargm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"long", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"alt", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"x", "type":"numeric"},
+		{"name":"y", "type":"numeric"},
+		{"name":"z", "type":"numeric"}
+	]
+},
+"camupm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"long", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"x", "type":"numeric"},
+		{"name":"y", "type":"numeric"},
+		{"name":"z", "type":"numeric"}
+	]
+},
+"daspectm":
+{
+	"inputs":
+	[
+		{"name":"zunits", "kind":"required", "type":[["choices={'meter','centimeter','millimeter','micron','kilometer','nautical mile','foot','inch','yard','mile','U.S. survey foot','U.S. survey mile','Clarkes foot','German legal metre','Indian foot'}"],["char"]]},
+		{"name":"vfac", "kind":"positional", "type":"numeric"},
+		{"name":"lat", "kind":"positional", "type":[["single"],["double"]]},
+		{"name":"long", "kind":"positional", "type":[["single"],["double"]]},
+		{"name":"az", "kind":"positional", "type":[["single"],["double"]]},
+		{"name":"radius", "kind":"ordered", "type":[["choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"],["numeric"]]}
+	]
+},
+"demcmap":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"ncolors", "kind":"positional", "type":"numeric"},
+		{"name":"cmapsea", "kind":"positional", "type":"numeric"},
+		{"name":"cmapland", "kind":"ordered", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"cmap", "type":"numeric"},
+		{"name":"climits", "type":"numeric"}
+	]
+},
+"demcmap":
+{
+	"inputs":
+	[
+		{"name":"literal", "kind":"required", "type":"choices={'inc'}"},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"deltaz", "kind":"required", "type":"numeric"},
+		{"name":"cmapsea", "kind":"positional", "type":"numeric"},
+		{"name":"cmapland", "kind":"ordered", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"cmap", "type":"numeric"},
+		{"name":"climits", "type":"numeric"}
+	]
+},
+"lightm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"alt", "kind":"ordered", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Light"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Light"}
+	]
+},
+"meshlsrm":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"[azim elev]", "kind":"positional", "type":["numeric","ncols=2"]},
+		{"name":"cmap", "kind":"positional", "type":"numeric"},
+		{"name":"clim", "kind":"ordered", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"shaderel":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":"numeric"},
+		{"name":"Y", "kind":"required", "type":"numeric"},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"cmap", "kind":"required", "type":["numeric", "ncols=3", ">=0", "<=1"]},
+		{"name":"[azim elev]", "kind":"positional", "type":["numeric","ncols=2"]},
+		{"name":"cmapl", "kind":"positional", "type":"numeric"},
+		{"name":"clim", "kind":"ordered", "type":["numeric","ncols=2"]}
+	],
+	"outputs":
+	[
+		{"name":"cindx", "type":"numeric"},
+		{"name":"cimap", "type":"numeric"},
+		{"name":"clim", "type":"numeric"}
+	]
+},
+"surflm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"s", "kind":"positional", "type":"numeric"},
+		{"name":"k", "kind":"ordered", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"surflm":
+{
+	"inputs":
+	[
+		{"name":"latlim", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lonlim", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"s", "kind":"positional", "type":"numeric"},
+		{"name":"k", "kind":"ordered", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"surflsrm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":"numeric"},
+		{"name":"long", "kind":"required", "type":"numeric"},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"[azim elev]", "kind":"positional", "type":["numeric","ncols=2"]},
+		{"name":"cmap", "kind":"positional", "type":"numeric"},
+		{"name":"clim", "kind":"ordered", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"surfacem":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"alt", "kind":"ordered", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"surfacem":
+{
+	"inputs":
+	[
+		{"name":"latlim", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lonlim", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"alt", "kind":"ordered", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"zdatam":
+{
+	"inputs":
+	[
+		{"name":"hndl", "kind":"required", "type":[["choices={'all','allimage','alllight','allline','allpatch','allsurface','alltext','clabel','contour','fillcontour','frame','grid','hggroup','image','light','line','map','meridian','mlabel','parallel','plabel','patch','scaleruler','surface','text','tissot','visible'}"],["handle", "@ishghandle"]]},
+		{"name":"zdata", "kind":"ordered", "type":"numeric"}
+	]
+},
+"clabelm":
+{
+	"inputs":
+	[
+		{"name":"C", "kind":"required", "type":["numeric","nrows=2"]},
+		{"name":"h", "kind":"ordered", "type":["matlab.graphics.primitive.Group","@(h) h.Tag == 'Contour'"]},
+		{"name":"v", "kind":"ordered", "type":["numeric","vector"]},
+		{"name":"LabelSpacing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Text"}
+	],
+	"outputs":
+	[
+		{"name":"text_handles", "type":"matlab.graphics.primitive.Text"}
+	]
+},
+"clabelm":
+{
+	"inputs":
+	[
+		{"name":"C", "kind":"required", "type":["numeric","nrows=2"]},
+		{"name":"h", "kind":"ordered", "type":["matlab.graphics.primitive.Group","@(h) h.Tag == 'Contour'"]},
+		{"name":"manual", "kind":"ordered", "type":"choices={'manual'}"}
+	],
+	"outputs":
+	[
+		{"name":"text_handles", "type":"matlab.graphics.primitive.Text"}
+	]
+},
+"clegendm":
+{
+	"inputs":
+	[
+		{"name":"cs", "kind":"required", "type":["numeric","nrows=2"]},
+		{"name":"h", "kind":"required", "type":["matlab.graphics.primitive.Group","@(h) h.Tag == 'Contour'"]},
+		{"name":"loc", "kind":"ordered", "type":"choices={-1,0,1,2,3,4}"},
+		{"name":"unitstr", "kind":"ordered", "type":"char"},
+		{"name":"labels", "kind":"ordered", "type":[["cellstr"],["string"]]}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.illustration.Legend"}
+	]
+},
+"contourcbar":
+{
+	"inputs":
+	[
+		{"mutuallyExclusiveGroup":
+			[
+				[],
+				{"name":"ax", "kind":"required", "type":"matlab.graphics.axis.AbstractAxes"},
+				[
+					{"name":"peer", "kind":"required", "type":"choices={'peer'}"},
+					{"name":"ax", "kind":"required", "type":"matlab.graphics.axis.AbstractAxes"}
+				]
+			]
+		},
+		{"name":"placement", "kind":"ordered", "type":"choices={'north','south','east', 'west','northoutside','southoutside','eastoutside','westoutside'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.illustration.ColorBar"}
+	],
+	"outputs":
+	[
+		{"name":"H", "type":"matlab.graphics.illustration.ColorBar"}
+	]
+},
+"contourcbar":
+{
+	"inputs":
+	[
+		{"mutuallyExclusiveGroup":
+			[
+				[],
+				{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.AbstractAxes"},
+				{"name":"h", "kind":"ordered", "type":"matlab.graphics.illustration.ColorBar"}
+			]
+		},
+		{"name":"off", "kind":"required", "type":"choices={'off'}"}
+	],
+	"outputs":
+	[
+		{"name":"H", "type":"matlab.graphics.illustration.ColorBar"}
+	]
+},
+"contourcmap":
+{
+	"inputs":
+	[
+		{"name":"cmapstr", "kind":"required", "type":"choices={'parula','jet','hsv','hot','cool','spring','summer','autumn','winter','gray','bone','copper','pink','lines','colorcube','prism','flag','white'}"},
+		{"name":"cdelta", "kind":"ordered", "type":"numeric"},
+		{"name":"Location", "kind":"namevalue", "type":"choices={'vertical','horizontal','none'}"},
+		{"name":"Colorbar", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"ColorAlignment", "kind":"namevalue", "type":"choices={'center','ends'}"},
+		{"name":"SourceObject", "kind":"namevalue", "type":["handle", "@ishghandle"]},
+		{"name":"TitleString", "kind":"namevalue", "type":"char"},
+		{"name":"XLabelString", "kind":"namevalue", "type":"char"},
+		{"name":"YLabelString", "kind":"namevalue", "type":"char"},
+		{"name":"ZLabelString", "kind":"namevalue", "type":"char"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.axis.Axes"}
+	]
+},
+"contourm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":"numeric"},
+		{"name":"lon", "kind":"required", "type":"numeric"},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"n", "kind":"ordered", "type":["numeric", "scalar"]},
+				{"name":"V", "kind":"ordered", "type":["numeric", "vector"]}
+			]
+		},
+		{"name":"LineSpec", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"Fill", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"LabelSpacing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LevelList", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"LevelStep", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LineColor", "kind":"namevalue", "type":[["choices={'flat','none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"LineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"LineWidth", "kind":"namevalue", "type":"numeric"},
+		{"name":"ShowText", "kind":"namevalue", "type":"choices={'on','off'}"}
+	],
+	"outputs":
+	[
+		{"name":"C", "type":"double"},
+		{"name":"h", "type":"matlab.graphics.primitive.Group"}
+	]
+},
+"contourm":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"n", "kind":"ordered", "type":["numeric", "scalar"]},
+				{"name":"V", "kind":"ordered", "type":["numeric", "vector"]}
+			]
+		},
+		{"name":"LineSpec", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"Fill", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"LabelSpacing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LevelList", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"LevelStep", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LineColor", "kind":"namevalue", "type":[["choices={'flat','none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"LineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"LineWidth", "kind":"namevalue", "type":"numeric"},
+		{"name":"ShowText", "kind":"namevalue", "type":"choices={'on','off'}"}
+	],
+	"outputs":
+	[
+		{"name":"C", "type":"double"},
+		{"name":"h", "type":"matlab.graphics.primitive.Group"}
+	]
+},
+"contour3m":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":"numeric"},
+		{"name":"lon", "kind":"required", "type":"numeric"},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"n", "kind":"ordered", "type":["numeric", "scalar"]},
+				{"name":"v", "kind":"ordered", "type":["numeric", "vector"]}
+			]
+		},
+		{"name":"LineSpec", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"Fill", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"LabelSpacing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LevelList", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"LevelStep", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LineColor", "kind":"namevalue", "type":[["choices={'flat','none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"LineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"LineWidth", "kind":"namevalue", "type":"numeric"},
+		{"name":"ShowText", "kind":"namevalue", "type":"choices={'on','off'}"}
+	],
+	"outputs":
+	[
+		{"name":"C", "type":"double"},
+		{"name":"h", "type":"matlab.graphics.primitive.Group"}
+	]
+},
+"contour3m":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"n", "kind":"ordered", "type":["numeric", "scalar"]},
+				{"name":"v", "kind":"ordered", "type":["numeric", "vector"]}
+			]
+		},
+		{"name":"LineSpec", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"Fill", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"LabelSpacing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LevelList", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"LevelStep", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LineColor", "kind":"namevalue", "type":[["choices={'flat','none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"LineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"LineWidth", "kind":"namevalue", "type":"numeric"},
+		{"name":"ShowText", "kind":"namevalue", "type":"choices={'on','off'}"}
+	],
+	"outputs":
+	[
+		{"name":"C", "type":"double"},
+		{"name":"h", "type":"matlab.graphics.primitive.Group"}
+	]
+},
+"contourfm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":"numeric"},
+		{"name":"lon", "kind":"required", "type":"numeric"},
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"n", "kind":"ordered", "type":["numeric", "scalar"]},
+				{"name":"v", "kind":"ordered", "type":["numeric", "vector"]}
+			]
+		},
+		{"name":"LineSpec", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"LabelSpacing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LevelList", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"LevelStep", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"LineWidth", "kind":"namevalue", "type":"numeric"},
+		{"name":"ShowText", "kind":"namevalue", "type":"choices={'on','off'}"}
+	],
+	"outputs":
+	[
+		{"name":"C", "type":"double"},
+		{"name":"h", "type":"matlab.graphics.primitive.Group"}
+	]
+},
+"contourfm":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":"numeric"},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"n", "kind":"ordered", "type":["numeric", "scalar"]},
+				{"name":"v", "kind":"ordered", "type":["numeric", "vector"]}
+			]
+		},
+		{"name":"LineSpec", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"LabelSpacing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LevelList", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"LevelStep", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"LineWidth", "kind":"namevalue", "type":"numeric"},
+		{"name":"ShowText", "kind":"namevalue", "type":"choices={'on','off'}"}
+	],
+	"outputs":
+	[
+		{"name":"C", "type":"double"},
+		{"name":"h", "type":"matlab.graphics.primitive.Group"}
+	]
+},
+"quiverm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"deltalat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"deltalon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"linestyle", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"scale", "kind":"ordered", "type":["numeric","scalar"]},
+		{"name":"filled", "kind":"flag", "type":["char", "choices={'filled'}"]}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"quiver3m":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"alt", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"u", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"v", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"w", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"linestyle", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"scale", "kind":"ordered", "type":["numeric","scalar"]},
+		{"name":"filled", "kind":"flag", "type":["char", "choices={'filled'}"]}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"scatterm":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":["matlab.graphics.axis.Axes","@(ax) logical(ismap(ax))"]},
+		{"name":"lat", "kind":"required", "type":"numeric"},
+		{"name":"lon", "kind":"required", "type":"numeric"},
+		{"name":"s", "kind":"ordered", "type":"numeric"},
+		{"name":"c", "kind":"ordered", "type":
+			[
+				["char", "choices={'yellow','magenta','cyan','green','blue','white','black'}"],
+				["numeric", "2d", "ncols=3", ">=0", "<=1"],
+				["numeric", "vector"],
+				["char", "@matlab.graphics.internal.isColorSpec"]
+			]
+		},
+		{"name":"filled", "kind":"flag", "type":"choices={'filled'}"},
+		{"name":"m", "kind":"flag", "type":["char", "choices={'o','+','*','.','x','square','s','^','>','v','<','d','diamond','p','pentagram','h','hexagram','none'}"]}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Group"}
+	]
+},
+"stem3m":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"z", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"LineType", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"symbolm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"z", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"MarkerType", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"polcmap":
+{
+	"inputs":
+	[
+		{"name":"ncolors", "kind":"positional", "type":"numeric"},
+		{"name":"maxsat", "kind":"ordered", "type":["numeric", "scalar"]}
+	],
+	"outputs":
+	[
+		{"name":"cmap", "type":"numeric"}
+	]
+},
+"polcmap":
+{
+	"inputs":
+	[
+		{"name":"ncolors", "kind":"positional", "type":"numeric"},
+		{"name":"huelimits", "kind":"positional", "type":["numeric", "vector"]},
+		{"name":"saturationlimits", "kind":"positional", "type":"numeric"},
+		{"name":"valuelimits", "kind":"ordered", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"cmap", "type":"numeric"}
+	]
+},
+"clrmenu":
+{
+	"inputs":
+	[
+		{"name":"h", "kind":"ordered", "type":"matlab.ui.Figure"}
+	]
+},
+"gcpmap":
+{
+	"inputs":
+	[
+		{"name":"hndl", "kind":"ordered", "type":["matlab.graphics.axis.Axes","@(ax) logical(ismap(ax))"]}
+	],
+	"outputs":
+	[
+		{"name":"pt", "type":"numeric"}
+	]
+},
+"gtextm":
+{
+	"inputs":
+	[
+		{"name":"string", "kind":"required", "type":"char"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Text"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Text"}
+	]
+},
+"inputm":
+{
+	"inputs":
+	[
+		{"name":"n", "kind":"positional", "type":"numeric"},
+		{"name":"h", "kind":"ordered", "type":["matlab.graphics.axis.Axes","@(ax) logical(ismap(ax))"]}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"},
+		{"name":"button", "type":"numeric"}
+	]
+},
+"maptool":
+{
+	"inputs":
+	[
+		{"name":"ProjectionFile", "kind":"ordered", "type":"char"},
+		{"name":"MapProjection", "kind":"namevalue", "type":[["choices=cellstr(maps('idlist'))"],["char"]]},
+		{"name":"AngleUnits", "kind":"namevalue", "type":"choices={'degrees','radians'}"},
+		{"name":"Aspect", "kind":"namevalue", "type":"choices={'normal','transverse'}"},
+		{"name":"FalseEasting", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"FalseNorthing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"Geoid", "kind":"namevalue", "type":[["numeric","numel=2"],["referenceSphere"],["referenceEllipsoid"],["oblateSpheroid"]]},
+		{"name":"MapLatLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"MapLonLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"MapParallels", "kind":"namevalue", "type":"numeric"},
+		{"name":"Origin", "kind":"namevalue", "type":"numeric"},
+		{"name":"ScaleFactor", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"Zone", "kind":"namevalue", "type":"char"},
+		{"name":"Frame", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"FFill", "kind":"namevalue", "type":"numeric"},
+		{"name":"FEdgeColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FFaceColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FLatLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"FLineWidth", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"FLonLimit", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"Grid", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"GAltitude", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"GColor", "kind":"namevalue", "type":[["choices={'none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"GLineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"GLineWidth", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"MLineException", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"MLineFill", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"MLineLimit", "kind":"namevalue", "type":"numeric"},
+		{"name":"MLineLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"PLineException", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"PLineFill", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"PLineLimit", "kind":"namevalue", "type":"numeric"},
+		{"name":"PLineLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"FontColor", "kind":"namevalue", "type":[[ "choices={'yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"FontAngle", "kind":"namevalue", "type":"choices={'normal','italic'}"},
+		{"name":"FontName", "kind":"namevalue", "type":"char"},
+		{"name":"FontSize", "kind":"namevalue", "type":["numeric","scalar","positive"]},
+		{"name":"FontUnits", "kind":"namevalue", "type":"choices={'inches','centimeters','normalized','points','pixels'}"},
+		{"name":"FontWeight", "kind":"namevalue", "type":"choices={'normal','bold'}"},
+		{"name":"LabelFormat", "kind":"namevalue", "type":"choices={'compass','signed','none'}"},
+		{"name":"LabelRotation", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"LabelUnits", "kind":"namevalue", "type":"choices={'degrees','dm','dms','radians'}"},
+		{"name":"MeridianLabel", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"MLabelLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"MLabelParallel", "kind":"namevalue", "type":[["choices={'north','south','equator'}"],["numeric", "scalar"]]},
+		{"name":"MLabelRound", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"ParallelLabel", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"PLabelLocation", "kind":"namevalue", "type":"numeric"},
+		{"name":"PLabelMeridian", "kind":"namevalue", "type":[["choices={'east','west','prime'}"],["numeric", "scalar"]]},
+		{"name":"PLabelRound", "kind":"namevalue", "type":["numeric","scalar"]}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"maptrim":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"linestyle", "kind":"required", "type":["char", "@matlab.graphics.internal.isLineSpec"]}
+	]
+},
+"maptrim":
+{
+	"inputs":
+	[
+		{"name":"datagrid", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"refvec", "kind":"required", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	]
+},
+"originui":
+{
+	"inputs":
+	[
+		{"name":"opts", "kind":"ordered", "type":"choices={'on','off'}"}
+	]
+},
+"parallelui":
+{
+	"inputs":
+	[
+		{"name":"opts", "kind":"ordered", "type":"choices={'on','off'}"}
+	]
+},
+"trackg":
+{
+	"inputs":
+	[
+		{"name":"track", "kind":"ordered", "type":"choices={'gc','rh'}"},
+		{"name":"ntrax", "kind":"required", "type":"numeric"},
+		{"name":"npts", "kind":"ordered", "type":"numeric"},
+		{"name":"linestyle", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"trackui":
+{
+	"inputs":
+	[
+		{"name":"h", "kind":"ordered", "type":["matlab.graphics.axis.Axes","@(ax) logical(ismap(ax))"]}
+	]
+},
+"scircleg":
+{
+	"inputs":
+	[
+		{"name":"track", "kind":"ordered", "type":"choices={'gc','rh'}"},
+		{"name":"ncirc", "kind":"required", "type":"numeric"},
+		{"name":"npts", "kind":"ordered", "type":"numeric"},
+		{"name":"linestyle", "kind":"ordered", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"scirclui":
+{
+	"inputs":
+	[
+		{"name":"h", "kind":"ordered", "type":["matlab.graphics.axis.Axes","@(ax) logical(ismap(ax))"]}
+	]
+},
+"defaultm":
+{
+	"inputs":
+	[
+		{"name":"projid", "kind":"required", "type":"choices=cellstr(maps('idlist'))"}
+	],
+	"outputs":
+	[
+		{"name":"mstruct", "type":"struct"}
+	]
+},
+"defaultm":
+{
+	"inputs":
+	[
+		{"name":"mstruct", "kind":"required", "type":"struct"}
+	],
+	"outputs":
+	[
+		{"name":"mstruct", "type":"struct"}
+	]
+},
+"clipdata":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"long", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"object", "kind":"required", "type":"choices={'surface','light','line','patch','text','point','none'}"}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"long", "type":"numeric"},
+		{"name":"splitpts", "type":"numeric"}
+	]
+},
+"mdistort":
+{
+	"inputs":
+	[
+		{"name":"parameter", "kind":"positional", "type":"choices={'area','angles','scale','maxscale','minscale','parscale','merscale','scaleratio'}"},
+		{"name":"levels", "kind":"positional", "type":[["single"],["double"]]},
+		{"name":"gsize", "kind":"ordered", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Group"}
+	]
+},
+"mdistort":
+{
+	"inputs":
+	[
+		{"name":"parameter", "kind":"positional", "type":"choices={'off'}"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Group"}
+	]
+},
+"tissot":
+{
+	"inputs":
+	[
+		{"name":"spec", "kind":"ordered", "type":"numeric"},
+		{"name":"linestyle", "kind":"positional", "type":["char", "@matlab.graphics.internal.isLineSpec"]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"tissot":
+{
+	"inputs":
+	[
+		{"name":"spec", "kind":"positional", "type":"numeric"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"matlab.graphics.primitive.Line"}
+	]
+},
+"utmzoneui":
+{
+	"inputs":
+	[
+		{"name":"InitZone", "kind":"ordered", "type":"char"}
+	]
+},
+"rotatem":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"origin", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"transform", "kind":"positional", "type":"choices={'forward','inverse'}"},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"lat1", "type":"numeric"},
+		{"name":"lon1", "type":"numeric"}
+	]
+}
+}

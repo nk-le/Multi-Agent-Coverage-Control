@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2011-2016 The MathWorks, Inc. -->
+<!-- THIS FILE CONTRIBUTES TO THE MATLAB APPS & PLOTS GALLERY WHICH IS CAREFULLY CURATED -->
+<!-- ADDITIONS AND CHANGES MUST GO THROUGH A DESIGN REVIEW PROCESS WITH SENIOR MANAGEMENT -->
+<!-- THIS PROCESS IS MANAGED BY THE MATLAB DESKTOP TEAM. CONSULT THE TOOLSTRIP GUIDELINES TO GET STARTED -->
+<toolset id="map_toolset" message_catalog="map:desktop">
+    <tool id="mapview">
+        <icon filename="image_app_16.png" path="../icons" />
+        <icon filename="image_app_24.png" path="../icons" />
+        <callback>mapview</callback>
+        <parent_tool id="image_products" toolset_id="apps_toolset" />
+    </tool>
+
+    <tool id="mapshow_point" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="mapshow_point.png" path="../../matlab/icons/map" />
+        <icon filename="mapshow_point.png" path="../../matlab/icons/map" />
+        <function>mapshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','mapshow_point',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','mapshow_point',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','mapshow_point',varNames,args)</action>
+        <parent_tool id="category_map_projectedXY" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="mapshow_line" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="mapshow_line.png" path="../../matlab/icons/map" />
+        <icon filename="mapshow_line.png" path="../../matlab/icons/map" />
+        <function>mapshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','mapshow_line',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','mapshow_line',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','mapshow_line',varNames,args)</action>
+        <parent_tool id="category_map_projectedXY" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="mapshow_poly" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="mapshow_poly.png" path="../../matlab/icons/map" />
+        <icon filename="mapshow_poly.png" path="../../matlab/icons/map" />
+        <function>mapshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','mapshow_poly',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','mapshow_poly',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','mapshow_poly',varNames,args)</action>
+        <parent_tool id="category_map_projectedXY" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="mapshow_S" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="mapshow_S.png" path="../../matlab/icons/map" />
+        <icon filename="mapshow_S.png" path="../../matlab/icons/map" />
+        <function>mapshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','mapshow_S',[],args)</visibility>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','mapshow_S',varNames,args)</action>
+        <parent_tool id="category_map_projectedXY" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="mapshow_Symbolspec" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="mapshow_S.png" path="../../matlab/icons/map" />
+        <icon filename="mapshow_S.png" path="../../matlab/icons/map" />
+        <function>mapshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','mapshow_Symbolspec',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','mapshow_Symbolspec',varNames,args)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','mapshow_Symbolspec',varNames,args)</action>
+        <parent_tool id="category_map_projectedXY" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="mapshow_texturemap" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="mapshow_texturemap.png" path="../../matlab/icons/map" />
+        <icon filename="mapshow_texturemap.png" path="../../matlab/icons/map" />
+        <function>mapshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','mapshow_texturemap',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','mapshow_texturemap',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','mapshow_texturemap',varNames,args)</action>
+        <parent_tool id="category_map_projectedXY" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="mapshow_surface" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="mapshow_surface.png" path="../../matlab/icons/map" />
+        <icon filename="mapshow_surface.png" path="../../matlab/icons/map" />
+        <function>mapshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','mapshow_surface',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','mapshow_surface',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','mapshow_surface',varNames,args)</action>
+        <parent_tool id="category_map_projectedXY" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="mapshow_image" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="mapshow_image.png" path="../../matlab/icons/map" />
+        <icon filename="mapshow_image.png" path="../../matlab/icons/map" />
+        <function>mapshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','mapshow_image',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','mapshow_image',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','mapshow_image',varNames,args)</action>
+        <parent_tool id="category_map_projectedXY" toolset_id="plot_toolset" />
+    </tool>
+
+    <tool id="geoshow_point" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="geoshow_point.png" path="../../matlab/icons/map" />
+        <icon filename="geoshow_point.png" path="../../matlab/icons/map" />
+        <function>geoshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','geoshow_point',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','geoshow_point',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','geoshow_point',varNames,args)</action>
+        <parent_tool id="category_map_geodata" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="geoshow_line" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="geoshow_line.png" path="../../matlab/icons/map" />
+        <icon filename="geoshow_line.png" path="../../matlab/icons/map" />
+        <function>geoshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','geoshow_line',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','geoshow_line',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','geoshow_line',varNames,args)</action>
+        <parent_tool id="category_map_geodata" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="geoshow_poly" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="geoshow_poly.png" path="../../matlab/icons/map" />
+        <icon filename="geoshow_poly.png" path="../../matlab/icons/map" />
+        <function>geoshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','geoshow_poly',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','geoshow_poly',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','geoshow_poly',varNames,args)</action>
+        <parent_tool id="category_map_geodata" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="geoshow_S" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="geoshow_S.png" path="../../matlab/icons/map" />
+        <icon filename="geoshow_S.png" path="../../matlab/icons/map" />
+        <function>geoshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','geoshow_S',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','geoshow_s',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','geoshow_S',varNames,args)</action>
+        <parent_tool id="category_map_geodata" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="geoshow_symbolspec" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="geoshow_symspec.png" path="../../matlab/icons/map" />
+        <icon filename="geoshow_symspec.png" path="../../matlab/icons/map" />
+        <function>geoshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','geoshow_symbolspec',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','geoshow_symbolspec',varNames,args)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','geoshow_symbolspec',varNames,args)</action>
+        <parent_tool id="category_map_geodata" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="geoshow_texture" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="geoshow_texture.png" path="../../matlab/icons/map" />
+        <icon filename="geoshow_texture.png" path="../../matlab/icons/map" />
+        <function>geoshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','geoshow_texture',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','geoshow_texture',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','geoshow_texture',varNames,args)</action>
+        <parent_tool id="category_map_geodata" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="geoshow_surface" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="geoshow_surface.png" path="../../matlab/icons/map" />
+        <icon filename="geoshow_surface.png" path="../../matlab/icons/map" />
+        <function>geoshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','geoshow_surface',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','geoshow_surface',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','geoshow_surface',varNames,args)</action>
+        <parent_tool id="category_map_geodata" toolset_id="plot_toolset" />
+    </tool>
+    <tool id="geoshow_image" handler_class="com.mathworks.mlwidgets.graphics.PlotToolSetHandler">
+        <icon filename="mapshow_image.png" path="../../matlab/icons/map" />
+        <icon filename="mapshow_image.png" path="../../matlab/icons/map" />
+        <function>geoshow</function>
+        <visibility>@(args) mappickerfunc('defaultshow','geoshow_image',[],args)</visibility>
+        <labelfcn>@(varNames,args) mappickerfunc('defaultlabel','geoshow_image',varNames)</labelfcn>
+        <action>@(varNames,args) mappickerfunc('defaultdisplay','geoshow_image',varNames,args)</action>
+        <parent_tool id="category_map_geodata" toolset_id="plot_toolset" />
+    </tool>
+</toolset>

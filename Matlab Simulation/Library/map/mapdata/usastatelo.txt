@@ -1,0 +1,16 @@
+Low-resolution outlines and names for the 50 United States plus the
+District of Columbia, stored in shapefile format with coordinates in 
+latitude (Y) and longitude (X) in degrees. Suggested label point
+coordinates and average population density for each state in 2000 are 
+included also. There are four attribute fields:
+
+                 Name: State name or 'District of Columbia'
+             LabelLat: Latitude of label point, in degrees
+             LabelLon: Longitude of label point, in degrees
+          PopDens2000: Average population density by state 
+                       in persons per square mile.
+
+Source
+------
+Based on data from the CIA World DataBank II and the U.S. Census Bureau site 
+"State and County QuickFacts" (http://quickfacts.census.gov/qfd/index.html). 

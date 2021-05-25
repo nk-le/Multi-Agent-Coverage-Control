@@ -62,7 +62,16 @@ classdef DataLogger < handle
             end
         end
         
-        
+        function logCentralizedController(obj, centralController)
+            obj.curCnt = obj.curCnt + 1;
+            if(obj.curCnt <= obj.maxCnt)
+                obj.PoseAgent(:, :,obj.curCnt) = centralController.CurPose(:,:);
+                obj.PoseVM(:, :,obj.curCnt) = centralController.CurPoseVM(:,:);
+                obj.CVT(:,:, obj.curCnt)  = centralController.CurPoseCVT(:,:);
+                obj.ControlOutput(:, obj.curCnt) = centralController.CurAngularVel(:);
+                obj.V_BLF(:, obj.curCnt) = centralController.LyapunovCost;
+            end
+        end 
     end
 end
 

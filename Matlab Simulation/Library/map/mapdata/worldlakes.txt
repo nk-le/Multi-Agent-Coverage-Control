@@ -1,0 +1,11 @@
+Low-resolution outlines of lakes and inland seas worldwide, stored as
+polygons in shapefile format with coordinates in latitude (Y) and
+longitude (X) in degrees.  A 'Name' attribute provides a names for each
+lake or sea.  The coordinate sampling is equivalent to a scale of
+1:30,000,000.  This data set is suitable for global displays.
+
+Source
+------
+The raw coordinate data were derived from the Digital Chart of the World
+(DCW) browser layer, published by U.S. National Geospatial-Intelligence
+Agency (NGA), formerly National Imagery and Mapping Agency (NIMA).
