@@ -128,6 +128,103 @@ function [dCi_dzi_AdjacentJ, dCi_dzj] = computePartialDerivativeCVT(thisPos, tha
     dCi_dzj             = [dCix_dzjx, dCix_dzjy; dCiy_dzjx, dCiy_dzjy];
 end
 
+function [dCi_dzi_AdjacentJ, dCi_dzj] = computePartialDerivativeCVTs(thisPos, thatPos, vertex1, vertex2, mVi, denseViX, denseViY)
+    %% Function definition for partial derivative
+    rho = @(x,y) 1;
+    distanceZiZj = sqrt((ziX - zjX)^2 + (ziY - zjY)^2);
+    dq__dZix_n = @(qX, ziX) (qX - ziX) / distanceZiZj; %        ((zjX - ziX)/2 + (qX - (qXY + zjX)/2)) / distanceZiZj; 
+    dq__dZiy_n = @(qY, ziY) (qY - ziY) / distanceZiZj; %        ((zjY - ziY)/2 + (qY - (ziY + zjY)/2)) /distanceZiZj; 
+    dq__dZjx_n = @(qX, zjX) (zjX - qX) / distanceZiZj; %        ((zjX - ziX)/2 - (qX - (ziX + zjX)/2)) /distanceZiZj; 
+    dq__dZjy_n = @(qY, zjY) (zjY - qY) / distanceZiZj; %        ((zjY - ziY)/2 - (qY - (ziY + zjY)/2))/distanceZiZj; 
+    
+    v1x = vertex1(1);
+    v1y = vertex1(2); 
+    v2x = vertex2(1);
+    v2y = vertex2(2);
+    zix = thisPos(1);
+    ziy = thisPos(2);
+    zjx = thatPos(1);
+    zjy = thatPos(2);
+    mViSquared = mVi^2;
+    
+    %% Integration parameter: t: 0 -> 1
+    XtoT = @(t) v1x + (v2x - v1x)* t;
+    YtoT = @(t) v1y + (v2y - v1y)* t;
+    dqTodtParam = sqrt((v2x - v1x)^2 + (v2y - v1y)^2);  % Factorization of dq = param * dt for line integration
+    
+    %% dCi_dzix
+    dCi_dzix_secondTermInt__mSquared = integral(@(t) dq__dZix_n(XtoT(t), zix), 0, 1 * dqTodtParam ) / mViSquared;
+    int_dCix_dzix =  integral(@(t) XtoT(t) * dq__dZix_n(XtoT(t), zix) * dqTodtParam, 0, 1) / mVi + dCi_dzix_secondTermInt__mSquared * denseViX;
+    int_dCiy_dziy =  integral(@(t) YtoT(t) * dq__dZix_n(YtoT(t), zix) * dqTodtParam, 0, 1) / mVi + dCi_dzix_secondTermInt__mSquared * denseViY;
+
+    %% dCi_dzjx
+    dCi_dzjx_secondTermInt__mSquared = integral(@(t) dq__dZjx_n(XtoT(t), zjx), 0, 1 * dqTodtParam ) / mViSquared;
+    int_dCix_dzjx = integral(@(t) XtoT(t) * dq__dZjx_n(XtoT(t), zjx) * dqTodtParam, 0, 1) / mVi + dCi_dzjx_secondTermInt__mSquared * denseViX;
+    int_dCiy_dzjx = integral(@(t) YtoT(t) * dq__dZjx_n(YtoT(t), zjx) * dqTodtParam, 0, 1) / mVi + dCi_dzjx_secondTermInt__mSquared * denseViY;
+    
+    %%
+    
+    
+    %%
+    int_dCix_dzjx
+    int_dCiy_dzjx
+    int_dCix_dzix
+    int_dCiy_dziy
+    int_dCix_dzix_1stTerm
+    dq__dZi_x_n = @(qXY, zjY, ziY) ((zjXY - ziXY)/2 + (qXY - (ziXY + zjXY)/2)); 
+
+    int_dCix_dzjx_func      = @(t, a, b, zjx, zix) rho(t,a*t+b) .* (t              .* dq__dZj_x_n(t, zjx, zix)             .* (1 + a^2)^(1/2));
+    int_dCix_dzjy_func      = @(t, a, b, zjy, ziy) rho(t,a*t+b) .* (t              .* dq__dZj_x_n((a * t + b), zjy, ziy)   .* (1 + a^2)^(1/2));
+    int_dCiy_dzjx_func      = @(t, a, b, zjx, zix) rho(t,a*t+b) .* ((a * t + b)    .* dq__dZj_x_n(t, zjx, zix)             .* (1 + a^2)^(1/2));
+    int_dCiy_dzjy_func      = @(t, a, b, zjy, ziy) rho(t,a*t+b) .* ((a * t + b)    .* dq__dZj_x_n((a * t + b), zjy, ziy)   .* (1 + a^2)^(1/2));
+    int_dq_dzj_x_n_intFunc   = @(t, a, b, zj, zi)  rho(t,a*t+b) .* ((zj - zi)/2 - (t - (zj + zi)/2)) * (1 + a^2)^(1/2); 
+    
+    int_dCix_dzix_func      = @(t, a, b, zjx, zix) rho(t,a*t+b) .* (t              .* dq__dZi_x_n(t, zjx, zix)             .* (1 + a^2)^(1/2)) ;
+    int_dCix_dziy_func      = @(t, a, b, zjy, ziy) rho(t,a*t+b) .* (t              .* dq__dZi_x_n((a * t + b), zjy, ziy)   .* (1 + a^2)^(1/2));
+    int_dCiy_dzix_func      = @(t, a, b, zjx, zix) rho(t,a*t+b) .* ((a * t + b)    .* dq__dZi_x_n(t, zjx, zix)             .* (1 + a^2)^(1/2));
+    int_dCiy_dziy_func      = @(t, a, b, zjy, ziy) rho(t,a*t+b) .* ((a * t + b)    .* dq__dZi_x_n((a * t + b), zjy, ziy)   .* (1 + a^2)^(1/2));
+    int_dq_dzi_x_n_intFunc   = @(t, a, b, zj, zi)  rho(t,a*t+b) .* ((zj - zi)/2 + (t - (zj + zi)/2)) .* (1 + a^2)^(1/2); 
+
+    % Name convention
+    
+
+    % Temporary save the vertexes of the adjacent boundary. Boundary line is
+    % defined by 2 points, we use the "start" and "end" notation for the
+    % integration
+    x1     = vertex1(1);
+    y1     = vertex1(2); 
+    x2       = vertex2(1);
+    y2       = vertex2(2);
+    % 2 cases to determine the line y = ax + b
+    dsIsdy = 0;
+    if(x1 ~= x2)
+       a = (y2 - y1) / (x2 - x1); 
+       b = y1 - a * x1;
+    else       
+       dsIsdy = 1;
+    end
+
+    % Distance to the neighbor agent
+    dZiZj = norm(thisPos - thatPos);
+
+    % Partial derivative computation
+    % variables to avoid recomputation
+    mViSquared = mVi^2;
+    
+    dCix_dzjx = (integral(@(x) int_dCix_dzjx_func(x,a,b,zjx,zix), x1, x2) / mVi  -  integral(@(x)int_dq_dzj_x_n_intFunc(x    ,a,b,zjx,zix), x1, x2) * denseViX / mViSquared) / dZiZj;
+    dCix_dzjy = (integral(@(x) int_dCix_dzjy_func(x,a,b,zjy,ziy), x1, x2) / mVi  -  integral(@(x)int_dq_dzj_x_n_intFunc(a*x+b,a,b,zjy,ziy), x1, x2) * denseViX / mViSquared) / dZiZj;
+    dCiy_dzjx = (integral(@(x) int_dCiy_dzjx_func(x,a,b,zjx,zix), x1, x2) / mVi  -  integral(@(x)int_dq_dzj_x_n_intFunc(x    ,a,b,zjx,zix), x1, x2) * denseViY / mViSquared) / dZiZj;
+    dCiy_dzjy = (integral(@(x) int_dCiy_dzjy_func(x,a,b,zjy,ziy), x1, x2) / mVi  -  integral(@(x)int_dq_dzj_x_n_intFunc(a*x+b,a,b,zjy,ziy), x1, x2) * denseViY / mViSquared) / dZiZj;
+
+    dCix_dzix = (integral(@(x) int_dCix_dzix_func(x,a,b,zjx,zix), x1, x2) / mVi  -  integral(@(x)int_dq_dzi_x_n_intFunc(x    ,a,b,zjx,zix), x1, x2) * denseViX / mViSquared) / dZiZj;
+    dCix_dziy = (integral(@(x) int_dCix_dziy_func(x,a,b,zjy,ziy), x1, x2) / mVi  -  integral(@(x)int_dq_dzi_x_n_intFunc(a*x+b,a,b,zjy,ziy), x1, x2) * denseViX / mViSquared) / dZiZj;
+    dCiy_dzix = (integral(@(x) int_dCiy_dzix_func(x,a,b,zjx,zix), x1, x2) / mVi  -  integral(@(x)int_dq_dzi_x_n_intFunc(x    ,a,b,zjx,zix), x1, x2) * denseViY / mViSquared) / dZiZj;
+    dCiy_dziy = (integral(@(x) int_dCiy_dziy_func(x,a,b,zjy,ziy), x1, x2) / mVi  -  integral(@(x)int_dq_dzi_x_n_intFunc(a*x+b,a,b,zjy,ziy), x1, x2) * denseViY / mViSquared) / dZiZj; 
+
+    dCi_dzi_AdjacentJ   = [dCix_dzix, dCix_dziy; dCiy_dzix, dCiy_dziy];
+    dCi_dzj             = [dCix_dzjx, dCix_dzjy; dCiy_dzjx, dCiy_dzjy];
+end
+
 %% Determine which CVTs are adjacent CVTs
 function [adjacentList] = computeAdjacentList(centroidPos, vertexes, vertexHandler)
     % Check for all agent
