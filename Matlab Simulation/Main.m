@@ -8,7 +8,7 @@ global globalInformation;   % pseudo broadcasted information over all agents (if
 visualizationOn = false;
 [nAgent, maxIter] = setup(visualizationOn);
 
-%% MAIN
+    %% MAIN
 for iteration = 1: maxIter
     % Main process
     [currentPose, currentLyapunov] = masterCom.loop();
@@ -21,6 +21,7 @@ for iteration = 1: maxIter
     % Displaying for debugging
     if(mod(iteration, 1) == 0)
         fprintf('Iter: %d Lyp: %f \n',iteration, currentLyapunov);
+        %disp(masterCom.LyapunovCost');
     end
     % Logging
     logger.logCentralizedController(masterCom);

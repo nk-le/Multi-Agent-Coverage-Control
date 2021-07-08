@@ -149,10 +149,12 @@ function [adjacentList] = computeAdjacentList(centroidPos, vertexes, vertexHandl
                        % adjacent CVT or not  -> currentVertexes vs vertexBeingChecked
                        commonVertex = intersect(thisVertexList, nextVertexList);        % There are some bugs here. Same vertex coord but different index list. Most happens when the vexter lies on the boundary lines
                        nComVer = numel(commonVertex);
-                       if(nComVer == 0 || nComVer == 1)
+                       if(nComVer == 0)
                             % not adjacent
                             adjacentList(thisCVT, adjCVT, 1) = false;
-                       elseif(numel(commonVertex) == 2)
+                       elseif(nComVer == 1)
+                           disp("Warning: only 1 common vertex found");
+                       elseif(nComVer == 2)
                            % Adjacent flag
                            adjacentList(thisCVT, adjCVT, 1) = true;
                            % Assign CVT coords
@@ -167,7 +169,7 @@ function [adjacentList] = computeAdjacentList(centroidPos, vertexes, vertexHandl
                            adjacentList(thisCVT, adjCVT,9) = vertexes(commonVertex(2),2); % v2y                        
                        else
                            error("More than 3 vertexes for 1 common line detected");
-                       end
+                        end
               end
          end
     end

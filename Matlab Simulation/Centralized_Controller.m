@@ -90,7 +90,9 @@ classdef Centralized_Controller < handle
             % Save all the current VM
             obj.CurPoseVM = newPoseVM;          
             % The used methods were developed by Aaron_Becker
-            [obj.v,obj.c]= Function_VoronoiBounded(obj.CurPoseVM(:,1), obj.CurPoseVM(:,2), obj.boundariesVertexes);
+            [obj.v,rawC]= Function_VoronoiBounded(obj.CurPoseVM(:,1), obj.CurPoseVM(:,2), obj.boundariesVertexes);
+            % Added a layer to outlier the duplicated vertexes
+            obj.c = outlierVertexList(obj.v, rawC, [0 obj.xrange], [0 obj.yrange]);
             % Compute the new setpoint for each agent
             for i = 1:obj.nAgent
                 [cx,cy] = Function_PolyCentroid(obj.v(obj.c{i},1),obj.v(obj.c{i},2));
@@ -199,12 +201,11 @@ classdef Centralized_Controller < handle
                     end
                 end      
                 % Compute the control input
-                epsSigmoid = 1;
-                mu = 1/w0; % Control gain %% ADJUST THE CONTROL GAIN HERE
+                epsSigmoid = 5;
+                mu = 1/w0/2; % Control gain %% ADJUST THE CONTROL GAIN HERE
                 w = w0 + mu * w0 * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
                 % Logging
                 obj.CurAngularVel(i) = w;
-                
                 % Set the computed output for this agent
                 agentHandle.setAngularVel(w);  
             end
