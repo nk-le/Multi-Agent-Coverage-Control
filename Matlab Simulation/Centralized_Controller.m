@@ -89,11 +89,13 @@ classdef Centralized_Controller < handle
         function [infoOut, LypOut, CVTsOut] = updateCoverage(obj, newPoseVM)
             % Save all the current VM
             obj.CurPoseVM = newPoseVM;          
-            % The used methods were developed by Aaron_Becker
+            %% The used methods were developed by Aaron_Becker
             [obj.v,rawC]= Function_VoronoiBounded(obj.CurPoseVM(:,1), obj.CurPoseVM(:,2), obj.boundariesVertexes);
-            % Added a layer to outlier the duplicated vertexes
+            
+            %% Added a layer to outlier the duplicated vertexes
             obj.c = outlierVertexList(obj.v, rawC, [0 obj.xrange], [0 obj.yrange]);
-            % Compute the new setpoint for each agent
+            
+            %% Compute the new setpoint for each agent
             for i = 1:obj.nAgent
                 [cx,cy] = Function_PolyCentroid(obj.v(obj.c{i},1),obj.v(obj.c{i},2));
                 cx = min(obj.xrange,max(0, cx));
@@ -103,12 +105,12 @@ classdef Centralized_Controller < handle
                     obj.CurPoseCVT(i,2) = cy;
                 end
             end
-            % Update the partial derivativ of each cells and construct the
-            % broadcased information matrix
+            
+            %% Update the partial derivativ of each cells and construct the broadcased information matrix
             [obj.CVTpartialDerivativeMat, obj.adjacentMat] = ComputeVoronoiProperty(obj.CurPoseVM, obj.CurPoseCVT, obj.v, obj.c);
             obj.CoverageStateInfo = obj.computeLyapunovDerivative();
          
-            %% This will be updated - Update Lyapunov function 
+            %% Update Lyapunov function 
             newV = zeros(obj.nAgent, 1);
             for k = 1:obj.nAgent
                 zk = obj.CurPoseVM(k,:);
@@ -119,7 +121,7 @@ classdef Centralized_Controller < handle
             obj.lastPoseCVT = obj.CurPoseCVT;
             obj.LyapunovCost = newV;
             
-            % Return the global info to be published and evaluation
+            %% Return the global info to be published and evaluation
             LypOut = sum(obj.LyapunovCost);
             infoOut = obj.CoverageStateInfo;
             CVTsOut = obj.CurPoseCVT;
@@ -239,7 +241,7 @@ classdef Centralized_Controller < handle
             globalInformation = obj.CoverageStateInfo;
             
             %% Update the control policy for each agent
-%% DISTRIBUTED CONTROLL POLICY
+% DISTRIBUTED CONTROLL POLICY
 %           TODO: implement the distributed fashion for each controller
 %             for i = 1:obj.nAgent
 %                 obj.agentList(i).executeControl(obj.CurPoseCVT(i,:));       
@@ -247,14 +249,13 @@ classdef Centralized_Controller < handle
 %                  
 %             end
             
-%% CENTRALIZED CONTROLL POLICY
+% CENTRALIZED CONTROLL POLICY
             obj.controlCentralize();
             
             %% Final update for the next process
             % ...
             % disp(curLypCost)
             
-            %% Return
             outLypCost = curLypCost;
             botPose = obj.CurPose;
         end

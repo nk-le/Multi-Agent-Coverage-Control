@@ -2,6 +2,10 @@
 %
 function [outList, adjacentList] = ComputeVoronoiProperty(pointCoord, CVTCoord, verList, verPtr)
     n = numel(verPtr);
+    
+    info = SimpleValue.empty(n,0);
+    
+    
     outList = zeros(n, n, 5); % Checkflag - dCix/dzjx - dCix/dzjy - dCiy/dzjx - dCiy/dzjy 
     [adjacentList] = computeAdjacentList(CVTCoord, verList, verPtr);
 %     if(1)
@@ -134,39 +138,75 @@ end
 %% Determine which CVTs are adjacent CVTs
 function [adjacentList] = computeAdjacentList(centroidPos, vertexes, vertexHandler)
     % Check for all agent
-    nCell = numel(vertexHandler);
+    nAgent = numel(vertexHandler);
     % Return the result [adjacentList] with the following information - 9 columns 
     % CheckNeighborflag - [thisCVT: x y] - [neighborCVT: x y] - [vertex1: x y] - [vertex2: x y]
-    adjacentList = zeros(nCell,nCell, 9);  
+    
+    AgentReport(nAgent) = struct();
+    % Tmp Variable to scan the collaborative agent
+    FriendAgentInfo(nAgent) = struct();
+    for k = 1:nAgent
+        % Instatinate struct data to carry all information of another agent
+        AgentReport(k).ID = k;
+        AgentReport(k).CVT.x = 0;
+        AgentReport(k).CVT.y = 0;
+        % Define how the info structure of friend agents looks like
+        for friendID = 1:nAgent
+            FriendAgentInfo(friendID).ID = friendID;
+            FriendAgentInfo(friendID).isVoronoiNeighbor = false;
+            FriendAgentInfo(friendID).CVT.x = 0;
+            FriendAgentInfo(friendID).CVT.y = 0;
+            FriendAgentInfo(friendID).CommonVertex.Vertex1.x = 0;
+            FriendAgentInfo(friendID).CommonVertex.Vertex1.y = 0;
+            FriendAgentInfo(friendID).CommonVertex.Vertex2.x = 0;
+            FriendAgentInfo(friendID).CommonVertex.Vertex2.y = 0;
+        end
+        AgentReport(k).FriendInfo = FriendAgentInfo;
+    end
+    
+    adjacentList = zeros(nAgent,nAgent, 9);
+    
     %% Start searching for common vertexes to determine neighbor agents
-    for thisCVT = 1 : nCell
-        thisVertexList = vertexHandler{thisCVT}(1:end - 1);
+    for thisID = 1 : nAgent
+        thisVertexList = vertexHandler{thisID}(1:end - 1);
         % Checking all another CVTs
-        for adjCVT = 1: nCell
-              if(adjCVT ~= thisCVT)
-                    nextVertexList = vertexHandler{adjCVT}(1:end-1); 
+        for friendID = 1: nAgent
+              if(friendID ~= thisID)
+                    nextVertexList = vertexHandler{friendID}(1:end-1); 
                        % Comparing these 2 arrays to find out whether it is the
                        % adjacent CVT or not  -> currentVertexes vs vertexBeingChecked
                        commonVertex = intersect(thisVertexList, nextVertexList);        % There are some bugs here. Same vertex coord but different index list. Most happens when the vexter lies on the boundary lines
                        nComVer = numel(commonVertex);
                        if(nComVer == 0)
                             % not adjacent
-                            adjacentList(thisCVT, adjCVT, 1) = false;
+                            adjacentList(thisID, friendID, 1) = false;
+                            AgentReport(thisID).FriendAgentInfo(friendID).isVoronoiNeighbor = false;
                        elseif(nComVer == 1)
                            disp("Warning: only 1 common vertex found");
                        elseif(nComVer == 2)
                            % Adjacent flag
-                           adjacentList(thisCVT, adjCVT, 1) = true;
+                           adjacentList(thisID, friendID, 1) = true;
                            % Assign CVT coords
-                           adjacentList(thisCVT, adjCVT,2) = centroidPos(thisCVT,1); % this Cx
-                           adjacentList(thisCVT, adjCVT,3) = centroidPos(thisCVT,2); % this Cy
-                           adjacentList(thisCVT, adjCVT,4) = centroidPos(adjCVT,1); % adj Cx
-                           adjacentList(thisCVT, adjCVT,5) = centroidPos(adjCVT,2); % adj Cy
+                           adjacentList(thisID, friendID,2) = centroidPos(thisID,1); % this Cx
+                           adjacentList(thisID, friendID,3) = centroidPos(thisID,2); % this Cy
+                           adjacentList(thisID, friendID,4) = centroidPos(friendID,1); % adj Cx
+                           adjacentList(thisID, friendID,5) = centroidPos(friendID,2); % adj Cy
                            % Assign first common vertex
-                           adjacentList(thisCVT, adjCVT,6) = vertexes(commonVertex(1),1); % v1x
-                           adjacentList(thisCVT, adjCVT,7) = vertexes(commonVertex(1),2); % v1y
-                           adjacentList(thisCVT, adjCVT,8) = vertexes(commonVertex(2),1); % v2x
-                           adjacentList(thisCVT, adjCVT,9) = vertexes(commonVertex(2),2); % v2y                        
+                           adjacentList(thisID, friendID,6) = vertexes(commonVertex(1),1); % v1x
+                           adjacentList(thisID, friendID,7) = vertexes(commonVertex(1),2); % v1y
+                           adjacentList(thisID, friendID,8) = vertexes(commonVertex(2),1); % v2x
+                           adjacentList(thisID, friendID,9) = vertexes(commonVertex(2),2); % v2y 
+                           
+                           % Adjacent flag
+                           AgentReport(thisID).CVT.x = centroidPos(thisID,1);
+                           AgentReport(thisID).CVT.y = centroidPos(thisID,2);
+                           AgentReport(thisID).FriendAgentInfo(friendID).isVoronoiNeighbor = true;
+                           AgentReport(thisID).FriendAgentInfo(friendID).CVT.x = centroidPos(friendID,1);
+                           AgentReport(thisID).FriendAgentInfo(friendID).CVT.x = centroidPos(friendID,2);
+                           AgentReport(thisID).FriendAgentInfo(friendID).CommonVertex.Vertex1.x = vertexes(commonVertex(1),1);
+                           AgentReport(thisID).FriendAgentInfo(friendID).CommonVertex.Vertex1.y = vertexes(commonVertex(1),2);
+                           AgentReport(thisID).FriendAgentInfo(friendID).CommonVertex.Vertex2.x = vertexes(commonVertex(2),1);
+                           AgentReport(thisID).FriendAgentInfo(friendID).CommonVertex.Vertex2.y = vertexes(commonVertex(2),2);
                        else
                            error("More than 3 vertexes for 1 common line detected");
                         end
