@@ -185,13 +185,14 @@ classdef Centralized_Controller < handle
         end
         
         function [LyapunovState] = controlCentralize(obj, AgentReport)
+            %% Compute the Lyapunov partial derivative according to the latest state of Agents
             LyapunovState = obj.ComputeLyapunovDerivative(AgentReport);
-            % Update all the control policy for all agents
+            
+            %% Compute the control policy
             for thisAgent = 1 : obj.nAgent
-                agentHandle = obj.agentList(thisAgent);        
-                w0 = agentHandle.wOrbit;
-                cosTheta = cos(agentHandle.curPose(3));   % agentStatus.curPose(3): Actual Orientation
-                sinTheta = sin(agentHandle.curPose(3));
+                w0 = obj.agentList(thisAgent).wOrbit;
+                cosTheta = cos(obj.agentList(thisAgent).curPose(3));   % agentStatus.curPose(3): Actual Orientation
+                sinTheta = sin(obj.agentList(thisAgent).curPose(3));
 
                 % Compute the Lyapunov feedback from adjacent agents
                 sumdVj_diX = LyapunovState(thisAgent).myInfo.dV_dVMx;     % Note that the adjacent agent affects this agent, so the index is dVj/dVi <--> obj.CoverageStateInfo(Agent_J, Agent_I, :)
@@ -207,13 +208,12 @@ classdef Centralized_Controller < handle
                 end      
                 % Compute the control input
                 epsSigmoid = 2;
-                mu = 1/2; % Control gain %% ADJUST THE CONTROL GAIN HERE
+                mu = 1; % Control gain %% ADJUST THE CONTROL GAIN HERE
                 w = w0 + mu * w0 * (sumdVj_diX * cosTheta + sumdVj_diY * sinTheta)/(abs(sumdVj_diX * cosTheta + sumdVj_diY * sinTheta) + epsSigmoid); 
-                % Logging
+                % Send control output to each agent
                 obj.CurAngularVel(thisAgent) = w;
-                % Set the computed output for this agent
-                %disp(w);
-                agentHandle.setAngularVel(w);  
+                obj.agentList(thisAgent).setAngularVel(w);
+                % disp(w);
             end
         end
 
@@ -241,19 +241,8 @@ classdef Centralized_Controller < handle
             
             %% Update the broadcasted information
             [AgentReport, curLypCost] = obj.updateCoverage(newPoseVM);
-            %global globalInformation;
-            %globalInformation = obj.CoverageStateInfo;
             
             %% Update the control policy for each agent
-% DISTRIBUTED CONTROLL POLICY
-%           TODO: implement the distributed fashion for each controller
-%             for i = 1:obj.nAgent
-%                 obj.agentList(i).executeControl(obj.CurPoseCVT(i,:));       
-%                 %obj.agentList(i).setAngularVel(3);
-%                  
-%             end
-            
-% CENTRALIZED CONTROLL POLICY
             LyapunovState = obj.controlCentralize(AgentReport);
             
             %% Final update for the next process

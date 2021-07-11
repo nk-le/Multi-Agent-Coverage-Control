@@ -3,7 +3,7 @@ function [simConfig, regionConfig, agentConfig] = Config()
     rng(4);
     simConfig.dt = 0.001;
     simConfig.maxIter = 40000;
-    simConfig.nAgent = 2;
+    simConfig.nAgent = 6;
     simConfig.visualization = false;
     
     %% Region Config - Shape of the coverage region
