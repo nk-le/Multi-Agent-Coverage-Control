@@ -1,5 +1,5 @@
-cellColors = cool(nAgent);    
-env = MultiRobotEnv(nAgent);
+cellColors = cool(simConfig.nAgent);    
+env = MultiRobotEnv(simConfig.nAgent);
 iter = logger.curCnt;
 spX = logger.CVT(:,1,:);
 spY = logger.CVT(:,2,:);
@@ -12,8 +12,8 @@ bndVertexes = logger.bndVertexes;
 
 
 
-poseInit = zeros(3, nAgent);
-env((1:nAgent), poseInit);
+poseInit = zeros(3, simConfig.nAgent);
+env((1:simConfig.nAgent), poseInit);
 hold on; grid on; %axis equal
 
 % Plot Boundaries
@@ -42,12 +42,12 @@ for loopCnt = 1:iter
                plot([bndVertexes(i,1) bndVertexes(i+1,1)],[bndVertexes(i,2) bndVertexes(i+1,2)], '-r', 'LineWidth',4);                    
             end   
             % Color Patch
-            verCellHandle = zeros(nAgent,1);
-            cellColors = cool(nAgent);         
+            verCellHandle = zeros(simConfig.nAgent,1);
+            cellColors = cool(simConfig.nAgent);         
             if(showColorPlot == true)
                 vmPlotColorHandle = [];
                 spPlotColorHandle = [];
-                for i = 1:nAgent % color according to
+                for i = 1:simConfig.nAgent % color according to
                     verCellHandle(i) = patch(spX(1,i),spY(2,i), cellColors(i,:)); % use color i  -- no robot assigned yet
                     vmHandle =  plot(vmX(i,loopCnt), vmY(i,loopCnt),'x','Color', cellColors(i,:), 'LineWidth',2);
                     spHandle =  plot(spX(i,loopCnt), spY(i,loopCnt), '-o','Color', cellColors(i,:), 'LineWidth',2);   
@@ -59,10 +59,10 @@ for loopCnt = 1:iter
         
     if(mod(loopCnt-1, 5) == 0)
         % Update the position in engine
-        for i = 1:nAgent
+        for i = 1:simConfig.nAgent
             pose(:,i) = [poseX(i, loopCnt), poseY(i, loopCnt), poseTheta(i, loopCnt)];
         end
-        env((1:nAgent), pose);
+        env((1:simConfig.nAgent), pose);
         
         if(showColorPlot == true)
             %figure(2);
@@ -72,7 +72,7 @@ for loopCnt = 1:iter
             str =  "Voronoi Tessellation";
             str = str + newline + "x: WMR's Virtual Mass, o: Centroid of Voronoi Partition";
             title(str);
-            for i = 1:nAgent % update Voronoi cells
+            for i = 1:simConfig.nAgent % update Voronoi cells
                set(spPlotColorHandle(i),'XData', spX(i,loopCnt) ,'YData', spY(i,loopCnt)); %plot current position
                set(vmPlotColorHandle(i),'XData', vmX(i,loopCnt) ,'YData', vmY(i,loopCnt)); 
                %set(verCellHandle(i), 'XData',com.v(com.c{i},1),'YData',com.v(com.c{i},2));
