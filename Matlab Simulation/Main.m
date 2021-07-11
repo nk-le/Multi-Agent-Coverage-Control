@@ -1,25 +1,25 @@
-%% GLOBAL PARAMETER
-global masterCom;           % centralized Controller operates all the simulation process (dynamics, control, ...)
-global logger;              % log instance of all time step of the centralized controller for post processing
-global globalInformation;   % pseudo broadcasted information over all agents (if applied in distributed scheme)
-%global env; % Simulation environment
-
 format long;
 
-%% Setup
-visualizationOn = false;
-[nAgent, maxIter] = setup(visualizationOn);
+[simConfig, regionConfig, agentConfig] = Config();
+%% Centralized Controller
+masterCom = Centralized_Controller(simConfig.nAgent, simConfig.dt, regionConfig.BoundariesCoeff, regionConfig.bndVertexes, agentConfig.startPose, agentConfig.vConstList, agentConfig.wOrbitList);
+
+% Instance of logger for data post processing, persistent over all files
+logger = DataLogger(simConfig.nAgent, simConfig.maxIter);
+logger.bndVertexes = regionConfig.bndVertexes;
 
     %% MAIN
-for iteration = 1: maxIter
+for iteration = 1: simConfig.maxIter
     % Main process
-    [currentPose, currentLyapunov] = masterCom.loop();
+    [currentPose, currentLyapunov, AgentReport, LyapunovState] = masterCom.loop();
+
+    % Using two variables AgentReport and LyapunovState for easy debugging
+    
+    
     % Update Visualization
-    
-    if(visualizationOn)
-        env((1:nAgent), currentPose');
-    end
-    
+    if(simConfig.visualization)
+        env((1:simConfig.nAgent), currentPose');
+    end    
     % Displaying for debugging
     if(mod(iteration, 1) == 0)
         fprintf('Iter: %d Lyp: %f \n',iteration, currentLyapunov);
@@ -28,36 +28,5 @@ for iteration = 1: maxIter
     % Logging
     logger.logCentralizedController(masterCom);
 end
-
 %% END
-
-
-
-
-%% Support functions
-function [nAgent, maxIter] = setup(visualizationOn)
-    global masterCom;
-    global logger;  
-    [nAgent, vConstList, wOrbitList, bndVertexes, bndCoeff, startPose, visualizationOn, maxIter] = Config;
-
-    %% Centralized Controller
-    masterCom = Centralized_Controller(nAgent, bndCoeff, bndVertexes, startPose, vConstList, wOrbitList);
-    % TODO - configurate the controller gain here
-    %masterCom.setupControlParameter(0,1,2,3)
-
-    % Instance of logger for data post processing, persistent over all files
-    logger = DataLogger(nAgent, maxIter);
-    logger.bndVertexes = bndVertexes;
-    
-    %% Visualization handler
-%     if(visualizationOn)
-%         env = MultiRobotEnv(nAgent);
-%         env((1:nAgent), startPose');
-%         hold on; grid on; axis equal
-%         offset = 20;
-%         xlim([0 - offset, maxX + offset]);
-%         ylim([0 - offset, maxY + offset]);
-%     end
-
-end
 

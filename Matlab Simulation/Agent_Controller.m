@@ -14,6 +14,7 @@ classdef Agent_Controller < handle
         regionCoeff     % [a1 a2 b] --> a1*x + a2*y - b <= 0
         
         %% Should be private
+        dt              % Simulation time step
         vConst          % const float
         wOrbit          % const float
         
@@ -29,7 +30,8 @@ classdef Agent_Controller < handle
     
     methods
         %% Initalize class handler
-        function obj = Agent_Controller()
+        function obj = Agent_Controller(dt)
+            obj.dt = dt;
             obj.v = 0;
             obj.w = 0;
         end
@@ -137,14 +139,13 @@ classdef Agent_Controller < handle
         % to simulate the movement.
         function [newPose] = move(obj) % Unicycle Dynamic
             % Universal time step
-            global dt;
-            if(dt == 0)
+            if(obj.dt == 0)
                error("Simulation time step dt was not assigned"); 
             end
             newPose = zeros(3,1); % [X Y Theta]
-            newPose(1) = obj.curPose(1) + dt * (obj.vConst * cos(obj.curPose(3)));
-            newPose(2) = obj.curPose(2) + dt * (obj.vConst * sin(obj.curPose(3)));
-            newPose(3) = obj.curPose(3) + dt * obj.w;
+            newPose(1) = obj.curPose(1) + obj.dt * (obj.vConst * cos(obj.curPose(3)));
+            newPose(2) = obj.curPose(2) + obj.dt * (obj.vConst * sin(obj.curPose(3)));
+            newPose(3) = obj.curPose(3) + obj.dt * obj.w;
             obj.curPose = newPose;
         end
     end

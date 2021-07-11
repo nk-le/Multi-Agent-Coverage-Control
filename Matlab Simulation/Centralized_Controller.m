@@ -44,7 +44,7 @@ classdef Centralized_Controller < handle
 
     methods
         %% Initialization constant variables
-        function obj = Centralized_Controller(nAgent, bndCoeff, bndVertexes, initPose, vConstList, wOrbitList)
+        function obj = Centralized_Controller(nAgent, dt, bndCoeff, bndVertexes, initPose, vConstList, wOrbitList)
             % Default empty variables
             obj.nAgent = nAgent;
             obj.boundariesVertexes = bndVertexes;
@@ -67,7 +67,7 @@ classdef Centralized_Controller < handle
             obj.agentList = Agent_Controller.empty(obj.nAgent, 0);
             for i = 1 : obj.nAgent
                 botID = i;
-                obj.agentList(i) = Agent_Controller();
+                obj.agentList(i) = Agent_Controller(dt);
                 obj.agentList(i).begin(botID, obj.boundariesCoeff, initPose(i, :), vConstList(i), wOrbitList(i));
             end
         end   
@@ -184,11 +184,8 @@ classdef Centralized_Controller < handle
             Vk =  (norm(Zk - Ck))^2 * Vk;
         end
         
-        function controlCentralize(obj, AgentReport)
-            dVState = obj.ComputeLyapunovDerivative(AgentReport);
-            
-            
-            
+        function [LyapunovState] = controlCentralize(obj, AgentReport)
+            LyapunovState = obj.ComputeLyapunovDerivative(AgentReport);
             % Update all the control policy for all agents
             for thisAgent = 1 : obj.nAgent
                 agentHandle = obj.agentList(thisAgent);        
@@ -197,24 +194,25 @@ classdef Centralized_Controller < handle
                 sinTheta = sin(agentHandle.curPose(3));
 
                 % Compute the Lyapunov feedback from adjacent agents
-                sumdVj_diX = dVState(thisAgent).myInfo.dV_dVMx;     % Note that the adjacent agent affects this agent, so the index is dVj/dVi <--> obj.CoverageStateInfo(Agent_J, Agent_I, :)
-                sumdVj_diY = dVState(thisAgent).myInfo.dV_dVMy;
+                sumdVj_diX = LyapunovState(thisAgent).myInfo.dV_dVMx;     % Note that the adjacent agent affects this agent, so the index is dVj/dVi <--> obj.CoverageStateInfo(Agent_J, Agent_I, :)
+                sumdVj_diY = LyapunovState(thisAgent).myInfo.dV_dVMy;
                 for friendID = 1 : obj.nAgent % Scan to see which are the adjacent agents
                     % If the considering cell affects us, add it to the gradient
-                    if(dVState(thisAgent).FriendInfo(friendID).isVoronoiNeighbor == true)
+                    if(LyapunovState(thisAgent).FriendInfo(friendID).isVoronoiNeighbor == true)
                         % NOTE: The index is reverse here according to the
                         % control law
-                        sumdVj_diX = sumdVj_diX + dVState(friendID).FriendInfo(thisAgent).dV_dVMFriend_x; % dVj_dzix
-                        sumdVj_diY = sumdVj_diY + dVState(friendID).FriendInfo(thisAgent).dV_dVMFriend_y; % dVj_dziy
+                        sumdVj_diX = sumdVj_diX + LyapunovState(friendID).FriendInfo(thisAgent).dV_dVMFriend_x; % dVj_dzix
+                        sumdVj_diY = sumdVj_diY + LyapunovState(friendID).FriendInfo(thisAgent).dV_dVMFriend_y; % dVj_dziy
                     end
                 end      
                 % Compute the control input
-                epsSigmoid = 5;
-                mu = 1/w0/2; % Control gain %% ADJUST THE CONTROL GAIN HERE
+                epsSigmoid = 2;
+                mu = 1/2; % Control gain %% ADJUST THE CONTROL GAIN HERE
                 w = w0 + mu * w0 * (sumdVj_diX * cosTheta + sumdVj_diY * sinTheta)/(abs(sumdVj_diX * cosTheta + sumdVj_diY * sinTheta) + epsSigmoid); 
                 % Logging
                 obj.CurAngularVel(thisAgent) = w;
                 % Set the computed output for this agent
+                %disp(w);
                 agentHandle.setAngularVel(w);  
             end
         end
@@ -226,7 +224,7 @@ classdef Centralized_Controller < handle
         %       Current pose of agents for simulation      
         %       
         %
-        function [botPose, outLypCost] = loop(obj)
+        function [botPose, outLypCost, AgentReport, LyapunovState] = loop(obj)
             %% Update dynamic - Each agents move according to the updated control policy
             % This method should be called independent from centralized
             % controller (inside the loop), however put it here for
@@ -256,7 +254,7 @@ classdef Centralized_Controller < handle
 %             end
             
 % CENTRALIZED CONTROLL POLICY
-            obj.controlCentralize(AgentReport);
+            LyapunovState = obj.controlCentralize(AgentReport);
             
             %% Final update for the next process
             % ...
