@@ -171,54 +171,7 @@ classdef Centralized_Controller < handle
                 end
             end 
         end
-        
-        
-        
-%         %% Partial dervivative of Lyapunov function
-%         function outdVMat = computeLyapunovDerivative(obj)
-%             outdVMat = zeros(obj.nAgent, obj.nAgent, 3); % Checkflag - dVi/dzx - dVi/dzy
-%             % CVTCoord      : CVT information of each agent
-%             % adjacentList  : 
-%             for thisCell = 1: obj.nAgent
-%                 %% One shot computation before scanning over the adjacent matrix
-%                 Q = eye(2);
-%                 Ci = obj.CurPoseCVT(thisCell,:)';
-%                 zi = obj.CurPoseVM(thisCell, :)';
-%                 sumHj = 0;
-%                 sum_aj_HjSquared = 0;
-%                 for j = 1: size(obj.boundariesCoeff)
-%                     tol = 0; % Tolerance to relax the state constraint
-%                     hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1)*zi(1) + obj.boundariesCoeff(j,2)*zi(2) + tol)); 
-%                     sumHj = sumHj + 1/hj;
-%                     sum_aj_HjSquared = sum_aj_HjSquared + [obj.boundariesCoeff(j,1); obj.boundariesCoeff(j,2)] / hj^2 / 2; 
-%                 end
-%                 Q_zDiff_hj = Q * (zi - Ci) / sumHj;
-%                  
-%                 %% Compute the Partial dVi_dzi of itself
-%                 dCi_dzi = [obj.CVTpartialDerivativeMat(thisCell, thisCell, 2), obj.CVTpartialDerivativeMat(thisCell, thisCell, 3);
-%                            obj.CVTpartialDerivativeMat(thisCell, thisCell, 4), obj.CVTpartialDerivativeMat(thisCell, thisCell, 5)];
-%                 
-%                 dVidi = (eye(2) - dCi_dzi')*Q_zDiff_hj + sum_aj_HjSquared * (zi - Ci)' * Q * (zi - Ci);
-%                 outdVMat(thisCell, thisCell, 1) = true;   
-%                 outdVMat(thisCell, thisCell, 2) = dVidi(1);    % dVi_dzix 
-%                 outdVMat(thisCell, thisCell, 3) = dVidi(2);    % dVi_dziy 
-%                 
-%                 %% Scan over the adjacent list and compute the corresponding partial derivative
-%                 flagAdj =  obj.adjacentMat(thisCell,:,1);
-%                 thisAdjList = find(flagAdj);
-%                 for nextAdj = 1: numel(thisAdjList)
-%                     adjIndex = thisAdjList(nextAdj);
-%                     dCi_dzk = [obj.CVTpartialDerivativeMat(thisCell, adjIndex, 2), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 3);
-%                                obj.CVTpartialDerivativeMat(thisCell, adjIndex, 4), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 5)];
-%                     dVidj = -dCi_dzk' * Q_zDiff_hj;
-%                     % Assign the new adjacent partial derivative
-%                     outdVMat(thisCell, adjIndex, 1) = true;
-%                     outdVMat(thisCell, adjIndex, 2) = dVidj(1);       % dVi_dzjx 
-%                     outdVMat(thisCell, adjIndex, 3) = dVidj(2);       % dVi_dzjy
-%                 end
-%             end 
-%         end
-        
+    
         function [Vk] = computeVLyp(obj, Zk, Ck)
             tol = 0;
             Vk = 0;
@@ -240,12 +193,12 @@ classdef Centralized_Controller < handle
             for thisAgent = 1 : obj.nAgent
                 agentHandle = obj.agentList(thisAgent);        
                 w0 = agentHandle.wOrbit;
-                cT = cos(agentHandle.curPose(3));   % agentStatus.curPose(3): Actual Orientation
-                sT = sin(agentHandle.curPose(3));
+                cosTheta = cos(agentHandle.curPose(3));   % agentStatus.curPose(3): Actual Orientation
+                sinTheta = sin(agentHandle.curPose(3));
 
                 % Compute the Lyapunov feedback from adjacent agents
-                sumdVj_diX = 0;     % Note that the adjacent agent affects this agent, so the index is dVj/dVi <--> obj.CoverageStateInfo(Agent_J, Agent_I, :)
-                sumdVj_diY = 0;
+                sumdVj_diX = dVState(thisAgent).myInfo.dV_dVMx;     % Note that the adjacent agent affects this agent, so the index is dVj/dVi <--> obj.CoverageStateInfo(Agent_J, Agent_I, :)
+                sumdVj_diY = dVState(thisAgent).myInfo.dV_dVMy;
                 for friendID = 1 : obj.nAgent % Scan to see which are the adjacent agents
                     % If the considering cell affects us, add it to the gradient
                     if(dVState(thisAgent).FriendInfo(friendID).isVoronoiNeighbor == true)
@@ -258,7 +211,7 @@ classdef Centralized_Controller < handle
                 % Compute the control input
                 epsSigmoid = 5;
                 mu = 1/w0/2; % Control gain %% ADJUST THE CONTROL GAIN HERE
-                w = w0 + mu * w0 * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
+                w = w0 + mu * w0 * (sumdVj_diX * cosTheta + sumdVj_diY * sinTheta)/(abs(sumdVj_diX * cosTheta + sumdVj_diY * sinTheta) + epsSigmoid); 
                 % Logging
                 obj.CurAngularVel(thisAgent) = w;
                 % Set the computed output for this agent
