@@ -32,6 +32,7 @@ classdef Centralized_Controller < handle
         adjacentMat
         CVTpartialDerivativeMat
         CoverageStateInfo % Some information here
+        dV_Info
         CurAngularVel
         
         %% Tmp
@@ -86,7 +87,7 @@ classdef Centralized_Controller < handle
         %                           ...
         %       - LypOut            --> Current Lyapunov cost
         %       - CVTsOut           --> List of new centroids asnew target for each agent
-        function [infoOut, LypOut, CVTsOut] = updateCoverage(obj, newPoseVM)
+        function [AgentReport, LypOut] = updateCoverage(obj, newPoseVM)
             % Save all the current VM
             obj.CurPoseVM = newPoseVM;          
             %% The used methods were developed by Aaron_Becker
@@ -107,10 +108,9 @@ classdef Centralized_Controller < handle
             end
             
             %% Update the partial derivativ of each cells and construct the broadcased information matrix
-            [obj.CVTpartialDerivativeMat, obj.adjacentMat] = ComputeVoronoiProperty(obj.CurPoseVM, obj.CurPoseCVT, obj.v, obj.c);
-            obj.CoverageStateInfo = obj.computeLyapunovDerivative();
-         
-            %% Update Lyapunov function 
+            [AgentReport] = ComputeVoronoiProperty(obj.CurPoseVM, obj.CurPoseCVT, obj.v, obj.c);
+            
+            %% Update Lyapunov Value 
             newV = zeros(obj.nAgent, 1);
             for k = 1:obj.nAgent
                 zk = obj.CurPoseVM(k,:);
@@ -120,23 +120,21 @@ classdef Centralized_Controller < handle
             obj.lastPoseVM = obj.CurPoseVM;
             obj.lastPoseCVT = obj.CurPoseCVT;
             obj.LyapunovCost = newV;
-            
+        
             %% Return the global info to be published and evaluation
             LypOut = sum(obj.LyapunovCost);
-            infoOut = obj.CoverageStateInfo;
-            CVTsOut = obj.CurPoseCVT;
         end
         
         %% Partial dervivative of Lyapunov function
-        function outdVMat = computeLyapunovDerivative(obj)
-            outdVMat = zeros(obj.nAgent, obj.nAgent, 3); % Checkflag - dVi/dzx - dVi/dzy
+        function out_dV_struct = ComputeLyapunovDerivative(obj, Info)
+            out_dV_struct(obj.nAgent) = struct();
             % CVTCoord      : CVT information of each agent
             % adjacentList  : 
-            for thisCell = 1: obj.nAgent
+            for thisAgent = 1: obj.nAgent
                 %% One shot computation before scanning over the adjacent matrix
                 Q = eye(2);
-                Ci = obj.CurPoseCVT(thisCell,:)';
-                zi = obj.CurPoseVM(thisCell, :)';
+                Ci = obj.CurPoseCVT(thisAgent,:)';
+                zi = obj.CurPoseVM(thisAgent, :)';
                 sumHj = 0;
                 sum_aj_HjSquared = 0;
                 for j = 1: size(obj.boundariesCoeff)
@@ -148,29 +146,78 @@ classdef Centralized_Controller < handle
                 Q_zDiff_hj = Q * (zi - Ci) / sumHj;
                  
                 %% Compute the Partial dVi_dzi of itself
-                dCi_dzi = [obj.CVTpartialDerivativeMat(thisCell, thisCell, 2), obj.CVTpartialDerivativeMat(thisCell, thisCell, 3);
-                           obj.CVTpartialDerivativeMat(thisCell, thisCell, 4), obj.CVTpartialDerivativeMat(thisCell, thisCell, 5)];
+                dCi_dzi = [Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCx_dVMx, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCx_dVMy;
+                           Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCy_dVMx, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCy_dVMy];
                 
-                dVidi = (eye(2) - dCi_dzi')*Q_zDiff_hj + sum_aj_HjSquared * (zi - Ci)' * Q * (zi - Ci);
-                outdVMat(thisCell, thisCell, 1) = true;   
-                outdVMat(thisCell, thisCell, 2) = dVidi(1);    % dVi_dzix 
-                outdVMat(thisCell, thisCell, 3) = dVidi(2);    % dVi_dziy 
-                
+                tmp = (eye(2) - dCi_dzi')*Q_zDiff_hj + sum_aj_HjSquared * (zi - Ci)' * Q * (zi - Ci);
+                out_dV_struct(thisAgent).myInfo.dV_dVMx = tmp(1);
+                out_dV_struct(thisAgent).myInfo.dV_dVMy = tmp(2);
+                %outdV(thisAgent, thisAgent, 1) = true;   %% REMEMBER THIS
+               
                 %% Scan over the adjacent list and compute the corresponding partial derivative
-                flagAdj =  obj.adjacentMat(thisCell,:,1);
-                thisAdjList = find(flagAdj);
-                for nextAdj = 1: numel(thisAdjList)
-                    adjIndex = thisAdjList(nextAdj);
-                    dCi_dzk = [obj.CVTpartialDerivativeMat(thisCell, adjIndex, 2), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 3);
-                               obj.CVTpartialDerivativeMat(thisCell, adjIndex, 4), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 5)];
-                    dVidj = -dCi_dzk' * Q_zDiff_hj;
-                    % Assign the new adjacent partial derivative
-                    outdVMat(thisCell, adjIndex, 1) = true;
-                    outdVMat(thisCell, adjIndex, 2) = dVidj(1);       % dVi_dzjx 
-                    outdVMat(thisCell, adjIndex, 3) = dVidj(2);       % dVi_dzjy
+                for friendID = 1: obj.nAgent
+                    out_dV_struct(thisAgent).FriendInfo(friendID).isVoronoiNeighbor = false; % Declaration makes the output structure consistent
+                    FriendInfo = Info.AgentReport(thisAgent).FriendAgentInfo(friendID);
+                    isNeighbor = (friendID ~= thisAgent) && FriendInfo.isVoronoiNeighbor; 
+                    if(isNeighbor)
+                        dCi_dzk = [FriendInfo.VoronoiInfo.partialCVT.dCx_dVMFriend_x, FriendInfo.VoronoiInfo.partialCVT.dCx_dVMFriend_y;
+                                   FriendInfo.VoronoiInfo.partialCVT.dCy_dVMFriend_x, FriendInfo.VoronoiInfo.partialCVT.dCy_dVMFriend_y];
+                        dVidj = -dCi_dzk' * Q_zDiff_hj;
+                        % Assign the new adjacent partial derivative
+                        out_dV_struct(thisAgent).FriendInfo(friendID).isVoronoiNeighbor = true;
+                        out_dV_struct(thisAgent).FriendInfo(friendID).dV_dVMFriend_x = dVidj(1);
+                        out_dV_struct(thisAgent).FriendInfo(friendID).dV_dVMFriend_y = dVidj(2);
+                    end
                 end
             end 
         end
+        
+        
+        
+%         %% Partial dervivative of Lyapunov function
+%         function outdVMat = computeLyapunovDerivative(obj)
+%             outdVMat = zeros(obj.nAgent, obj.nAgent, 3); % Checkflag - dVi/dzx - dVi/dzy
+%             % CVTCoord      : CVT information of each agent
+%             % adjacentList  : 
+%             for thisCell = 1: obj.nAgent
+%                 %% One shot computation before scanning over the adjacent matrix
+%                 Q = eye(2);
+%                 Ci = obj.CurPoseCVT(thisCell,:)';
+%                 zi = obj.CurPoseVM(thisCell, :)';
+%                 sumHj = 0;
+%                 sum_aj_HjSquared = 0;
+%                 for j = 1: size(obj.boundariesCoeff)
+%                     tol = 0; % Tolerance to relax the state constraint
+%                     hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1)*zi(1) + obj.boundariesCoeff(j,2)*zi(2) + tol)); 
+%                     sumHj = sumHj + 1/hj;
+%                     sum_aj_HjSquared = sum_aj_HjSquared + [obj.boundariesCoeff(j,1); obj.boundariesCoeff(j,2)] / hj^2 / 2; 
+%                 end
+%                 Q_zDiff_hj = Q * (zi - Ci) / sumHj;
+%                  
+%                 %% Compute the Partial dVi_dzi of itself
+%                 dCi_dzi = [obj.CVTpartialDerivativeMat(thisCell, thisCell, 2), obj.CVTpartialDerivativeMat(thisCell, thisCell, 3);
+%                            obj.CVTpartialDerivativeMat(thisCell, thisCell, 4), obj.CVTpartialDerivativeMat(thisCell, thisCell, 5)];
+%                 
+%                 dVidi = (eye(2) - dCi_dzi')*Q_zDiff_hj + sum_aj_HjSquared * (zi - Ci)' * Q * (zi - Ci);
+%                 outdVMat(thisCell, thisCell, 1) = true;   
+%                 outdVMat(thisCell, thisCell, 2) = dVidi(1);    % dVi_dzix 
+%                 outdVMat(thisCell, thisCell, 3) = dVidi(2);    % dVi_dziy 
+%                 
+%                 %% Scan over the adjacent list and compute the corresponding partial derivative
+%                 flagAdj =  obj.adjacentMat(thisCell,:,1);
+%                 thisAdjList = find(flagAdj);
+%                 for nextAdj = 1: numel(thisAdjList)
+%                     adjIndex = thisAdjList(nextAdj);
+%                     dCi_dzk = [obj.CVTpartialDerivativeMat(thisCell, adjIndex, 2), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 3);
+%                                obj.CVTpartialDerivativeMat(thisCell, adjIndex, 4), obj.CVTpartialDerivativeMat(thisCell, adjIndex, 5)];
+%                     dVidj = -dCi_dzk' * Q_zDiff_hj;
+%                     % Assign the new adjacent partial derivative
+%                     outdVMat(thisCell, adjIndex, 1) = true;
+%                     outdVMat(thisCell, adjIndex, 2) = dVidj(1);       % dVi_dzjx 
+%                     outdVMat(thisCell, adjIndex, 3) = dVidj(2);       % dVi_dzjy
+%                 end
+%             end 
+%         end
         
         function [Vk] = computeVLyp(obj, Zk, Ck)
             tol = 0;
@@ -184,10 +231,14 @@ classdef Centralized_Controller < handle
             Vk =  (norm(Zk - Ck))^2 * Vk;
         end
         
-        function controlCentralize(obj)
+        function controlCentralize(obj, AgentReport)
+            dVState = obj.ComputeLyapunovDerivative(AgentReport);
+            
+            
+            
             % Update all the control policy for all agents
-            for i = 1 : obj.nAgent
-                agentHandle = obj.agentList(i);        
+            for thisAgent = 1 : obj.nAgent
+                agentHandle = obj.agentList(thisAgent);        
                 w0 = agentHandle.wOrbit;
                 cT = cos(agentHandle.curPose(3));   % agentStatus.curPose(3): Actual Orientation
                 sT = sin(agentHandle.curPose(3));
@@ -195,11 +246,13 @@ classdef Centralized_Controller < handle
                 % Compute the Lyapunov feedback from adjacent agents
                 sumdVj_diX = 0;     % Note that the adjacent agent affects this agent, so the index is dVj/dVi <--> obj.CoverageStateInfo(Agent_J, Agent_I, :)
                 sumdVj_diY = 0;
-                for j = 1 : obj.nAgent % Scan to see which are the adjacent agents
+                for friendID = 1 : obj.nAgent % Scan to see which are the adjacent agents
                     % If the considering cell affects us, add it to the gradient
-                    if(obj.CoverageStateInfo(j, i, 1) == true) % Is neighbor or itself ?
-                        sumdVj_diX = sumdVj_diX + obj.CoverageStateInfo(j,i,2); % dVj_dzix
-                        sumdVj_diY = sumdVj_diY + obj.CoverageStateInfo(j,i,3); % dVj_dziy
+                    if(dVState(thisAgent).FriendInfo(friendID).isVoronoiNeighbor == true)
+                        % NOTE: The index is reverse here according to the
+                        % control law
+                        sumdVj_diX = sumdVj_diX + dVState(friendID).FriendInfo(thisAgent).dV_dVMFriend_x; % dVj_dzix
+                        sumdVj_diY = sumdVj_diY + dVState(friendID).FriendInfo(thisAgent).dV_dVMFriend_y; % dVj_dziy
                     end
                 end      
                 % Compute the control input
@@ -207,7 +260,7 @@ classdef Centralized_Controller < handle
                 mu = 1/w0/2; % Control gain %% ADJUST THE CONTROL GAIN HERE
                 w = w0 + mu * w0 * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
                 % Logging
-                obj.CurAngularVel(i) = w;
+                obj.CurAngularVel(thisAgent) = w;
                 % Set the computed output for this agent
                 agentHandle.setAngularVel(w);  
             end
@@ -236,9 +289,9 @@ classdef Centralized_Controller < handle
             end
             
             %% Update the broadcasted information
-            [obj.CoverageStateInfo, curLypCost, newCVTs] = obj.updateCoverage(newPoseVM);
-            global globalInformation;
-            globalInformation = obj.CoverageStateInfo;
+            [AgentReport, curLypCost] = obj.updateCoverage(newPoseVM);
+            %global globalInformation;
+            %globalInformation = obj.CoverageStateInfo;
             
             %% Update the control policy for each agent
 % DISTRIBUTED CONTROLL POLICY
@@ -250,7 +303,7 @@ classdef Centralized_Controller < handle
 %             end
             
 % CENTRALIZED CONTROLL POLICY
-            obj.controlCentralize();
+            obj.controlCentralize(AgentReport);
             
             %% Final update for the next process
             % ...
