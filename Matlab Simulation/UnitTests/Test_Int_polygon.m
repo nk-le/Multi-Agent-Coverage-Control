@@ -1,7 +1,7 @@
 % Region definition
 worldVertexes = [0, 0; 0,6; 6,12 ; 16,6 ; 6,0; 0,0];
-X = [0; 0; 6; 16; 6; 0];
-Y = [0; 6; 12; 6; 0; 0];
+X = [1; 0; 6; 16; 6; 1];
+Y = [1; 6; 12; 6; 0; 1];
 
 % Integral configurations
 IntDomain = struct('type','polygon','x',X(1: end -1)','y',Y(1: end - 1)');

@@ -119,12 +119,12 @@ function [dCi_dzi_AdjacentJ, dCi_dzj] = ComputePartialDerivativeCVTs(PartialCVTC
     dCiy_dziy = (integral(@(t) YtoT(t) .* dq__dZiy_n(YtoT(t), thisCoord.y) .* dqTodtParam, 0, 1) + dCi_dziy_secondTermInt * thisCVT.y) / mVi;
     
     %% dCi_dzjx
-    dCi_dzjx_secondTermInt = integral(@(t) dq__dZjx_n(XtoT(t), adjCoord.x) * dqTodtParam , 0, 1 ) / mViSquared;
+    dCi_dzjx_secondTermInt = integral(@(t) dq__dZjx_n(XtoT(t), adjCoord.x) * dqTodtParam , 0, 1 );
     dCix_dzjx = (integral(@(t) XtoT(t) .* dq__dZjx_n(XtoT(t), adjCoord.x) .* dqTodtParam, 0, 1) + dCi_dzjx_secondTermInt * thisCVT.x) / mVi;
     dCiy_dzjx = (integral(@(t) YtoT(t) .* dq__dZjx_n(XtoT(t), adjCoord.x) .* dqTodtParam, 0, 1) + dCi_dzjx_secondTermInt * thisCVT.y) / mVi;
     
     %% dCi_dzjy
-    dCi_dzjy_secondTermInt = integral(@(t) dq__dZjy_n(YtoT(t), adjCoord.y) * dqTodtParam , 0, 1 ) / mViSquared;
+    dCi_dzjy_secondTermInt = integral(@(t) dq__dZjy_n(YtoT(t), adjCoord.y) * dqTodtParam , 0, 1 );
     dCix_dzjy =  (integral(@(t) XtoT(t) .* dq__dZjy_n(YtoT(t), adjCoord.y) .* dqTodtParam, 0, 1) + dCi_dzjy_secondTermInt * thisCVT.x) / mVi;
     dCiy_dzjy =  (integral(@(t) YtoT(t) .* dq__dZjy_n(YtoT(t), adjCoord.y) .* dqTodtParam, 0, 1) + dCi_dzjy_secondTermInt * thisCVT.y) / mVi;
     

@@ -401,6 +401,9 @@ if  strcmpi(domain.type,'polygon')
     x = reshape(x,1,numel(x));   % row vector
     y = reshape(y,1,numel(y));   % row vector
     [top,bot] = ordnepolygon([x;y]);      % find bottum and top lines
+    %% Bug here detected. Duplicate members so we eliminate this
+    top = unique(top.','rows').';
+    bot = unique(bot.','rows').';
     % do integration in several segments.
     xsegments = sort([bot(1,:),top(1,2:(end-1))]);
     y1 = @(x) interp1(bot(1,:),bot(2,:),x);   % default is 'linear'

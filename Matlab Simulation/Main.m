@@ -4,6 +4,8 @@ global logger;              % log instance of all time step of the centralized c
 global globalInformation;   % pseudo broadcasted information over all agents (if applied in distributed scheme)
 %global env; % Simulation environment
 
+format long;
+
 %% Setup
 visualizationOn = false;
 [nAgent, maxIter] = setup(visualizationOn);
