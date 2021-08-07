@@ -207,7 +207,7 @@ classdef Centralized_Controller < handle
                     end
                 end      
                 % Compute the control input
-                epsSigmoid = 2;
+                epsSigmoid = 10;
                 mu = 1; % Control gain %% ADJUST THE CONTROL GAIN HERE
                 w = w0 + mu * w0 * (sumdVj_diX * cosTheta + sumdVj_diY * sinTheta)/(abs(sumdVj_diX * cosTheta + sumdVj_diY * sinTheta) + epsSigmoid); 
                 % Send control output to each agent
