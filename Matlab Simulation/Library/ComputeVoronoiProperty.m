@@ -3,45 +3,43 @@
 function [Info] = ComputeVoronoiProperty(pointCoord, CVTCoord, verList, verPtr)
     nAgent = numel(verPtr);
     
-    %% Assign the computed Voronoi and instantiate an Dat Structure that contains all neccessary Coverage Information
+    %% Assign the computed Voronoi and instantiate the Data Structure that contains all neccessary Coverage Information
     Info.Common.nAgent = nAgent;
     Info.Common.VoronoiVertexes = verList;
-    AgentReport(nAgent) = struct();
     % Tmp Variable to scan the collaborative agent
     for thisAgent = 1:nAgent
         % Instatinate struct data to carry all information of another agent
-        AgentReport(thisAgent).MyInfo.Coord.x = pointCoord(thisAgent, 1);
-        AgentReport(thisAgent).MyInfo.Coord.y = pointCoord(thisAgent, 2);
-        AgentReport(thisAgent).MyInfo.VoronoiInfo.CVTCoord.x = CVTCoord(thisAgent, 1);
-        AgentReport(thisAgent).MyInfo.VoronoiInfo.CVTCoord.y = CVTCoord(thisAgent, 2);
-        AgentReport(thisAgent).MyInfo.VoronoiInfo.VertexesID = verPtr{thisAgent}(1:end-1); % The built in function of matlab duplicaes so we eliminate
-        AgentReport(thisAgent).MyInfo.VoronoiInfo.VertexesCoord.x = verList(verPtr{thisAgent},1);
-        AgentReport(thisAgent).MyInfo.VoronoiInfo.VertexesCoord.y = verList(verPtr{thisAgent},2);
+        Info.AgentReport(thisAgent).MyInfo.Coord.x = pointCoord(thisAgent, 1);
+        Info.AgentReport(thisAgent).MyInfo.Coord.y = pointCoord(thisAgent, 2);
+        Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.CVTCoord.x = CVTCoord(thisAgent, 1);
+        Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.CVTCoord.y = CVTCoord(thisAgent, 2);
+        Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.VertexesID = verPtr{thisAgent}(1:end-1); % The built in function of matlab duplicaes so we eliminate
+        Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.VertexesCoord.x = verList(verPtr{thisAgent},1);
+        Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.VertexesCoord.y = verList(verPtr{thisAgent},2);
     end 
-    Info.AgentReport = AgentReport;
-    AgentReport = []; % Delete this to avoid misused data structure, from now we only use the Info structure
     
     %% Append the Adjacent Information into the Info Data Structure
+    % This method analyse the adjacent agents according to the coordinates,
+    % vertexes. 
+    % @in: Info variable with the coord and vertexes of all agents
+    % @out: The same info structure with additionally assigned information
+    % of the adjacent agents 
     Info = AppendAdjacentAgentInfo(Info);
+    
+    %% Now we compute the partial derivative according to the information of the adjacent agents
     for thisAgent = 1:nAgent
+        % Compute this one first to reduce redundant computation before
+        % going to the loop
         PartialCVTComputation_Struct.my.Coord = Info.AgentReport(thisAgent).MyInfo.Coord;
         PartialCVTComputation_Struct.my.CVTCoord =  Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.CVTCoord;
-        % Compute this one first to reduce redundant computation 
         PartialCVTComputation_Struct.my.PartionMass = ComputePartitionMass(Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.VertexesCoord);
-        PartialCVTComputation_Struct.friend.Coord.x = [];
-        PartialCVTComputation_Struct.friend.Coord.y = [];
-        PartialCVTComputation_Struct.Common.Vertex1.x = [];
-        PartialCVTComputation_Struct.Common.Vertex1.y = [];
-        PartialCVTComputation_Struct.Common.Vertex2.x = [];
-        PartialCVTComputation_Struct.Common.Vertex2.y = [];
-
+       
         %% Scan over the friend list of each agent to compute the Voronoi properties
         ownParitialDerivative = zeros(2,2);
         for friendAgent = 1: nAgent
             isNeighbor = (friendAgent ~= thisAgent) && (Info.AgentReport(thisAgent).FriendAgentInfo(friendAgent).isVoronoiNeighbor);
             if(isNeighbor)                
                 PartialCVTComputation_Struct.friend.Coord = Info.AgentReport(thisAgent).FriendAgentInfo(friendAgent).Coord;
-                %PartialCVTComputation_Struct.friend.CVTCoord = Info.AgentReport(thisAgent).FriendAgentInfo(friendAgent).VoronoiInfo.CVTCoord;
                 PartialCVTComputation_Struct.Common.Vertex1 = Info.AgentReport(thisAgent).FriendAgentInfo(friendAgent).VoronoiInfo.CommonVertex.Vertex1;
                 PartialCVTComputation_Struct.Common.Vertex2 = Info.AgentReport(thisAgent).FriendAgentInfo(friendAgent).VoronoiInfo.CommonVertex.Vertex2;
             
@@ -87,11 +85,7 @@ function [dCi_dzi_AdjacentJ, dCi_dzj] = ComputePartialDerivativeCVTs(PartialCVTC
     thisCVT = PartialCVTComputation_Struct.my.CVTCoord;
     vertex1 = PartialCVTComputation_Struct.Common.Vertex1;
     vertex2 = PartialCVTComputation_Struct.Common.Vertex2;
-    
 
-    % Computation
-    mViSquared = mVi^2;    
-    
     %% Function definition for partial derivative
     % rho = @(x,y) 1;
     distanceZiZj = sqrt((thisCoord.x - adjCoord.x)^2 + (thisCoord.y - adjCoord.y)^2);
@@ -136,7 +130,7 @@ function [dCi_dzi_AdjacentJ, dCi_dzj] = ComputePartialDerivativeCVTs(PartialCVTC
 end
 
 
-%% Determine which CVTs are adjacent CVTs
+%% Determine which CVTs are adjacent CVTs and assgign the information of adjacent agents into the data structure
 function [InfoStruct] = AppendAdjacentAgentInfo(InfoStruct)
     %% Start searching for common vertexes to determine neighbor agents
     for thisAgent = 1 : InfoStruct.Common.nAgent
