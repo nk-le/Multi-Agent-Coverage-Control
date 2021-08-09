@@ -2,7 +2,7 @@ format long;
 
 [simConfig, regionConfig, agentConfig] = Config();
 %% Centralized Controller
-masterCom = Centralized_Controller(simConfig.nAgent, simConfig.dt, regionConfig.BoundariesCoeff, regionConfig.bndVertexes, agentConfig.startPose, agentConfig.vConstList, agentConfig.wOrbitList);
+simulator = Centralized_Controller(simConfig.nAgent, simConfig.dt, regionConfig.BoundariesCoeff, regionConfig.bndVertexes, agentConfig.startPose, agentConfig.vConstList, agentConfig.wOrbitList);
 
 % Instance of logger for data post processing, persistent over all files
 logger = DataLogger(simConfig.nAgent, simConfig.maxIter);
@@ -11,7 +11,7 @@ logger.bndVertexes = regionConfig.bndVertexes;
     %% MAIN
 for iteration = 1: simConfig.maxIter
     % Main process
-    [currentPose, currentLyapunov, AgentReport, LyapunovState] = masterCom.loop();
+    [currentPose, currentLyapunov, AgentReport, LyapunovState] = simulator.loop();
 
     % Using two variables AgentReport and LyapunovState for easy debugging
     
@@ -26,7 +26,7 @@ for iteration = 1: simConfig.maxIter
         %disp(masterCom.LyapunovCost');
     end
     % Logging
-    logger.logCentralizedController(masterCom);
+    logger.logCentralizedController(simulator);
 end
 %% END
 

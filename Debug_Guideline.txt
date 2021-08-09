@@ -1,0 +1,41 @@
+The debug process is split into these parts
+
+1) Movement of agents: 
+constant heading velocity, computation of the virtual mass --> Agent_Controller.m --> move(), updateVirtualCenter()
+
+2) Computation of Voronoi partition:
+Voronoi partitions and CVTs according to the virtual mass coordinate --> Centralized_Controller.m --> updateCoverage()
+"""
+// This method computes the vertexes of each Voronoi partition 
+[obj.v,rawC]= Function_VoronoiBounded(obj.CurPoseVM(:,1), obj.CurPoseVM(:,2), obj.boundariesVertexes);
+            
+// Due to numerical errors of the above method, I wrote the "outlierVertexList" to eliminate the redundancy of the computation
+%% Added a layer to outlier the duplicated vertexes
+obj.c = outlierVertexList(obj.v, rawC, [0 obj.xrange], [0 obj.yrange]);
+"""
+
+3) Computation of Voronoi properties: 
+a) Adjacent Agents: --> ComputeVoronoiProperty.m --> AppendAdjacentAgentInfo() this methods identify the neighrbor agents according to the Voronoi partitions
+b) Partial Derivative of CVTs: --> ComputeVoronoiProperty.m --> ComputePartialDerivativeCVTs()  ***** THIS IS WHAT WE NEED TO EVALUATE RIGHT NOW
+
+4) TBD
+
+
+HOW TO DEBUG?
+The most important part to be evaluated is the computation of Voronoi property, which requires lots of information. For this reason, I create a consistent
+data structure that will be passed through each method. This helps us plotting all of the states easily when we set a breakpoint during the programm.
+The data structure is returned by this function
+Centralized_Controller() -->  updateCoverage() --> [AgentReport] = ComputeVoronoiProperty(obj.CurPoseVM, obj.CurPoseCVT, obj.v, obj.c);
+
+Variable 
+"AgentReport"
+{
+	.Common {.nAgent, .VoronoiVertexes} // The common information of all agents
+	.Agentreport(agentID) {.MyInfo,  .FriendAgentInfo(friendID)}	// Its own information and its neighbor information, also the partial derivative computation 
+}
+To evaluate the computation of the property, set the breakpoint after this "[AgentReport] = ComputeVoronoiProperty(obj.CurPoseVM, obj.CurPoseCVT, obj.v, obj.c);"
+Then use the scripts "Plot_Voronoi_Info(AgentReport, maxX, maxY)" (maxY,maxY declare the range for plaotting of the coverage region, which are set in config.m),
+and "Print_Voronoi_Info(AgentReport, agentID)" to print the calculation. (See DebugGuide.PNG)
+
+
+

@@ -1,5 +1,5 @@
-function Print_Info(Info, AgentID)  
-    thisAgentInfo = Info.AgentReport(AgentID).MyInfo;
+function Print_Voronoi_Info(InfoStruct, AgentID)  
+    thisAgentInfo = InfoStruct.AgentReport(AgentID).MyInfo;
 
     fprintf("\n INFO Agent %d ***********************\n", AgentID);
     fprintf("Coord: [%.4f %.4f] \n", thisAgentInfo.Coord.x, thisAgentInfo.Coord.y);
@@ -7,8 +7,8 @@ function Print_Info(Info, AgentID)
     fprintf("PartialCVT dC%d_dVM%d: [%.4f %.4f ; %.4f %.4f] \n", AgentID, AgentID, thisAgentInfo.VoronoiInfo.partialCVT.dCx_dVMx, thisAgentInfo.VoronoiInfo.partialCVT.dCx_dVMy, thisAgentInfo.VoronoiInfo.partialCVT.dCy_dVMx, thisAgentInfo.VoronoiInfo.partialCVT.dCy_dVMy);
     fprintf("=== Neighbor Info === \n");
     
-    for friendID = 1:Info.Common.nAgent
-        friendInfo = Info.AgentReport(AgentID).FriendAgentInfo(friendID);
+    for friendID = 1:InfoStruct.Common.nAgent
+        friendInfo = InfoStruct.AgentReport(AgentID).FriendAgentInfo(friendID);
         if(friendInfo.isVoronoiNeighbor)
             fprintf("Friend ID: %d \n", friendID);
             fprintf("Coord: [%.4f %.4f]\n", friendInfo.Coord.x, friendInfo.Coord.y);
