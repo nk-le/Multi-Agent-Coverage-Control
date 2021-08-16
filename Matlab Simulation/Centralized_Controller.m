@@ -166,8 +166,8 @@ classdef Centralized_Controller < handle
             assert(isfield(Info.AgentReport(:), "FriendAgentInfo"));
             
             %% Adjustable variable
-            epsSigmoid = 2;
-            mu = 1; % Control gain %% ADJUST THE CONTROL GAIN HERE
+            epsSigmoid = 5;
+            mu = 2; % Control gain %% ADJUST THE CONTROL GAIN HERE
             sigmoid_func = @(x,eps) x / (abs(x) + eps);  
             
             %% Compute the control policy
