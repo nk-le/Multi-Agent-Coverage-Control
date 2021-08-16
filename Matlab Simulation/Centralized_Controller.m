@@ -256,7 +256,7 @@ classdef Centralized_Controller < handle
             loggedTopics.CurPoseVM = newPoseVM;
             loggedTopics.CurPoseCVT = poseCVT_2D;
             loggedTopics.CurAngularVel = ControlInput;
-            loggedTopics.LyapunovCost = newV;
+            loggedTopics.LyapunovCost = BLF;
 
         end
     end
