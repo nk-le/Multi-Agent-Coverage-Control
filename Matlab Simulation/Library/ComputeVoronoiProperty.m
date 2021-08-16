@@ -1,6 +1,7 @@
 %% This function returns ...
 %
 function [Info] = ComputeVoronoiProperty(pointCoord, CVTCoord, verList, verPtr)
+    format long;
     nAgent = numel(verPtr);
     
     %% Assign the computed Voronoi and instantiate the Data Structure that contains all neccessary Coverage Information

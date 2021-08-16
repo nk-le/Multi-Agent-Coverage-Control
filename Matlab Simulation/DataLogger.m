@@ -69,7 +69,7 @@ classdef DataLogger < handle
                 obj.PoseVM(:, :,obj.curCnt) = centralController.CurPoseVM(:,:);
                 obj.CVT(:,:, obj.curCnt)  = centralController.CurPoseCVT(:,:);
                 obj.ControlOutput(:, obj.curCnt) = centralController.CurAngularVel(:);
-                obj.V_BLF(:, obj.curCnt) = centralController.LyapunovCost;
+                obj.V_BLF(:, obj.curCnt) = centralController.LyapunovCost(:);
             end
         end 
     end

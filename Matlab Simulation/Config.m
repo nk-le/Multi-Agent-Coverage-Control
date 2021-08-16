@@ -3,7 +3,7 @@ function [simConfig, regionConfig, agentConfig] = Config()
     rng(4);
     simConfig.dt = 0.005;
     simConfig.maxIter = 40000;
-    simConfig.nAgent = 8;
+    simConfig.nAgent = 6;
     simConfig.visualization = false;
     
     %% Region Config - Shape of the coverage region
@@ -28,8 +28,8 @@ function [simConfig, regionConfig, agentConfig] = Config()
     % Feel free to modify the [startX] and [startY]
     % The following example deploys a group of agents around the coord          
     % centerCoord initally
-    centerCoord = [150, 150];    % deploy all agents near this coord
-    rXY = 80;                   % agents formualates a circle at the beginning
+    centerCoord = [450, 250];    % deploy all agents near this coord
+    rXY = 200;                   % agents formualates a circle at the beginning
     agentConfig.startPose = zeros(simConfig.nAgent,3);
     agentConfig.startPose(:,1) = centerCoord(1) + rXY.*rand(simConfig.nAgent,1); %x
     agentConfig.startPose(:,2) = centerCoord(2) + rXY.*rand(simConfig.nAgent,1); %y

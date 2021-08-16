@@ -66,6 +66,7 @@ classdef Centralized_Controller < handle
         %                   
         %       
         function [Info, poseCVT_2D] = updateCoverage(obj, newPoseVM_3D)
+            format long;
             % Save all the current VM   
             %% The used methods were developed by Aaron_Becker
             [v, c]= Function_VoronoiBounded(newPoseVM_3D(:,1), newPoseVM_3D(:,2), obj.boundariesVertexes);
@@ -256,7 +257,7 @@ classdef Centralized_Controller < handle
             loggedTopics.CurPoseVM = newPoseVM;
             loggedTopics.CurPoseCVT = poseCVT_2D;
             loggedTopics.CurAngularVel = ControlInput;
-            loggedTopics.LyapunovCost = BLF;
+            loggedTopics.LyapunovCost = newV;
 
         end
     end
