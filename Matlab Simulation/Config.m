@@ -3,13 +3,13 @@ function [simConfig, regionConfig, agentConfig] = Config()
     rng(4);
     simConfig.dt = 0.005;
     simConfig.maxIter = 40000;
-    simConfig.nAgent = 6;
+    simConfig.nAgent = 8;
     simConfig.visualization = false;
     
     %% Region Config - Shape of the coverage region
     % Adjust the range to varying the region with the same shape
-    regionConfig.maxX = 600;
-    regionConfig.maxY = 600;
+    regionConfig.maxX = 800;
+    regionConfig.maxY = 800;
     % Adjust the edges of the coverage region. The using one is specific
     % for the rectangle shape
     regionConfig.bndVertexes = [0, 0; 0,regionConfig.maxY; regionConfig.maxX,regionConfig.maxY; regionConfig.maxX, 0; 0, 0];

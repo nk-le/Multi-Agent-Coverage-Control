@@ -11,7 +11,7 @@ logger.bndVertexes = regionConfig.bndVertexes;
     %% MAIN
 for iteration = 1: simConfig.maxIter
     % Main process
-    [currentPose, currentLyapunov, AgentReport, LyapunovState] = simulator.loop();
+    [Info, BLF, loggedTopics] = simulator.loop();
 
     % Using two variables AgentReport and LyapunovState for easy debugging
     
@@ -22,11 +22,11 @@ for iteration = 1: simConfig.maxIter
     end    
     % Displaying for debugging
     if(mod(iteration, 1) == 0)
-        fprintf('Iter: %d Lyp: %f \n',iteration, currentLyapunov);
+        fprintf('Iter: %d Lyp: %f \n',iteration, BLF);
         %disp(masterCom.LyapunovCost');
     end
     % Logging
-    logger.logCentralizedController(simulator);
+    logger.logCentralizedController(loggedTopics);
 end
 %% END
 
