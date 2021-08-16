@@ -132,13 +132,16 @@ classdef Centralized_Controller < handle
             % adjacentList  : 
             for thisAgent = 1: obj.nAgent
                 %% One shot computation before scanning over the adjacent matrix
+                %% Some adjustable variables Parameter
                 Q = eye(2);
+                tol = 1; % Tolerance to relax the state constraint
+
+                %% Computation
                 Ci = obj.CurPoseCVT(thisAgent,:)';
                 zi = obj.CurPoseVM(thisAgent, :)';
                 sumHj = 0;
                 sum_aj_HjSquared = 0;
                 for j = 1: size(obj.boundariesCoeff)
-                    tol = 0; % Tolerance to relax the state constraint
                     hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1)*zi(1) + obj.boundariesCoeff(j,2)*zi(2) + tol)); 
                     sumHj = sumHj + 1/hj;
                     sum_aj_HjSquared = sum_aj_HjSquared + [obj.boundariesCoeff(j,1); obj.boundariesCoeff(j,2)] / hj^2 / 2; 
@@ -152,7 +155,6 @@ classdef Centralized_Controller < handle
                 tmp = (eye(2) - dCi_dzi')*Q_zDiff_hj + sum_aj_HjSquared * (zi - Ci)' * Q * (zi - Ci);
                 out_dV_struct(thisAgent).myInfo.dV_dVMx = tmp(1);
                 out_dV_struct(thisAgent).myInfo.dV_dVMy = tmp(2);
-                %outdV(thisAgent, thisAgent, 1) = true;   %% REMEMBER THIS
                
                 %% Scan over the adjacent list and compute the corresponding partial derivative
                 for friendID = 1: obj.nAgent
@@ -173,10 +175,9 @@ classdef Centralized_Controller < handle
         end
     
         function [Vk] = computeVLyp(obj, Zk, Ck)
-            tol = 0;
             Vk = 0;
             for j = 1 : size(obj.boundariesCoeff, 1)
-                Vk = Vk +  1 / (obj.boundariesCoeff(j,3) - (obj.boundariesCoeff(j,1)*Zk(1) + obj.boundariesCoeff(j,2)* Zk(2) + tol)) / 2 ;
+                Vk = Vk +  1 / (obj.boundariesCoeff(j,3) - (obj.boundariesCoeff(j,1)*Zk(1) + obj.boundariesCoeff(j,2)* Zk(2))) / 2 ;
             end
             if(Vk < 0)
                 error("State constraint is violated. Check inital position of virtual centers or the control algorithm");
@@ -207,7 +208,7 @@ classdef Centralized_Controller < handle
                     end
                 end      
                 % Compute the control input
-                epsSigmoid = 10;
+                epsSigmoid = 2;
                 mu = 1; % Control gain %% ADJUST THE CONTROL GAIN HERE
                 w = w0 + mu * w0 * (sumdVj_diX * cosTheta + sumdVj_diY * sinTheta)/(abs(sumdVj_diX * cosTheta + sumdVj_diY * sinTheta) + epsSigmoid); 
                 % Send control output to each agent

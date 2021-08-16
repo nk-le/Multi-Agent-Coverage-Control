@@ -8,7 +8,7 @@ function [simConfig, regionConfig, agentConfig] = Config()
     
     %% Region Config - Shape of the coverage region
     % Adjust the range to varying the region with the same shape
-    regionConfig.maxX = 800;
+    regionConfig.maxX = 600;
     regionConfig.maxY = 600;
     % Adjust the edges of the coverage region. The using one is specific
     % for the rectangle shape
@@ -23,13 +23,13 @@ function [simConfig, regionConfig, agentConfig] = Config()
     
     
     %% BOT & CONTROLLER Config - Initial Poses of agent.
-    agentConfig.vConstList = 20 .* ones(1,simConfig.nAgent); % linspace(10, 20, nAgent) .* ones(1,nAgent);
+    agentConfig.vConstList = 30 .* ones(1,simConfig.nAgent); % linspace(10, 20, nAgent) .* ones(1,nAgent);
     agentConfig.wOrbitList = 1.2 .* ones(1,simConfig.nAgent); % linspace(0.4, 0.8, nAgent) .* ones(1,nAgent);
     % Feel free to modify the [startX] and [startY]
     % The following example deploys a group of agents around the coord          
     % centerCoord initally
-    centerCoord = [200, 100];    % deploy all agents near this coord
-    rXY = 50;                   % agents formualates a circle at the beginning
+    centerCoord = [150, 150];    % deploy all agents near this coord
+    rXY = 80;                   % agents formualates a circle at the beginning
     agentConfig.startPose = zeros(simConfig.nAgent,3);
     agentConfig.startPose(:,1) = centerCoord(1) + rXY.*rand(simConfig.nAgent,1); %x
     agentConfig.startPose(:,2) = centerCoord(2) + rXY.*rand(simConfig.nAgent,1); %y
