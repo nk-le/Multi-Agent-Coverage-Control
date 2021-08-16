@@ -116,6 +116,10 @@ classdef Agent_Controller < handle
             obj.w = w;
         end
         
+        function setHeadingVel(obj, v)
+            obj.vConst = v;
+        end
+        
 %         function [V] = computeCurrentV(obj)
 %             % The postitive tol parameter prevents agent from jumping over the
 %             % bounded region (discontinuity)

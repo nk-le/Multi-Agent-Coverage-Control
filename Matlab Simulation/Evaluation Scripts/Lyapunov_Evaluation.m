@@ -1,4 +1,5 @@
-botColors = cool(nAgent);
+[simConfig, regionConfig, agentConfig] = Config()
+botColors = cool(simConfig.nAgent);
 len = logger.curCnt - 1;
 startId = 5;
 xAxis = startId:len;
@@ -7,12 +8,12 @@ V = zeros(1, len);
 % BLF
 figure(1)
 hold on; grid on;
-for i = 1:nAgent
+for i = 1:simConfig.nAgent
     plot(xAxis, logger.V_BLF(i,xAxis), 'Color', botColors(i,:), 'LineWidth',4);
     V(xAxis) = V(xAxis) + logger.V_BLF(i,xAxis);
 end
 plot(xAxis, V(xAxis), '-r', 'LineWidth',4);
-ylim([0, 100000]);
+ylim([0, 6000]);
 xlim([startId, len]);
 xlabel("Iteration");
 ylabel("V_k");
@@ -23,7 +24,7 @@ set(gca,'FontSize',18)
 % Control input
 figure(2)
 hold on; grid on;
-for i = 1:nAgent
+for i = 1:simConfig.nAgent
     plot(xAxis, logger.ControlOutput(i,xAxis), 'Color', botColors(i,:), 'LineWidth',2);
 end
 plot(xAxis, -wMax*ones(1, numel(xAxis)), '-r', 'LineWidth',4);
@@ -42,9 +43,9 @@ hold on; grid on;
 for i = 1: size(worldVertexes,1)-1                
    plot([worldVertexes(i,1) worldVertexes(i+1,1)],[worldVertexes(i,2) worldVertexes(i+1,2)],'Color','r','LineWidth',4);                    
 end
-for i = 1:nAgent
-   dataVMX = zeros(nAgent, loopCnt);
-   dataVMY = zeros(nAgent, loopCnt);
+for i = 1:simConfig.nAgent
+   dataVMX = zeros(simConfig.nAgent, loopCnt);
+   dataVMY = zeros(simConfig.nAgent, loopCnt);
    
    dataVMX(i,xAxis) =  logger.PoseVM(i,1,xAxis);
    dataVMY(i,xAxis) =  logger.PoseVM(i,2,xAxis);

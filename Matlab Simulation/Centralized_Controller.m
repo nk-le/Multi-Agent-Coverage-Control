@@ -211,9 +211,23 @@ classdef Centralized_Controller < handle
                 mu = 1; % Control gain %% ADJUST THE CONTROL GAIN HERE
                 w = w0 + mu * w0 * (sumdVj_diX * cosTheta + sumdVj_diY * sinTheta)/(abs(sumdVj_diX * cosTheta + sumdVj_diY * sinTheta) + epsSigmoid); 
                 % Send control output to each agent
-                obj.CurAngularVel(thisAgent) = w;
-                obj.agentList(thisAgent).setAngularVel(w);
-                % disp(w);
+                holdingOtherAgents = 0;
+                %% This part hold another agents' movement to evaluate the compuatation of Voronoi partial derivative. Will be removed later
+                if(holdingOtherAgents)
+                    if(thisAgent == 1)
+                        obj.CurAngularVel(thisAgent) = w;
+                        obj.agentList(thisAgent).setAngularVel(w);
+                    else
+                        obj.CurAngularVel(thisAgent) = w0;
+                        obj.agentList(thisAgent).setAngularVel(w0);
+                        obj.agentList(thisAgent).setHeadingVel(0)
+                    end
+               %% Here is the normal input setup
+                else 
+                    obj.CurAngularVel(thisAgent) = w;
+                    obj.agentList(thisAgent).setAngularVel(w);
+                    obj.CurAngularVel(thisAgent) = w0;
+                end
             end
         end
 
