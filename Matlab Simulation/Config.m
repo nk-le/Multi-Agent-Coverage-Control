@@ -1,6 +1,6 @@
 function [simConfig, regionConfig, agentConfig] = Config()
     %% Simulation configuration 
-    rng(4);
+    rng(0);
     simConfig.dt = 0.001;
     simConfig.maxIter = 40000;
     simConfig.nAgent = 6;
