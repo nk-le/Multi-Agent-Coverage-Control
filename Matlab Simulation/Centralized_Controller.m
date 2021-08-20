@@ -104,20 +104,20 @@ classdef Centralized_Controller < handle
                 %% Computation
                 Ck = [Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.CVTCoord.x, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.CVTCoord.y]';
                 zk = [Info.AgentReport(thisAgent).MyInfo.Coord.x, Info.AgentReport(thisAgent).MyInfo.Coord.y]';
-                sumHj = 0;
+                sum_1_div_Hj = 0;
                 sum_aj_HjSquared = 0;
                 for j = 1: size(obj.boundariesCoeff)
                     hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1)*zk(1) + obj.boundariesCoeff(j,2)*zk(2) + tol)); 
-                    sumHj = sumHj + 1/hj;
+                    sum_1_div_Hj = sum_1_div_Hj + 1/hj;
                     sum_aj_HjSquared = sum_aj_HjSquared + [obj.boundariesCoeff(j,1); obj.boundariesCoeff(j,2)] / hj^2 / 2; 
                 end
-                Q_zDiff_div_hj = Q * (zk - Ck) / sumHj;
+                Q_zDiff_div_hj = Q * (zk - Ck) * sum_1_div_Hj;
                  
                 %% Compute the Partial dVi_dzi of itself
                 dCi_dzi = [Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCx_dVMx, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCx_dVMy;
                            Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCy_dVMx, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCy_dVMy];
                 
-                Vk = (zk - Ck)' * Q * (zk - Ck) / sumHj;
+                Vk = (zk - Ck)' * Q * (zk - Ck) * sum_1_div_Hj;
                 dVkdzk = (eye(2) - dCi_dzi')*Q_zDiff_div_hj + sum_aj_HjSquared * (zk - Ck)' * Q * (zk - Ck);
                 % Assign to the Info handle
                 Info.AgentReport(thisAgent).MyInfo.LyapunovState.V = Vk;
@@ -166,8 +166,8 @@ classdef Centralized_Controller < handle
             assert(isfield(Info.AgentReport(:), "FriendAgentInfo"));
             
             %% Adjustable variable
-            epsSigmoid = 5;
-            mu = 2; % Control gain %% ADJUST THE CONTROL GAIN HERE
+            epsSigmoid = 3;
+            mu = 3; % Control gain %% ADJUST THE CONTROL GAIN HERE
             sigmoid_func = @(x,eps) x / (abs(x) + eps);  
             
             %% Compute the control policy
