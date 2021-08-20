@@ -3,7 +3,7 @@ classdef Communication_Link < handle
         %% Communication
         nAgent
         AgentReportList
-        VoronoiReportsList
+        VoronoiReportList
         
         %% Voronooi handler, which handles any computation related to Voronoi properties
         VoronoiProcessor
@@ -14,13 +14,13 @@ classdef Communication_Link < handle
             obj.nAgent = nAgents;
             
             obj.AgentReportList = Agent_Coordinates_Report.empty(nAgents, 0);
-            obj.VoronoiReportsList = Agent_Voronoi_Report.empty(nAgents, 0);
+            obj.VoronoiReportList = Agent_Voronoi_Report.empty(nAgents, 0);
             for i = 1: nAgents
                 obj.AgentReportList(i) = Agent_Coordinates_Report(i);
-                obj.VoronoiReportsList(i) = Agent_Voronoi_Report(i);
+                obj.VoronoiReportList(i) = Agent_Voronoi_Report(i);
             end
             
-            obj.VoronoiProcessor = Voronoi2D_Handler(nAgents);
+            obj.VoronoiProcessor = Voronoi2D_Handler();
             obj.VoronoiProcessor.setup(regionConfig);
         end
                 
@@ -43,10 +43,10 @@ classdef Communication_Link < handle
             % Split them into neighbors and some values
             % ...
             vmCmoord_2d_list = [30,20;23,22;46,94]; %zeros(nAgents, 2);
-            ret = obj.VoronoiProcessor.exec_partition(vmCmoord_2d_list);
+            [o_Vertexes, o_neighborInfo] = obj.VoronoiProcessor.exec_partition(vmCmoord_2d_list);
             
-            for i = 1: nAgents
-               obj.VoronoiReportsList(agentID).assign() 
+            for agentID = 1: obj.nAgent
+               obj.VoronoiReportList(agentID).assign(o_Vertexes{agentID}, o_neighborInfo{agentID}) ;
             end
         end
     end

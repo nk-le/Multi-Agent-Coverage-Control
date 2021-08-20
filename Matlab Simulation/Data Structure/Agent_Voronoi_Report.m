@@ -1,6 +1,7 @@
 classdef Agent_Voronoi_Report < Report_Base
     properties (Access  = public)
         Vertex2D_List
+        NeighborInfoList
     end
     
     methods
@@ -20,8 +21,8 @@ classdef Agent_Voronoi_Report < Report_Base
     
     methods (Access = protected)
          function printInfo(obj)
-            disp(obj.VertexList);
-            disp(obj.NeighborCoord_2d_List);
+            disp(obj.Vertex2D_List);
+            disp(obj.NeighborInfoList);
          end
     end
 end
