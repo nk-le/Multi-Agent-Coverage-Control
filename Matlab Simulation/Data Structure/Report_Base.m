@@ -8,20 +8,20 @@ classdef (Abstract) Report_Base < handle
             obj.ID = initID;
         end
         
-        function print(obj)
+        function printValue(obj)
             fprintf("Agent: %d\n", obj.ID);
             % Call the printing information of the child class
             obj.printInfo()
-        end        
+        end
+        
+        function out = getID(obj)
+           out = obj.ID; 
+        end
     end
     
     % Child class must declare these abstract methods 
     methods (Access = protected, Abstract)
         printInfo(obj)
-    end    
-    
-    methods (Abstract) 
-        assign(obj)
     end    
 end
 

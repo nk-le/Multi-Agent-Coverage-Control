@@ -1,5 +1,5 @@
 classdef Agent_Coordinates_Report < Report_Base  
-    properties (Access  = private)
+    properties (Access  = public)
         poseCoord_3d
         poseVM_2d
     end
@@ -9,16 +9,7 @@ classdef Agent_Coordinates_Report < Report_Base
             obj@Report_Base(myID);
             obj.poseCoord_3d = zeros(3,1);
             obj.poseVM_2d = zeros(2,1);
-        end
-        
-        function assign(obj, newPose3d, newVM2d)
-            assert(all(size(newPose3d) == [3,1]));
-            assert(all(size(newVM2d) == [2,1]));
-            obj.poseCoord_3d = newPose3d;
-            obj.poseVM_2d = newVM2d;
-        end
-        
-        
+        end        
     end
     
     methods (Access = protected)
