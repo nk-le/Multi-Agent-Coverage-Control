@@ -22,6 +22,11 @@ classdef Agent_Controller < handle
         v               % float: current heading velocity
         lastSubV
         currentSubV
+        
+        
+        
+        %% Newly added
+        VoronoiInfo
     end
     
     properties (Access = private)
@@ -152,6 +157,38 @@ classdef Agent_Controller < handle
             newPose(3) = obj.curPose(3) + obj.dt * obj.w;
             obj.curPose = newPose;
         end
+        
+        function loop(obj)
+            % Universal time step
+            if(obj.dt == 0)
+               error("Simulation time step dt was not assigned"); 
+            end
+            %% Move 
+            obj.curPose(1) = obj.curPose(1) + obj.dt * (obj.vConst * cos(obj.curPose(3)));
+            obj.curPose(2) = obj.curPose(2) + obj.dt * (obj.vConst * sin(obj.curPose(3)));
+            obj.curPose(3) = obj.curPose(3) + obj.dt * obj.w;
+            %% Update the virtual mass
+            obj.curVMPose(1) = obj.curPose(1) - (obj.vConst/obj.wOrbit) * sin(obj.curPose(3)); 
+            obj.curVMPose(2) = obj.curPose(2) + (obj.vConst/obj.wOrbit) * cos(obj.curPose(3)); 
+        end
+        
+        function [tmp] = getAgentCoordReport(obj)
+            tmp = Agent_Coordinates_Report(obj.ID);
+            tmp.poseCoord_3d =  obj.curPose;
+            tmp.poseVM_2d = obj.curVMPose;
+        end
+        
+        function receiveGBS(obj, newData)
+            isa(newData, 'GBS_Voronoi_Report');
+            obj.VoronoiInfo = newData;
+        end
+        
+        
+        
+        
+        
+        
+        
     end
 end
 

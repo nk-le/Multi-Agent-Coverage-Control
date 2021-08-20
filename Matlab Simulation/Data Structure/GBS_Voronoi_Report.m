@@ -1,11 +1,12 @@
-classdef Agent_Voronoi_Report < Report_Base
+classdef GBS_Voronoi_Report < Report_Base
     properties (Access  = public)
+        NAME = "GBS_Voronoi_Report"
         Vertex2D_List
         NeighborInfoList
     end
     
     methods
-        function obj = Agent_Voronoi_Report(myID)
+        function obj = GBS_Voronoi_Report(myID)
             obj@Report_Base(myID);
         end
         

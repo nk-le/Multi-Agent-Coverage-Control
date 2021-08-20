@@ -15,6 +15,7 @@ isa(vorInfo, 'Agent_Coordinates_Report')
 
 
 % Communication Link
+bndVertexes_2d = [0, 0; 0,maxY; maxX, maxY; maxX, 0; 0, 0];
 comLink = Communication_Link(2, bndVertexes_2d);
 comLink.upload(agentInfo);
 
@@ -22,7 +23,6 @@ comLink.upload(agentInfo);
 maxX = 200;
 maxY = 200;
 
-%bndVertexes_2d = [0, 0; 0,maxY; maxX, maxY; maxX, 0; 0, 0];
 %Vor2D_com.exec_partition([30,20;23,22;46,94])
 
 comLink.loop();

@@ -1,5 +1,6 @@
 classdef Struct_Neighbor_Info < handle
     properties
+        NAME = "Struct_Neighbor_Info"
         neighborID
         Neighbor_Coord_2d
         CommonVertex_2d_1

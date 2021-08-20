@@ -14,10 +14,10 @@ classdef Communication_Link < handle
             obj.nAgent = nAgents;
             
             obj.AgentReportList = Agent_Coordinates_Report.empty(nAgents, 0);
-            obj.VoronoiReportList = Agent_Voronoi_Report.empty(nAgents, 0);
+            obj.VoronoiReportList = GBS_Voronoi_Report.empty(nAgents, 0);
             for i = 1: nAgents
                 obj.AgentReportList(i) = Agent_Coordinates_Report(i);
-                obj.VoronoiReportList(i) = Agent_Voronoi_Report(i);
+                obj.VoronoiReportList(i) = GBS_Voronoi_Report(i);
             end
             
             obj.VoronoiProcessor = Voronoi2D_Handler();
@@ -35,14 +35,20 @@ classdef Communication_Link < handle
         
         %% Download the report structure
         function out = download(obj, agentID)
-            out = obj.VoronoiReportsList(agentID);
+            out = obj.VoronoiReportList(agentID);
         end
         
         function loop(obj)
             % Compute the CVT according to the actual agents' coord
             % Split them into neighbors and some values
             % ...
-            vmCmoord_2d_list = [30,20;23,22;46,94]; %zeros(nAgents, 2);
+            % Get the registered data from agents
+%             vmCmoord_2d_list = zeros(nAgents, 2);
+%             for agentID = 1: obj.nAgent
+%                 vmCmoord_2d_list(agentID) = obj.AgentReportList(thisID).poseVM_2d;
+%             end
+            
+            vmCmoord_2d_list = [30,20;23,22;46,94; 23, 15; 45, 25; 35, 33]; %zeros(nAgents, 2);
             [o_Vertexes, o_neighborInfo] = obj.VoronoiProcessor.exec_partition(vmCmoord_2d_list);
             
             for agentID = 1: obj.nAgent

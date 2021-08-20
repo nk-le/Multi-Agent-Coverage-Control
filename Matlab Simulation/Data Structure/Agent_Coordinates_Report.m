@@ -1,5 +1,6 @@
 classdef Agent_Coordinates_Report < Report_Base  
     properties (Access  = public)
+        NAME = "Agent_Coordinates_Report"
         poseCoord_3d
         poseVM_2d
     end

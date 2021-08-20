@@ -1,5 +1,6 @@
-classdef Agent_Voronoi_Report_Centralized < Agent_Voronoi_Report
-    properties (Access  = private)
+classdef GBS_Voronoi_Report_Extended < GBS_Voronoi_Report
+    properties (Access  = public)
+        NAME = "GBS_Voronoi_Report_Extended"
         % dC_dz =   [dCx_dzx, dCx_dzy;
         %            dCy_dzx, dCy_dzy]
         dC_dz
@@ -8,7 +9,7 @@ classdef Agent_Voronoi_Report_Centralized < Agent_Voronoi_Report
     end
     
     methods
-        function obj = Agent_Voronoi_Report_Centralized(myID)
+        function obj = GBS_Voronoi_Report_Extended(myID)
             obj@Agent_Voronoi_Report(myID);
             obj.dC_dz = zeros(2,2);
             obj.dV_dz = zeros(2,1);
