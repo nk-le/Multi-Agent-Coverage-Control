@@ -216,14 +216,12 @@ classdef Centralized_Controller < handle
             % controller (inside the loop), however put it here for
             % simplicity
             agentPose = zeros(obj.nAgent,3);
-            for i = 1:obj.nAgent
-               agentPose(i, :) = obj.agentList(i).move();
-            end
-            
-            %% Update the new coordinate feedback (Virtual center) and update Voronoi partitions
             newPoseVM = zeros(obj.nAgent,2);
             for i = 1:obj.nAgent
-                newPoseVM(i,:) =  obj.agentList(i).updateVirtualCenter();
+               obj.agentList(i).move();
+               
+               agentPose(i, :) = obj.agentList(i).getPose_3d();
+               newPoseVM(i,:) =  obj.agentList(i).getVirtualMass_2d();
             end
             
             %% Update the broadcasted information

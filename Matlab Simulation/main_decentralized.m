@@ -20,10 +20,11 @@ for iteration = 1: simConfig.maxIter
     for id = 1 : simConfig.nAgent
        %% Synchronise with the GBS
        voronoiInfo = GBS.download(id);
-       agentHandle(id).receiveGBS(voronoiInfo);
+       %agentHandle(id).receiveGBS(voronoiInfo);
         
        %% Execute Control algorithm
-       agentHandle(id).loop();
+       agentHandle(id).computeOutput(voronoiInfo)
+       agentHandle(id).move();
 
        %% Update the data to GBS
        tmp = agentHandle(id).getAgentCoordReport();       

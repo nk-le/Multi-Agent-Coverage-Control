@@ -27,6 +27,7 @@ classdef Agent_Controller < handle
         
         %% Newly added
         VoronoiInfo
+        CVTCoord_2d
     end
     
     properties (Access = private)
@@ -61,14 +62,6 @@ classdef Agent_Controller < handle
             % Update virtual center, save internally
             [curVM] = obj.updateVirtualCenter();
             
-            %% To be updated
-%             obj.ErrorX = obj.virtualMassX - obj.targetX;
-%             obj.ErrorY = obj.virtualMassY - obj.targetY;  
-%             obj.distance  = (obj.ErrorX ^ 2 + obj.ErrorY ^ 2) ^ (0.5);
-%             obj.L = obj.agent.bodyWidth;         
-%             cosPhi = (obj.ErrorX * cos(obj.agent.theta) + obj.ErrorY * sin(obj.agent.theta))/((obj.ErrorX ^ 2 + obj.ErrorY ^ 2) ^ (0.5));
-%             obj.phi = acos(cosPhi);   
-            
             %% Return
             newVMPose = curVM;
         end
@@ -81,42 +74,7 @@ classdef Agent_Controller < handle
             obj.curVMPose(2) = obj.curPose(2) + (obj.vConst/obj.wOrbit) * cos(obj.curPose(3)); 
             poseVM = [obj.curVMPose];
         end
-        
-        %% Execute the control policy 
-        % [@in]
-        %      curCVTPose   : New Voronoi centroid
-        % [@out]
-        %      wOut         : desired control ouput   
-%         function [v, wOut] = executeControl(obj, newCVTPose)
-%             % Pseudo communication matrix that used to exchange information
-%             % between agents
-%             % global neighborInformation;
-%             global dVi_dzMat;
-%             
-%             % Update the new target
-%             obj.curCVTPose = newCVTPose;
-%             %obj.currentSubV = obj.computeCurrentV();
-%            
-%             % Determine Output
-%             v = obj.vConst;             
-%             cT = cos(obj.curPose(3));
-%             sT = sin(obj.curPose(3));
-%             
-%             dVj_di_Matrix = dVi_dzMat(:,obj.ID,:);
-%             sumdVj_diX = 0;
-%             sumdVj_diY = 0;
-%             for i = 1 : size(dVj_di_Matrix, 1)
-%                 sumdVj_diX = sumdVj_diX + dVj_di_Matrix(i,1);
-%                 sumdVj_diY = sumdVj_diY + dVj_di_Matrix(i,2);
-%             end
-%             
-%             %w = obj.w0 + mu * sign(obj.w0) * sign(sumdVj_diX * cT + sumdVj_diY * sT); 
-%             % Try sigmoid function here - changeable epsilon
-%             epsSigmoid = 5;
-%             wOut = obj.wOrbit + 1 * (sumdVj_diX * cT + sumdVj_diY * sT)/(abs(sumdVj_diX * cT + sumdVj_diY * sT) + epsSigmoid); 
-%             obj.w = wOut;
-%         end
-        
+    
         function setAngularVel(obj, w)
             obj.w = w;
         end
@@ -124,46 +82,16 @@ classdef Agent_Controller < handle
         function setHeadingVel(obj, v)
             obj.vConst = v;
         end
-        
-%         function [V] = computeCurrentV(obj)
-%             % The postitive tol parameter prevents agent from jumping over the
-%             % bounded region (discontinuity)
-%             % bj - (a1*x + a2*) > 0 <-- bj - (a1*x - a2*y + tol) > 0 
-%             tol = 0.001;
-%             a = obj.regionCoeff(:, 1:2);
-%             b = obj.regionCoeff(:, 3);
-%             m = numel(b);
-%             Vtmp = 0;
-%             for j = 1:m
-%                 Vtmp = Vtmp +  1 / ( b(j) - (a(j,1) * Zk(1) + a(j,2) * Zk(2) + tol)) / 2 ;
-%             end
-%             if(Vtmp < 0)
-%                error("VBLF is violated. Agent: ...: Current Info"); 
-%             end  
-%             V =  (norm(Zk - Ck))^2 * Vtmp;
-%         end
+
         
         %% Simulate dynamic model 
         % Call this function once every time the control policy is updated
         % to simulate the movement.
-        function [newPose] = move(obj) % Unicycle Dynamic
+        function move(obj) % Unicycle Dynamic
             % Universal time step
             if(obj.dt == 0)
                error("Simulation time step dt was not assigned"); 
             end
-            newPose = zeros(3,1); % [X Y Theta]
-            newPose(1) = obj.curPose(1) + obj.dt * (obj.vConst * cos(obj.curPose(3)));
-            newPose(2) = obj.curPose(2) + obj.dt * (obj.vConst * sin(obj.curPose(3)));
-            newPose(3) = obj.curPose(3) + obj.dt * obj.w;
-            obj.curPose = newPose;
-        end
-        
-        function loop(obj)
-            % Universal time step
-            if(obj.dt == 0)
-               error("Simulation time step dt was not assigned"); 
-            end
-            %% Move 
             obj.curPose(1) = obj.curPose(1) + obj.dt * (obj.vConst * cos(obj.curPose(3)));
             obj.curPose(2) = obj.curPose(2) + obj.dt * (obj.vConst * sin(obj.curPose(3)));
             obj.curPose(3) = obj.curPose(3) + obj.dt * obj.w;
@@ -172,16 +100,56 @@ classdef Agent_Controller < handle
             obj.curVMPose(2) = obj.curPose(2) + (obj.vConst/obj.wOrbit) * cos(obj.curPose(3)); 
         end
         
+        function computeOutput(obj, voronoiData)
+             assert(isa(voronoiData, 'GBS_Voronoi_Report'));
+             %obj.VoronoiInfo = voronoiData;
+             
+             if(isempty(voronoiData.Vertex2D_List))
+                
+             else
+                [obj.CVTCoord_2d] = Voronoi2D_calcCVT(voronoiData.Vertex2D_List);
+                %[out] = Voronoi2D_calCVTPartialDerivative(voronoiData.NeighborInfoList);
+                %assert(isa(neighborInfoList, 'Struct_Neighbor_Info'));
+
+                nNeighbor = numel(voronoiData.NeighborInfoList);
+                for neighborID = 1: nNeighbor
+                    mVi = Voronoi2D_calcPartitionMass(voronoiData.Vertex2D_List);
+                    adjCoord_2d = voronoiData.NeighborInfoList(neighborID).Neighbor_Coord_2d;
+                    vertex1_2d = voronoiData.NeighborInfoList(neighborID).CommonVertex_2d_1;
+                    vertex2_2d = voronoiData.NeighborInfoList(neighborID).CommonVertex_2d_2;
+                    Voronoi2D_calCVTPartialDerivative(obj.curVMPose, obj.CVTCoord_2d, mVi, adjCoord_2d, vertex1_2d, vertex2_2d)
+                end
+             end
+
+        end
+        
+%         function loop(obj)
+%             % Universal time step
+%             if(obj.dt == 0)
+%                error("Simulation time step dt was not assigned"); 
+%             end
+%             obj.move();
+%         end
+        
+        
+        function pose = getPose_3d(obj)
+            pose = obj.curPose;
+        end
+        
+        function vm = getVirtualMass_2d(obj)
+            vm = obj.curVMPose;
+        end
+        
         function [tmp] = getAgentCoordReport(obj)
             tmp = Agent_Coordinates_Report(obj.ID);
             tmp.poseCoord_3d =  obj.curPose;
             tmp.poseVM_2d = obj.curVMPose;
         end
         
-        function receiveGBS(obj, newData)
-            isa(newData, 'GBS_Voronoi_Report');
-            obj.VoronoiInfo = newData;
-        end
+%         function receiveGBS(obj, newData)
+%             isa(newData, 'GBS_Voronoi_Report');
+%             obj.VoronoiInfo = newData;
+%         end
         
         
         
