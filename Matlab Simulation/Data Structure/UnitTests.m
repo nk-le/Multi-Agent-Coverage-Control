@@ -15,17 +15,17 @@ isa(vorInfo, 'Agent_Coordinates_Report')
 
 
 % Communication Link
-comLink = Communication_Link(2);
+comLink = Communication_Link(2, bndVertexes_2d);
 comLink.upload(agentInfo);
-rx = comLink.download(2);
-rx.printValue();
 
 % Region Config
 maxX = 200;
 maxY = 200;
 
-bndVertexes_2d = [0, 0; 0,maxY; maxX, maxY; maxX, 0; 0, 0];
-Vor2D_com = Voronoi2D_Handler(3);
-Vor2D_com.setup(bndVertexes_2d);
-Vor2D_com.partition([30,20;23,22;46,94])
+%bndVertexes_2d = [0, 0; 0,maxY; maxX, maxY; maxX, 0; 0, 0];
+%Vor2D_com.exec_partition([30,20;23,22;46,94])
 
+comLink.loop();
+
+rx = comLink.download(2);
+rx.printValue();

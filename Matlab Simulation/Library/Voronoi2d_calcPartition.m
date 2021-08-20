@@ -1,36 +1,25 @@
-function [poseCVT_2D] = Voronoi2d_calcParition(points_2d_list, bndVertex)
+function [vertexes, vexterPtr] = Voronoi2d_calcPartition(points_2d_list, bndVertex)
         format long;
         assert(size(points_2d_list,2) == 2);
-        nPoints = size(points_2d_list,1);
-
         % Save all the current VM   
         %% The used methods were developed by Aaron_Becker
-        [v, c]= Function_VoronoiBounded(points_2d_list(:,1), points_2d_list(:,2), bndVertex);
+        [vertexes, c]= Function_VoronoiBounded(points_2d_list(:,1), points_2d_list(:,2), bndVertex);
 
         %% Added a layer to outlier the duplicated vertexes
-        xRange = max(bndVertex(:,1));
-        yRange = max(bndVertex(:,1));
-        c = outlierVertexList(v, c, [0 xRange], [0 yRange]);
-
-        %% Compute the new setpoint for each agent
-        poseCVT_2D = zeros(nPoints, 2);
-        for i = 1:nPoints
-            [cx,cy] = Function_PolyCentroid(v(c{i},1),v(c{i},2));
-            cx = min(xRange, max(0, cx));
-            cy = min(yRange, max(0, cy));
-            if ~isnan(cx) && inpolygon(cx,cy, bndVertex(:,1), bndVertex(:,2))
-                poseCVT_2D(i,1) = cx;  %don't update if goal is outside the polygon
-                poseCVT_2D(i,2) = cy;
-            end
-        end
+        vexterPtr = outlierVertexList(vertexes, c, bndVertex);
 end
 
-function outVHandler = outlierVertexList(vertexes, vertexHandler, xRange, yRange)
+%% Added functions to oulier the reduntdant vertexes
+function outVHandler = outlierVertexList(vertexes, vertexHandler, bndVertex)
+xMin = min(bndVertex(:,1));
+yMin =  min(bndVertex(:,2));
+xMax = max(bndVertex(:,1));
+yMax = max(bndVertex(:,1));    
 nVer = size(vertexes,1);
 %% Clean the unused vertexes
 feasibleFlag = zeros(nVer, 1);
 for i = 1:nVer
-    feasibleFlag(i) = checkInRange2D(vertexes(i,1), vertexes(i,2), xRange(1), xRange(2), yRange(1), yRange(2),0.5);   
+    feasibleFlag(i) = checkInRange2D(vertexes(i,1), vertexes(i,2), xMin, xMax, yMin, yMax,0.5);   
 end
 % Create a flag List that indicates duplicated values
 dupFlag = zeros(nVer, 1);
@@ -46,7 +35,7 @@ for i = 1:nVer-1
                thatV = vertexes(j,:);
                % Check if they are duplicated
                tol = 1/(1e10);
-               if(checkDup2D(thisV, thatV, tol))
+               if((norm(thisV-thatV) < tol))
                     % Assigned a unique "ID" for the duplicated flag
                     % disp([i,j])
                     dupID(j, :) = [i, j];
@@ -57,10 +46,8 @@ for i = 1:nVer-1
         end
     end
 end
-
 dupID( ~any(dupID,2), : ) = [];
 outVHandler = replaceIndex(vertexHandler, dupID);
-%disp(outVHandler);
 end
 
 function flag = checkInRange2D(x, y, xMin, xMax, yMin, yMax, tol)
@@ -69,13 +56,6 @@ function flag = checkInRange2D(x, y, xMin, xMax, yMin, yMax, tol)
     yMin = yMin - tol;
     yMax = yMax + tol;
     flag = (x >= xMin) && (x <= xMax) && (y >= yMin) && (y <= yMax); 
-    %if(~flag)
-    %       disp([x,y, xMin, xMax, yMin, yMax]) 
-    %end
-end
-
-function isDup = checkDup2D(p1, p2, tol)
-    isDup = (norm(p1-p2) < tol); 
 end
 
 function out = replaceIndex(verOld, dupID)
@@ -91,10 +71,9 @@ function out = replaceIndex(verOld, dupID)
     out = verOut';
 end
 
+% Eliminate sequentially repeated rows
+% Create row vector for diff (must transpose if given a column vector)
 function [uniqueSequence] = DedupSequence (seq)
-    % Eliminate sequentially repeated rows
-    
-    % Create row vector for diff (must transpose if given a column vector)
     if size(seq,1) > 1
         seqCopy = seq(:,1)'; 
     else
