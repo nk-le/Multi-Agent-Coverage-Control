@@ -10,7 +10,7 @@ classdef GBS_Voronoi_Report_Extended < GBS_Voronoi_Report
     
     methods
         function obj = GBS_Voronoi_Report_Extended(myID)
-            obj@Agent_Voronoi_Report(myID);
+            obj@GBS_Voronoi_Report(myID);
             obj.dC_dz = zeros(2,2);
             obj.dV_dz = zeros(2,1);
         end

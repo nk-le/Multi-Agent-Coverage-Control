@@ -100,25 +100,58 @@ classdef Agent_Controller < handle
             obj.curVMPose(2) = obj.curPose(2) + (obj.vConst/obj.wOrbit) * cos(obj.curPose(3)); 
         end
         
-        function computeOutput(obj, voronoiData)
-             assert(isa(voronoiData, 'GBS_Voronoi_Report'));
-             %obj.VoronoiInfo = voronoiData;
-             
-             if(isempty(voronoiData.Vertex2D_List))
-                
-             else
+        function [Vk, dVkdzk, neighbordVdz] = computeLyapunovFeedback(obj, voronoiData)
+             assert(isa(voronoiData, 'GBS_Voronoi_Report'));             
+             % Initally no vertex passed 
+             if(~isempty(voronoiData.Vertex2D_List))
                 [obj.CVTCoord_2d] = Voronoi2D_calcCVT(voronoiData.Vertex2D_List);
                 %[out] = Voronoi2D_calCVTPartialDerivative(voronoiData.NeighborInfoList);
                 %assert(isa(neighborInfoList, 'Struct_Neighbor_Info'));
 
                 nNeighbor = numel(voronoiData.NeighborInfoList);
-                for neighborID = 1: nNeighbor
+                tmp_dCk_dzi_List = zeros(nNeighbor, 2,2);
+                dCk_dzk = zeros(2,2);
+                %% Iterate to obtain the aggregated dCi_dzi
+                for i = 1: nNeighbor
                     mVi = Voronoi2D_calcPartitionMass(voronoiData.Vertex2D_List);
-                    adjCoord_2d = voronoiData.NeighborInfoList(neighborID).Neighbor_Coord_2d;
-                    vertex1_2d = voronoiData.NeighborInfoList(neighborID).CommonVertex_2d_1;
-                    vertex2_2d = voronoiData.NeighborInfoList(neighborID).CommonVertex_2d_2;
-                    Voronoi2D_calCVTPartialDerivative(obj.curVMPose, obj.CVTCoord_2d, mVi, adjCoord_2d, vertex1_2d, vertex2_2d)
+                    adjCoord_2d = voronoiData.NeighborInfoList(i).Neighbor_Coord_2d;
+                    vertex1_2d = voronoiData.NeighborInfoList(i).CommonVertex_2d_1;
+                    vertex2_2d = voronoiData.NeighborInfoList(i).CommonVertex_2d_2;
+                    [dCk_dzk_Neighbor_i, tmp_dCk_dzi_List(i,:,:)] = Voronoi2D_calCVTPartialDerivative(obj.curVMPose, obj.CVTCoord_2d, mVi, adjCoord_2d, vertex1_2d, vertex2_2d);
+                    dCk_dzk = dCk_dzk + dCk_dzk_Neighbor_i;
                 end
+                
+                %% Preparation for the computation of Lyapunov Derivative
+                %% Some adjustable variables Parameter
+                Q = eye(2);
+                tol = 1; % Tolerance to relax the state constraint
+
+                %% Computation
+                zk = [obj.curPose(1) obj.curPose(2)]';
+                sum_1_div_Hj = 0;
+                sum_aj_HjSquared = 0;
+                for j = 1: size(obj.regionCoeff)
+                    hj = (obj.regionCoeff(j,3)- (obj.regionCoeff(j,1)*zk(1) + obj.regionCoeff(j,2)*zk(2) + tol)); 
+                    sum_1_div_Hj = sum_1_div_Hj + 1/hj;
+                    sum_aj_HjSquared = sum_aj_HjSquared + [obj.regionCoeff(j,1); obj.regionCoeff(j,2)] / hj^2 / 2; 
+                end
+                Q_zDiff_div_hj = Q * (zk - obj.CVTCoord_2d) * sum_1_div_Hj;
+                 
+                %% Compute the Partial dVi_dzi of itself
+                Vk = (zk - obj.CVTCoord_2d)' * Q * (zk - obj.CVTCoord_2d) * sum_1_div_Hj;
+                dVkdzk = (eye(2) - dCk_dzk')*Q_zDiff_div_hj + sum_aj_HjSquared * (zk - obj.CVTCoord_2d)' * Q * (zk - obj.CVTCoord_2d);
+                % Assign to the Info handle
+                
+                %% Iterative to compute the partial Lyapunov derivative for each neighbor
+                neighbordVdz = Struct_Neighbor_Lyapunov.empty(nNeighbor, 0);
+                for i = 1: nNeighbor
+                    dCi_dzk(:,:) = tmp_dCk_dzi_List(i,:,:);
+                    dVkdzi = -dCi_dzk' * Q_zDiff_div_hj;
+                    % Assign the new adjacent partial derivative
+                    neighbordVdz(i) = Struct_Neighbor_Lyapunov(obj.ID, voronoiData.NeighborInfoList(i).getID(), dVkdzi); %% Create a report with neighbor ID to publish
+                end
+             else
+                 fprintf("WARN: Agent %d: No vertex for region partitioning detected \n", obj.ID);
              end
 
         end

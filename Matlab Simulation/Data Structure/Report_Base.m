@@ -1,5 +1,5 @@
 classdef (Abstract) Report_Base < handle
-    properties (Access  = private)
+    properties (Access  = public)
         ID
     end
     
