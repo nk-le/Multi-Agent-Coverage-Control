@@ -25,6 +25,7 @@ logger.bndVertexes = regionConfig.bndVertexes;
 
 %% MAIN
 for iteration = 1: simConfig.maxIter
+    %% Thread Agents
     for k = 1 : simConfig.nAgent 
        %% Synchronise with the GBS
        [voronoiInfo, isAvailable] = GBS.download(agentHandle(k).ID);        
@@ -37,11 +38,18 @@ for iteration = 1: simConfig.maxIter
        
        %% Download the feedback again
        
-                   %% Perform the control algorithm
         
        
        
                    
+       
+    end
+    
+    for k = 1 : simConfig.nAgent 
+              %% Perform the control algorithm
+ 
+        
+        
        %% Move
        agentHandle(k).move();
 
@@ -49,10 +57,17 @@ for iteration = 1: simConfig.maxIter
        tmp = agentHandle(k).getAgentCoordReport();       
        GBS.upload(tmp);
     end
+    
+    
+    %% Thread Voronoi Updater
     [vmCmoord_2d_list, ID_List] = GBS.downloadCoord();
     [VoronoiPartitionInfo] = VoronoiCom.exec_partition(vmCmoord_2d_list, ID_List);
     GBS.uploadVoronoiParition(VoronoiPartitionInfo);
 
+    %% Logging
+    if(mod(iteration, 100) == 0)
+       fprintf("Running... \n"); 
+    end
 end
 %% END
 
