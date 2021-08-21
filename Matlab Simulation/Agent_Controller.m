@@ -152,8 +152,10 @@ classdef Agent_Controller < handle
                 end
              else
                  fprintf("WARN: Agent %d: No vertex for region partitioning detected \n", obj.ID);
+                 Vk = [];
+                 dVkdzk = [];
+                 neighbordVdz = [];
              end
-
         end
         
 %         function loop(obj)

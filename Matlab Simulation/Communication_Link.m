@@ -11,9 +11,7 @@ classdef Communication_Link < handle
         nAgent
         AgentReportList
         VoronoiReportList
-        
-        %% Voronooi handler, which handles any computation related to Voronoi properties
-        VoronoiProcessor
+            
     end
     
     methods
@@ -25,6 +23,7 @@ classdef Communication_Link < handle
             obj.VoronoiReportList = GBS_Voronoi_Report.empty(nAgents, 0);
             for i = 1: nAgents
                 obj.AgentReportList(i) = Agent_Coordinates_Report(-1);
+                obj.VoronoiReportList(i) = GBS_Voronoi_Report(-1);
             end            
         end
 
@@ -44,21 +43,24 @@ classdef Communication_Link < handle
         
         %% Download the report structure
         function [out, isAvailable] = download(obj, agentID)
-            isAvailable = false;
-            out = [];
-            for i = 1: obj.nAgent
-                if(~isempty(obj.VoronoiReportList))
-                    if(obj.VoronoiReportList(i).getID() == agentID)
-                        out = obj.VoronoiReportList(i);
-                        isAvailable = true;
-                        return
-                    end
-               end
+            out = [];            
+            agentIndex = find(obj.ID_List == agentID);
+            isAvailable = ~isempty(agentIndex);
+            if(isAvailable)
+                out = obj.VoronoiReportList(agentIndex);
             end
         end
         
         function uploadVoronoiParition(obj, VoronoiPartitionInfo)
-            isa(VoronoiPartitionInfo, "GBS_Voronoi_Report")
+            isa(VoronoiPartitionInfo, "GBS_Voronoi_Report");
+            assert(numel(VoronoiPartitionInfo) == obj.nAgent);
+            
+            for i = 1: obj.nAgent 
+                agentID = VoronoiPartitionInfo(i).getID();
+                agentIndex = find(obj.ID_List == agentID);
+                obj.VoronoiReportList(agentIndex) = GBS_Voronoi_Report(agentID);
+                obj.VoronoiReportList(agentIndex) = VoronoiPartitionInfo(i);
+            end
         end
         
         
@@ -66,19 +68,6 @@ classdef Communication_Link < handle
             obj.nAgent;
             out  = [30,20;23,22;46,94; 23, 15; 45, 25; 35, 33]; %zeros(nAgents, 2);
             ID_LIST = obj.ID_List;
-        end
-        
-        function loop(obj)
-            % Compute the CVT according to the actual agents' coord
-            % Split them into neighbors and some values
-            % ...
-            % Get the registered data from agents
-
-            
-%             for i = 1: obj.nAgent
-%                 obj.VoronoiReportList(i) = GBS_Voronoi_Report(obj.AgentReportList(i).getID());
-%                 obj.VoronoiReportList(i).assign(o_Vertexes{i}, o_neighborInfo{i}) ;
-%             end
         end
     end
 end
