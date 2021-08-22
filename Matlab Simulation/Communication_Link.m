@@ -9,66 +9,55 @@ classdef Communication_Link < handle
         
         %% Communication
         nAgent
-        AgentReportList
-        VoronoiReportList
-            
+        NeighborReportList
+        
     end
     
     methods
-        function obj = Communication_Link(nAgents)
+        function obj = Communication_Link(nAgents, ID_List)
             obj.nAgent = nAgents;
-            
-            obj.AgentReportList = Agent_Coordinates_Report.empty(nAgents, 0);
-            obj.ID_List = -1 * ones(nAgents, 1);
-            obj.VoronoiReportList = GBS_Voronoi_Report.empty(nAgents, 0);
-            for i = 1: nAgents
-                obj.AgentReportList(i) = Agent_Coordinates_Report(-1);
-                obj.VoronoiReportList(i) = GBS_Voronoi_Report(-1);
-            end            
+            obj.ID_List = ID_List;
+            obj.NeighborReportList = cell(nAgents);
+            obj.ID_List = ID_List;          
         end
 
-   
-        %% Upload the report structure
-        function upload(obj, reportCoordinates)
-            assert(isa(reportCoordinates, 'Agent_Coordinates_Report'));
-            thisID = reportCoordinates.getID();
-            for i = 1: obj.nAgent
-               if(obj.AgentReportList(i).getID() == thisID || obj.AgentReportList(i).getID() == -1)
-                    obj.AgentReportList(i) = reportCoordinates;
-                    obj.ID_List(i) = thisID;
-                    return
-               end
+        function isValid = uploadVoronoiProperty(obj, UploaderID, report)
+            assert(isa(report, 'Struct_Neighbor_Lyapunov'));
+            txAgentIndex = find(obj.ID_List  == UploaderID);
+            assert(~isempty(txAgentIndex)); %% Agent not yet registered in the communication link so it can not upload
+
+            obj.NeighborReportList{txAgentIndex} = Struct_Neighbor_Lyapunov.empty(numel(report), 0);
+            for i = 1: numel(report)
+                %rxIndex = report.getReceiverID();
+                %rxAgentIndex = find(obj.ID_List  == rxIndex, 1);
+                %assert(~isempty(rxAgentIndex)); %% Agent not yet registered in the communication link so it can not upload
+                obj.NeighborReportList{txAgentIndex}(i) = report(i);
             end
-        end
-        
-        %% Download the report structure
-        function [out, isAvailable] = download(obj, agentID)
-            out = [];            
-            agentIndex = find(obj.ID_List == agentID);
-            isAvailable = ~isempty(agentIndex);
-            if(isAvailable)
-                out = obj.VoronoiReportList(agentIndex);
-            end
-        end
-        
-        function uploadVoronoiParition(obj, VoronoiPartitionInfo)
-            isa(VoronoiPartitionInfo, "GBS_Voronoi_Report");
-            assert(numel(VoronoiPartitionInfo) == obj.nAgent);
+
             
-            for i = 1: obj.nAgent 
-                agentID = VoronoiPartitionInfo(i).getID();
-                agentIndex = find(obj.ID_List == agentID);
-                obj.VoronoiReportList(agentIndex) = GBS_Voronoi_Report(agentID);
-                obj.VoronoiReportList(agentIndex) = VoronoiPartitionInfo(i);
+            
+            nReports = numel(report);
+            obj.NeighborReportList(txAgentIndex) = [];
+            %obj.NeighborReportList(index) = 
+            if(isValid)
+                %obj.NeighborReportList(index) = Struct_Neighbor_Lyapunov(report.getSenderID(), report.getReceiverID(), );
+            else
+                return
             end
         end
         
-        
-        function [out, ID_LIST] = downloadCoord(obj)
-            obj.nAgent;
-            out  = [30,20;23,22;46,94; 23, 15; 45, 25; 35, 33]; %zeros(nAgents, 2);
-            ID_LIST = obj.ID_List;
+        function [out, isAvailable] = downloadVoronoiProperty(obj, agentID)
+            agentIndex = find(obj.ID_List == agentID);
+            try
+                out = obj.NeighborReportList(agentIndex);
+                isAvailable = true;
+            catch ME
+                fprintf("Data sharing for Agent %d is not available \n", agentID);
+                isAvailable = false;
+                out = [];
+            end
         end
+        
     end
 end
 

@@ -1,21 +1,21 @@
 classdef (Abstract) Report_Base < handle
     properties (Access  = public)
-        ID
+        SenderID
     end
     
     methods
         function obj = Report_Base(initID)
-            obj.ID = initID;
+            obj.SenderID = initID;
         end
         
         function printValue(obj)
-            fprintf("Agent: %d\n", obj.ID);
+            fprintf("Agent: %d\n", obj.SenderID);
             % Call the printing information of the child class
             obj.printInfo()
         end
         
-        function out = getID(obj)
-           out = obj.ID; 
+        function out = getSenderID(obj)
+           out = obj.SenderID; 
         end
     end
     

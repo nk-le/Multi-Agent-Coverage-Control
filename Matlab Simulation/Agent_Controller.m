@@ -36,54 +36,22 @@ classdef Agent_Controller < handle
     
     methods
         %% Initalize class handler
-        function obj = Agent_Controller(dt)
+        function obj = Agent_Controller(dt, botID, coverageRegionCoeff, initPose, v0, w0)
             obj.dt = dt;
             obj.v = 0;
             obj.w = 0;
-        end
-        
-        %% One time configuration
-        %   Assign a fix ID for each controller for communication broadcasting and easy debugging
-        %   Assign the coefficient of the closed convex region: [coverageRegionCoeff] = [a1 a2 b] --> a1*x + a2*y - b <= 0
-        function obj = begin(obj, botID, coverageRegionCoeff, initPose, v0, w0)
+            
             obj.ID = botID;
             obj.regionCoeff = coverageRegionCoeff;
             obj.vConst = v0;
             obj.wOrbit = w0;
             
-            % Update initial position
-            obj.setState(initPose);
-        end
-        
-        %% Position feedback and internal state update
-       function [newVMPose] = setState(obj, newPose)
-            % Update Current state
-            obj.curPose = newPose;
-            % Update virtual center, save internally
-            [curVM] = obj.updateVirtualCenter();
-            
-            %% Return
-            newVMPose = curVM;
-        end
-        
-        %% Get the current virtual center according to the current pose 
-        %  wOrbit is fixed orbiting angular velocity
-        %  cVonst is fixed heading velocity
-        function [poseVM] = updateVirtualCenter(obj)            
+            %% Update initial position and the virtual center
+            obj.curPose = initPose;
             obj.curVMPose(1) = obj.curPose(1) - (obj.vConst/obj.wOrbit) * sin(obj.curPose(3)); 
             obj.curVMPose(2) = obj.curPose(2) + (obj.vConst/obj.wOrbit) * cos(obj.curPose(3)); 
-            poseVM = [obj.curVMPose];
-        end
-    
-        function setAngularVel(obj, w)
-            obj.w = w;
-        end
-        
-        function setHeadingVel(obj, v)
-            obj.vConst = v;
         end
 
-        
         %% Simulate dynamic model 
         % Call this function once every time the control policy is updated
         % to simulate the movement.
@@ -148,7 +116,7 @@ classdef Agent_Controller < handle
                     dCi_dzk(:,:) = tmp_dCk_dzi_List(i,:,:);
                     dVkdzi = -dCi_dzk' * Q_zDiff_div_hj;
                     % Assign the new adjacent partial derivative
-                    neighbordVdz(i) = Struct_Neighbor_Lyapunov(obj.ID, voronoiData.NeighborInfoList(i).getID(), dVkdzi); %% Create a report with neighbor ID to publish
+                    neighbordVdz(i) = Struct_Neighbor_Lyapunov(obj.ID, voronoiData.NeighborInfoList(i).getReceiverID(), dVkdzi); %% Create a report with neighbor ID to publish
                 end
              else
                  fprintf("WARN: Agent %d: No vertex for region partitioning detected \n", obj.ID);
@@ -157,15 +125,7 @@ classdef Agent_Controller < handle
                  neighbordVdz = [];
              end
         end
-        
-%         function loop(obj)
-%             % Universal time step
-%             if(obj.dt == 0)
-%                error("Simulation time step dt was not assigned"); 
-%             end
-%             obj.move();
-%         end
-        
+          
         
         function pose = getPose_3d(obj)
             pose = obj.curPose;
@@ -181,12 +141,9 @@ classdef Agent_Controller < handle
             tmp.poseVM_2d = obj.curVMPose;
         end
         
-%         function receiveGBS(obj, newData)
-%             isa(newData, 'GBS_Voronoi_Report');
-%             obj.VoronoiInfo = newData;
-%         end
-        
-        
+        function executeControl(obj, report)
+            
+        end
         
         
         
