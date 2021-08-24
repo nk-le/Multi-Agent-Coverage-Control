@@ -80,11 +80,11 @@ classdef Agent_Controller < handle
                 tmp_dCk_dzi_List = zeros(nNeighbor, 2,2);
                 dCk_dzk = zeros(2,2);
                 %% Iterate to obtain the aggregated dCi_dzi
+                mVi = Voronoi2D_calcPartitionMass(voronoiData.Vertex2D_List);
                 for i = 1: nNeighbor
-                    mVi = Voronoi2D_calcPartitionMass(voronoiData.Vertex2D_List);
-                    adjCoord_2d = voronoiData.NeighborInfoList(i).Neighbor_Coord_2d;
-                    vertex1_2d = voronoiData.NeighborInfoList(i).CommonVertex_2d_1;
-                    vertex2_2d = voronoiData.NeighborInfoList(i).CommonVertex_2d_2;
+                    adjCoord_2d = voronoiData.NeighborInfoList{i}.Neighbor_Coord_2d;
+                    vertex1_2d = voronoiData.NeighborInfoList{i}.CommonVertex_2d_1;
+                    vertex2_2d = voronoiData.NeighborInfoList{i}.CommonVertex_2d_2;
                     [dCk_dzk_Neighbor_i, tmp_dCk_dzi_List(i,:,:)] = Voronoi2D_calCVTPartialDerivative(obj.curVMPose, obj.CVTCoord_2d, mVi, adjCoord_2d, vertex1_2d, vertex2_2d);
                     dCk_dzk = dCk_dzk + dCk_dzk_Neighbor_i;
                 end
@@ -116,7 +116,7 @@ classdef Agent_Controller < handle
                     dCi_dzk(:,:) = tmp_dCk_dzi_List(i,:,:);
                     dVkdzi = -dCi_dzk' * Q_zDiff_div_hj;
                     % Assign the new adjacent partial derivative
-                    neighbordVdz(i) = Struct_Neighbor_Lyapunov(obj.ID, voronoiData.NeighborInfoList(i).getReceiverID(), dVkdzi); %% Create a report with neighbor ID to publish
+                    neighbordVdz(i) = Struct_Neighbor_Lyapunov(obj.ID, voronoiData.NeighborInfoList{i}.getReceiverID(), dVkdzi); %% Create a report with neighbor ID to publish
                 end
              else
                  fprintf("WARN: Agent %d: No vertex for region partitioning detected \n", obj.ID);
@@ -142,7 +142,11 @@ classdef Agent_Controller < handle
         end
         
         function executeControl(obj, report)
-            
+            fprintf("AgentID %d exc Control \n", obj.ID)
+            for i = 1 : numel(report)
+               report{i}.printValue(); 
+            end
+            fprintf("End \n");
         end
         
         

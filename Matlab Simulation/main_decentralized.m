@@ -1,3 +1,9 @@
+addpath('./Data Structure');
+addpath('./Evaluation Scripts');
+addpath('./Library');
+addpath('./Voronoi Debug Scripts');
+
+
 format long;
 [simConfig, regionConfig, agentConfig] = Config();
 
