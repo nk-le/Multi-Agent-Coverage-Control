@@ -71,7 +71,19 @@ classdef DataLogger < handle
                 obj.ControlOutput(:, obj.curCnt) = centralController.CurAngularVel(:);
                 obj.V_BLF(:, obj.curCnt) = centralController.LyapunovCost(:);
             end
+        end
+        
+        function logDecentralized(obj, CurPose, CurPoseVM, CurPoseCVT, LyapunovCost)
+            obj.curCnt = obj.curCnt + 1;
+            if(obj.curCnt <= obj.maxCnt)
+                obj.PoseAgent(:, :,obj.curCnt) = CurPose(:,:);
+                obj.PoseVM(:, :,obj.curCnt) = CurPoseVM(:,:);
+                obj.CVT(:,:, obj.curCnt)  = CurPoseCVT(:,:);
+                obj.V_BLF(:, obj.curCnt) = LyapunovCost(:);
+            end
         end 
+        
+        
     end
 end
 

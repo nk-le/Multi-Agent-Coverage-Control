@@ -29,6 +29,11 @@ logger.bndVertexes = regionConfig.bndVertexes;
 
 %% MAIN
 for iteration = 1: simConfig.maxIter
+    %% Logging only
+    pose_3d_list = zeros(simConfig.nAgent, 3);
+    CVT_List = zeros(simConfig.nAgent, 2);
+    Vk_List = zeros(simConfig.nAgent, 1);
+    
     %% Get the latest pose and update inside the Voronoi Handler
     vmCmoord_2d_list = zeros(simConfig.nAgent, 2);
     ID_List = zeros(simConfig.nAgent, 1);
@@ -38,14 +43,15 @@ for iteration = 1: simConfig.maxIter
        
        %% Move
        if(isAvailable)
-           agentHandle(k).executeControl(report);
-                   
+           agentHandle(k).computeControlInput(report);    
+           agentHandle(k).move();
        else
-           
+           fprintf("Check \n");
        end
        %% Update the data to Environment
        agentReport = agentHandle(k).getAgentCoordReport();
-       vmCmoord_2d_list(k, :) = agentReport.poseVM_2d;      
+       vmCmoord_2d_list(k, :) = agentReport.poseVM_2d;   
+       pose_3d_list(k,:) = agentReport.poseCoord_3d;   
        ID_List(k,:) = agentHandle(k).ID;
     end
     
@@ -55,15 +61,23 @@ for iteration = 1: simConfig.maxIter
        %% Mimic the behaviour of Voronoi Topology
        [voronoiInfo, isAvailable] = VoronoiCom.get_Voronoi_Parition(agentHandle(k).ID);        
        if(isAvailable)
-            [Vk, dVkdzk, neighbordVdz] = agentHandle(k).computeLyapunovFeedback(voronoiInfo);
+            [CVT, Vk, dVkdzk, neighbordVdz] = agentHandle(k).computeLyapunovFeedback(voronoiInfo);
             GBS.uploadVoronoiProperty(agentHandle(k).ID, neighbordVdz);
+            
+            CVT_List(k,:) = CVT;
+            Vk_List(k) = Vk; 
+       else
+            fprintf("Check \n");
        end
     end
     
     %% Logging
-    if(mod(iteration, 10) == 0)
-       fprintf("Running... \n"); 
-    end
+    logger.logDecentralized(pose_3d_list, vmCmoord_2d_list, CVT_List, Vk_List);
+    fprintf("Iter: %d. L: %f \n", iteration, sum(Vk_List)); 
+    
+%     if(mod(iteration, 10) == 0)
+%        fprintf("Running... \n"); 
+%     end
 end
 %% END
 

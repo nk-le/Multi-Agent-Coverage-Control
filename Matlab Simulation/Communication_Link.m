@@ -18,9 +18,6 @@ classdef Communication_Link < handle
             obj.nAgent = nAgents;
             obj.ID_List = ID_List;
             obj.NeighborReportTable = cell(nAgents, 1);
-%             for i = 1: nAgents
-%                 obj.NeighborReportTable{i} = cell(nAgents, 1); 
-%             end
             obj.ID_List = ID_List;          
         end
 
@@ -41,28 +38,20 @@ classdef Communication_Link < handle
         
         function [out, isAvailable] = downloadVoronoiProperty(obj, agentID)
             requestAgentIndex = find(obj.ID_List == agentID);
-            try
-                out = cell(obj.nAgent, 1);
-                for senderAgentPtr = 1: obj.nAgent
-%                     for reportPtr = 1: numel(obj.NeighborReportTable{agentPtr})
-%                         if(~isempty(obj.NeighborReportTable{agentPtr}{reportPtr}))
-%                             if(obj.NeighborReportTable{agentPtr}{reportPtr}.getReceiverID() == agentID)
-%                                 out(agentPtr) = obj.NeighborReportTable{agentPtr}{reportPtr};
-%                             end
-%                         end
-%                     end
-                    if(~isempty(obj.NeighborReportTable{senderAgentPtr}{requestAgentIndex}))
-                        out{senderAgentPtr} = obj.NeighborReportTable{senderAgentPtr}{requestAgentIndex};
+            out = cell(obj.nAgent, 1);
+            isAvailable = false;
+            for i = 1: obj.nAgent
+                if(~isempty(obj.NeighborReportTable{i}))
+                    if(~isempty(obj.NeighborReportTable{i}{requestAgentIndex}))
+                        out{i} = obj.NeighborReportTable{i}{requestAgentIndex};
+                        isAvailable = true;
                     end
                 end
-                
+            end
+            if(isAvailable)
                 out = out(~cellfun(@isempty,out));
-                isAvailable = true;
-            catch ME
-                fprintf("%s \n", ME.message);
+            else
                 fprintf("Data sharing for Agent %d is not available \n", agentID);
-                isAvailable = false;
-                out = [];
             end
         end
         

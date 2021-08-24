@@ -1,4 +1,6 @@
-[simConfig, regionConfig, agentConfig] = Config()
+addpath('./Library/*');
+
+[simConfig, regionConfig, agentConfig] = Config();
 cellColors = cool(simConfig.nAgent);    
 env = MultiRobotEnv(simConfig.nAgent);
 iter = logger.curCnt;

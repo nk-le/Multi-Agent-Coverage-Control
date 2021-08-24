@@ -28,6 +28,7 @@ classdef Agent_Controller < handle
         %% Newly added
         VoronoiInfo
         CVTCoord_2d
+        dVkdzk
     end
     
     properties (Access = private)
@@ -68,14 +69,13 @@ classdef Agent_Controller < handle
             obj.curVMPose(2) = obj.curPose(2) + (obj.vConst/obj.wOrbit) * cos(obj.curPose(3)); 
         end
         
-        function [Vk, dVkdzk, neighbordVdz] = computeLyapunovFeedback(obj, voronoiData)
+        function [CVT, Vk, dVkdzk, neighbordVdz] = computeLyapunovFeedback(obj, voronoiData)
              assert(isa(voronoiData, 'GBS_Voronoi_Report'));             
              % Initally no vertex passed 
              if(~isempty(voronoiData.Vertex2D_List))
                 [obj.CVTCoord_2d] = Voronoi2D_calcCVT(voronoiData.Vertex2D_List);
-                %[out] = Voronoi2D_calCVTPartialDerivative(voronoiData.NeighborInfoList);
-                %assert(isa(neighborInfoList, 'Struct_Neighbor_Info'));
-
+                CVT = obj.CVTCoord_2d;
+               
                 nNeighbor = numel(voronoiData.NeighborInfoList);
                 tmp_dCk_dzi_List = zeros(nNeighbor, 2,2);
                 dCk_dzk = zeros(2,2);
@@ -107,8 +107,8 @@ classdef Agent_Controller < handle
                  
                 %% Compute the Partial dVi_dzi of itself
                 Vk = (zk - obj.CVTCoord_2d)' * Q * (zk - obj.CVTCoord_2d) * sum_1_div_Hj;
-                dVkdzk = (eye(2) - dCk_dzk')*Q_zDiff_div_hj + sum_aj_HjSquared * (zk - obj.CVTCoord_2d)' * Q * (zk - obj.CVTCoord_2d);
-                % Assign to the Info handle
+                obj.dVkdzk = (eye(2) - dCk_dzk')*Q_zDiff_div_hj + sum_aj_HjSquared * (zk - obj.CVTCoord_2d)' * Q * (zk - obj.CVTCoord_2d);
+                dVkdzk = obj.dVkdzk; 
                 
                 %% Iterative to compute the partial Lyapunov derivative for each neighbor
                 neighbordVdz = Struct_Neighbor_Lyapunov.empty(nNeighbor, 0);
@@ -141,18 +141,28 @@ classdef Agent_Controller < handle
             tmp.poseVM_2d = obj.curVMPose;
         end
         
-        function executeControl(obj, report)
-            fprintf("AgentID %d exc Control \n", obj.ID)
-            for i = 1 : numel(report)
-               report{i}.printValue(); 
+        function computeControlInput(obj, report)
+%             fprintf("AgentID %d exc Control \n", obj.ID)
+%             for i = 1 : numel(report)
+%                report{i}.printValue(); 
+%             end
+%             fprintf("End \n");
+            
+            %% Aggregate the Lyapunov feedback from neighbor agents
+            sum_dVi_dzk = obj.dVkdzk;
+            for i = 1: numel(report)
+                sum_dVi_dzk = sum_dVi_dzk + report{i}.dVdz_2d;
             end
-            fprintf("End \n");
+           
+            %% Adjustable variable --> Will move later to constant
+            epsSigmoid = 3;
+            mu = 3; % Control gain %% ADJUST THE CONTROL GAIN HERE
+            sigmoid_func = @(x,eps) x / (abs(x) + eps);  
+            w0 = 1.2; 
+            
+            %% Compute the control policy
+            obj.w = w0 + mu * w0 * sigmoid_func(sum_dVi_dzk' * [cos(obj.curPose(3)) ;sin(obj.curPose(3))], epsSigmoid); 
         end
-        
-        
-        
-        
-        
     end
 end
 
