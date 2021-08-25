@@ -19,7 +19,7 @@ classdef Voronoi2D_Handler < handle
             obj.boundVertex = bndVertexes;
         end
         
-        function exec_partition(obj, pose2D, IDList)
+        function [v, c] = exec_partition(obj, pose2D, IDList)
             assert(size(pose2D, 2) == 2);
             
             [obj.partitionVertexes, obj.vertexPtr] = Voronoi2d_calcPartition(pose2D, obj.boundVertex);
@@ -40,6 +40,10 @@ classdef Voronoi2D_Handler < handle
                 obj.VoronoiReportList(i).assign(o_Vertexes{i}, o_neighborInfo{i}) ;
                 obj.ID_List = IDList;
             end
+            
+            %% For debug
+            v = obj.partitionVertexes;
+            c = obj.vertexPtr;
         end
         
         %% Download the report structure

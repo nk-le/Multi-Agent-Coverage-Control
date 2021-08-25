@@ -18,6 +18,9 @@ classdef Communication_Link < handle
             obj.nAgent = nAgents;
             obj.ID_List = ID_List;
             obj.NeighborReportTable = cell(nAgents, 1);
+            for i = 1 : nAgents
+                obj.NeighborReportTable{i} = cell(obj.nAgent, 1);
+            end
             obj.ID_List = ID_List;          
         end
 
@@ -41,11 +44,9 @@ classdef Communication_Link < handle
             out = cell(obj.nAgent, 1);
             isAvailable = false;
             for i = 1: obj.nAgent
-                if(~isempty(obj.NeighborReportTable{i}))
-                    if(~isempty(obj.NeighborReportTable{i}{requestAgentIndex}))
-                        out{i} = obj.NeighborReportTable{i}{requestAgentIndex};
-                        isAvailable = true;
-                    end
+                if(~isempty(obj.NeighborReportTable{i}{requestAgentIndex}))
+                    out{i} = obj.NeighborReportTable{i}{requestAgentIndex};
+                    isAvailable = true;
                 end
             end
             if(isAvailable)

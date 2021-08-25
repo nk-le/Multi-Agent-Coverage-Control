@@ -31,12 +31,11 @@ logger.bndVertexes = regionConfig.bndVertexes;
 for iteration = 1: simConfig.maxIter
     %% Logging only
     pose_3d_list = zeros(simConfig.nAgent, 3);
-    CVT_List = zeros(simConfig.nAgent, 2);
+    CVT_2d_List = zeros(simConfig.nAgent, 2);
     Vk_List = zeros(simConfig.nAgent, 1);
     
     %% Get the latest pose and update inside the Voronoi Handler
     vmCmoord_2d_list = zeros(simConfig.nAgent, 2);
-    ID_List = zeros(simConfig.nAgent, 1);
     for k = 1 : simConfig.nAgent 
        %% Perform the control algorithm
        [report, isAvailable] = GBS.downloadVoronoiProperty(agentHandle(k).ID);
@@ -52,11 +51,10 @@ for iteration = 1: simConfig.maxIter
        agentReport = agentHandle(k).getAgentCoordReport();
        vmCmoord_2d_list(k, :) = agentReport.poseVM_2d;   
        pose_3d_list(k,:) = agentReport.poseCoord_3d;   
-       ID_List(k,:) = agentHandle(k).ID;
     end
     
     %% Thread Voronoi Updater
-    VoronoiCom.exec_partition(vmCmoord_2d_list, ID_List);
+    [v,c] = VoronoiCom.exec_partition(vmCmoord_2d_list, ID_LIST);
     for k = 1 : simConfig.nAgent 
        %% Mimic the behaviour of Voronoi Topology
        [voronoiInfo, isAvailable] = VoronoiCom.get_Voronoi_Parition(agentHandle(k).ID);        
@@ -64,7 +62,7 @@ for iteration = 1: simConfig.maxIter
             [CVT, Vk, dVkdzk, neighbordVdz] = agentHandle(k).computeLyapunovFeedback(voronoiInfo);
             GBS.uploadVoronoiProperty(agentHandle(k).ID, neighbordVdz);
             
-            CVT_List(k,:) = CVT;
+            CVT_2d_List(k,:) = CVT;
             Vk_List(k) = Vk; 
        else
             fprintf("Check \n");
@@ -72,7 +70,7 @@ for iteration = 1: simConfig.maxIter
     end
     
     %% Logging
-    logger.logDecentralized(pose_3d_list, vmCmoord_2d_list, CVT_List, Vk_List);
+    logger.logDecentralized(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List);
     fprintf("Iter: %d. L: %f \n", iteration, sum(Vk_List)); 
     
 %     if(mod(iteration, 10) == 0)

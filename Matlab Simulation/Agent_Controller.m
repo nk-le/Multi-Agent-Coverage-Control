@@ -20,8 +20,6 @@ classdef Agent_Controller < handle
         
         w               % float: current angular velocity
         v               % float: current heading velocity
-        lastSubV
-        currentSubV
         
         
         
@@ -29,6 +27,10 @@ classdef Agent_Controller < handle
         VoronoiInfo
         CVTCoord_2d
         dVkdzk
+        dCkdzk
+        
+        %% For debug only
+        lastVoronoiData
     end
     
     properties (Access = private)
@@ -38,6 +40,7 @@ classdef Agent_Controller < handle
     methods
         %% Initalize class handler
         function obj = Agent_Controller(dt, botID, coverageRegionCoeff, initPose, v0, w0)
+            assert(dt~=0);
             obj.dt = dt;
             obj.v = 0;
             obj.w = 0;
@@ -56,11 +59,8 @@ classdef Agent_Controller < handle
         %% Simulate dynamic model 
         % Call this function once every time the control policy is updated
         % to simulate the movement.
-        function move(obj) % Unicycle Dynamic
-            % Universal time step
-            if(obj.dt == 0)
-               error("Simulation time step dt was not assigned"); 
-            end
+        function move(obj) 
+            % Unicycle Dynamic
             obj.curPose(1) = obj.curPose(1) + obj.dt * (obj.vConst * cos(obj.curPose(3)));
             obj.curPose(2) = obj.curPose(2) + obj.dt * (obj.vConst * sin(obj.curPose(3)));
             obj.curPose(3) = obj.curPose(3) + obj.dt * obj.w;
@@ -70,6 +70,9 @@ classdef Agent_Controller < handle
         end
         
         function [CVT, Vk, dVkdzk, neighbordVdz] = computeLyapunovFeedback(obj, voronoiData)
+            %% For debugging only
+            obj.lastVoronoiData = voronoiData;
+            
              assert(isa(voronoiData, 'GBS_Voronoi_Report'));             
              % Initally no vertex passed 
              if(~isempty(voronoiData.Vertex2D_List))
@@ -88,6 +91,7 @@ classdef Agent_Controller < handle
                     [dCk_dzk_Neighbor_i, tmp_dCk_dzi_List(i,:,:)] = Voronoi2D_calCVTPartialDerivative(obj.curVMPose, obj.CVTCoord_2d, mVi, adjCoord_2d, vertex1_2d, vertex2_2d);
                     dCk_dzk = dCk_dzk + dCk_dzk_Neighbor_i;
                 end
+                obj.dCkdzk = dCk_dzk;
                 
                 %% Preparation for the computation of Lyapunov Derivative
                 %% Some adjustable variables Parameter
@@ -113,10 +117,10 @@ classdef Agent_Controller < handle
                 %% Iterative to compute the partial Lyapunov derivative for each neighbor
                 neighbordVdz = Struct_Neighbor_Lyapunov.empty(nNeighbor, 0);
                 for i = 1: nNeighbor
-                    dCi_dzk(:,:) = tmp_dCk_dzi_List(i,:,:);
-                    dVkdzi = -dCi_dzk' * Q_zDiff_div_hj;
+                    dCk_dzi(:,:) = tmp_dCk_dzi_List(i,:,:);
+                    dVkdzi = -dCk_dzi' * Q_zDiff_div_hj;
                     % Assign the new adjacent partial derivative
-                    neighbordVdz(i) = Struct_Neighbor_Lyapunov(obj.ID, voronoiData.NeighborInfoList{i}.getReceiverID(), dVkdzi); %% Create a report with neighbor ID to publish
+                    neighbordVdz(i) = Struct_Neighbor_Lyapunov(obj.ID, voronoiData.NeighborInfoList{i}.getReceiverID(), dVkdzi); %% Create a report with neighbor ID to publish             
                 end
              else
                  fprintf("WARN: Agent %d: No vertex for region partitioning detected \n", obj.ID);
@@ -125,16 +129,7 @@ classdef Agent_Controller < handle
                  neighbordVdz = [];
              end
         end
-          
-        
-        function pose = getPose_3d(obj)
-            pose = obj.curPose;
-        end
-        
-        function vm = getVirtualMass_2d(obj)
-            vm = obj.curVMPose;
-        end
-        
+
         function [tmp] = getAgentCoordReport(obj)
             tmp = Agent_Coordinates_Report(obj.ID);
             tmp.poseCoord_3d =  obj.curPose;
