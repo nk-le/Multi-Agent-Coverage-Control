@@ -30,7 +30,9 @@ classdef Agent_Controller < handle
         dCkdzk
         
         %% For debug only
-        lastVoronoiData
+        VoronoiPartitionInfo
+        PartialDerivativeReport
+        Vk
     end
     
     properties (Access = private)
@@ -69,25 +71,26 @@ classdef Agent_Controller < handle
             obj.curVMPose(2) = obj.curPose(2) + (obj.vConst/obj.wOrbit) * cos(obj.curPose(3)); 
         end
         
-        function [CVT, Vk, dVkdzk, neighbordVdz] = computeLyapunovFeedback(obj, voronoiData)
-            %% For debugging only
-            obj.lastVoronoiData = voronoiData;
+        function [CVT, Vk, dVkdzk, neighbordVdz] = computeLyapunovFeedback(obj, i_VoronoiPartitionInfo)
+             format long;
+             %% For debugging only
+             obj.VoronoiPartitionInfo = i_VoronoiPartitionInfo;
             
-             assert(isa(voronoiData, 'GBS_Voronoi_Report'));             
+             assert(isa(i_VoronoiPartitionInfo, 'GBS_Voronoi_Report'));             
              % Initally no vertex passed 
-             if(~isempty(voronoiData.Vertex2D_List))
-                [obj.CVTCoord_2d] = Voronoi2D_calcCVT(voronoiData.Vertex2D_List);
+             if(~isempty(i_VoronoiPartitionInfo.Vertex2D_List))
+                [obj.CVTCoord_2d] = Voronoi2D_calcCVT(i_VoronoiPartitionInfo.Vertex2D_List);
                 CVT = obj.CVTCoord_2d;
                
-                nNeighbor = numel(voronoiData.NeighborInfoList);
+                nNeighbor = numel(i_VoronoiPartitionInfo.NeighborInfoList);
                 tmp_dCk_dzi_List = zeros(nNeighbor, 2,2);
                 dCk_dzk = zeros(2,2);
                 %% Iterate to obtain the aggregated dCi_dzi
-                mVi = Voronoi2D_calcPartitionMass(voronoiData.Vertex2D_List);
+                mVi = Voronoi2D_calcPartitionMass(i_VoronoiPartitionInfo.Vertex2D_List);
                 for i = 1: nNeighbor
-                    adjCoord_2d = voronoiData.NeighborInfoList{i}.Neighbor_Coord_2d;
-                    vertex1_2d = voronoiData.NeighborInfoList{i}.CommonVertex_2d_1;
-                    vertex2_2d = voronoiData.NeighborInfoList{i}.CommonVertex_2d_2;
+                    adjCoord_2d = i_VoronoiPartitionInfo.NeighborInfoList{i}.Neighbor_Coord_2d;
+                    vertex1_2d = i_VoronoiPartitionInfo.NeighborInfoList{i}.CommonVertex_2d_1;
+                    vertex2_2d = i_VoronoiPartitionInfo.NeighborInfoList{i}.CommonVertex_2d_2;
                     [dCk_dzk_Neighbor_i, tmp_dCk_dzi_List(i,:,:)] = Voronoi2D_calCVTPartialDerivative(obj.curVMPose, obj.CVTCoord_2d, mVi, adjCoord_2d, vertex1_2d, vertex2_2d);
                     dCk_dzk = dCk_dzk + dCk_dzk_Neighbor_i;
                 end
@@ -96,7 +99,7 @@ classdef Agent_Controller < handle
                 %% Preparation for the computation of Lyapunov Derivative
                 %% Some adjustable variables Parameter
                 Q = eye(2);
-                tol = 1; % Tolerance to relax the state constraint
+                tol = 0; % Tolerance to relax the state constraint
 
                 %% Computation
                 zk = [obj.curPose(1) obj.curPose(2)]';
@@ -110,7 +113,8 @@ classdef Agent_Controller < handle
                 Q_zDiff_div_hj = Q * (zk - obj.CVTCoord_2d) * sum_1_div_Hj;
                  
                 %% Compute the Partial dVi_dzi of itself
-                Vk = (zk - obj.CVTCoord_2d)' * Q * (zk - obj.CVTCoord_2d) * sum_1_div_Hj;
+                obj.Vk = (zk - obj.CVTCoord_2d)' * Q * (zk - obj.CVTCoord_2d) * sum_1_div_Hj;
+                Vk = obj.Vk;
                 obj.dVkdzk = (eye(2) - dCk_dzk')*Q_zDiff_div_hj + sum_aj_HjSquared * (zk - obj.CVTCoord_2d)' * Q * (zk - obj.CVTCoord_2d);
                 dVkdzk = obj.dVkdzk; 
                 
@@ -120,7 +124,7 @@ classdef Agent_Controller < handle
                     dCk_dzi(:,:) = tmp_dCk_dzi_List(i,:,:);
                     dVkdzi = -dCk_dzi' * Q_zDiff_div_hj;
                     % Assign the new adjacent partial derivative
-                    neighbordVdz(i) = Struct_Neighbor_Lyapunov(obj.ID, voronoiData.NeighborInfoList{i}.getReceiverID(), dVkdzi); %% Create a report with neighbor ID to publish             
+                    neighbordVdz(i) = Struct_Neighbor_Lyapunov(obj.ID, i_VoronoiPartitionInfo.NeighborInfoList{i}.getReceiverID(), dVkdzi, dCk_dzi); %% Create a report with neighbor ID to publish             
                 end
              else
                  fprintf("WARN: Agent %d: No vertex for region partitioning detected \n", obj.ID);
@@ -137,6 +141,8 @@ classdef Agent_Controller < handle
         end
         
         function computeControlInput(obj, report)
+            format long;
+            obj.PartialDerivativeReport = report;
 %             fprintf("AgentID %d exc Control \n", obj.ID)
 %             for i = 1 : numel(report)
 %                report{i}.printValue(); 
@@ -158,6 +164,25 @@ classdef Agent_Controller < handle
             %% Compute the control policy
             obj.w = w0 + mu * w0 * sigmoid_func(sum_dVi_dzk' * [cos(obj.curPose(3)) ;sin(obj.curPose(3))], epsSigmoid); 
         end
+        
+        function printReceivedReport(obj)
+            fprintf("============ START REPORT OF AGENT %d =================== \n", obj.ID);
+            fprintf("Pose: [%.9f %.9f %.9f], VM: [%.9f %.9f] CVT: [%.9f %.9f] \n", ...
+            obj.curPose(1), obj.curPose(2), obj.curPose(3), obj.curVMPose(1), obj.curVMPose(2), obj.CVTCoord_2d(1), obj.CVTCoord_2d(2))
+            fprintf("dCk_dzk : [%.9f %.9f; %.9f %.9f]. dVk_dzk: [%.9f %.9f]. Vk %.9f \n", ...
+                obj.dCkdzk(1,1), obj.dCkdzk(1,2), obj.dCkdzk(2,1), obj.dCkdzk(2,2), obj.dVkdzk(1), obj.dVkdzk(2), obj.Vk);
+            fprintf("VORONOI PARTITION INFORMATION RECEIVED FROM THE ""NATURE"" \n");
+            for i = 1: numel(obj.VoronoiPartitionInfo.NeighborInfoList)
+               obj.VoronoiPartitionInfo.NeighborInfoList{i}.printValue();
+            end
+            fprintf("\nPARTIAL DERIVATIVE INFORMATION DOWNLOADED FROM THE COMMUNICATION LINK\n");
+            for i = 1: numel(obj.PartialDerivativeReport)
+                obj.PartialDerivativeReport{i}.printValue();
+            end
+            fprintf("=============== END ================= \n");
+           
+        end
+        
     end
 end
 

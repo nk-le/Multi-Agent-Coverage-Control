@@ -15,7 +15,9 @@ function Print_Voronoi_Info(InfoStruct, AgentID)
             fprintf("CVT: [%.8f %.8f] \n" , friendInfo.VoronoiInfo.CVTCoord.x, friendInfo.VoronoiInfo.CVTCoord.y);
             fprintf("Common Vertexex: V1 [%.8f %.8f] V2 [%.8f %.8f]\n", friendInfo.VoronoiInfo.CommonVertex.Vertex1.x, friendInfo.VoronoiInfo.CommonVertex.Vertex1.y, friendInfo.VoronoiInfo.CommonVertex.Vertex2.x, friendInfo.VoronoiInfo.CommonVertex.Vertex2.y);
             fprintf("PartialCVT dC%d_dVM%d: [%.8f %.8f ; %.8f %.8f] \n",AgentID, friendID, friendInfo.VoronoiInfo.partialCVT.dCx_dVMFriend_x, friendInfo.VoronoiInfo.partialCVT.dCx_dVMFriend_y, friendInfo.VoronoiInfo.partialCVT.dCy_dVMFriend_x, friendInfo.VoronoiInfo.partialCVT.dCy_dVMFriend_y);
-            fprintf("\n")
+            %fprintf("Partial Lyapunov dV%d_dz%d: [%.5f %.5f]", friendID, AgentID, ...
+            %            InfoStruct.AgentReport(friendID).FriendAgentInfo(AgentID).LyapunovState.dV_dVMFriend.x, Info.AgentReport(friendID).FriendAgentInfo(AgentID).LyapunovState.dV_dVMFriend.y);
+            fprintf("\n");
         end
     end
     

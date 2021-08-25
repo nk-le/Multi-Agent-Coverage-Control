@@ -20,6 +20,7 @@ classdef Voronoi2D_Handler < handle
         end
         
         function [v, c] = exec_partition(obj, pose2D, IDList)
+            format long;
             assert(size(pose2D, 2) == 2);
             
             [obj.partitionVertexes, obj.vertexPtr] = Voronoi2d_calcPartition(pose2D, obj.boundVertex);

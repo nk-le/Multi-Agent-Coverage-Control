@@ -15,7 +15,7 @@ classdef Agent_Coordinates_Report < Report_Base
     
     methods (Access = protected)
         function printInfo(obj)
-            fprintf("Pose [%.4f %.4f %.2f]. VM Coord: [%.4f %.4f] \n", ...
+            fprintf("Pose [%.9f %.9f %.9f]. VM Coord: [%.9f %.9f] \n", ...
             obj.poseCoord_3d(1), obj.poseCoord_3d(2),obj.poseCoord_3d(3), obj.poseVM_2d(1), obj.poseVM_2d(2));
         end
     end

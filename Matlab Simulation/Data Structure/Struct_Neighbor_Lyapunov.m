@@ -15,8 +15,9 @@ classdef Struct_Neighbor_Lyapunov < Struct_Neighbor_Info_Base
     
     methods (Access = protected)
         function printInfo(obj)
-            disp(obj.dVdz_2d);
-            disp(obj.dCdz_2x2);
+            fprintf("Neighbor Partial Derivative Info. Owner: %d, Adjacent: %d | ", obj.SenderID, obj.ReceiverID);
+            fprintf("dVk_dzi: [%.9f %.9f], ", obj.dVdz_2d(1), obj.dVdz_2d(2));
+            fprintf("dCk_dzi: [%.9f %.9f; %.9f %.9f] \n", obj.dCdz_2x2(1,1), obj.dCdz_2x2(1,2), obj.dCdz_2x2(2,1), obj.dCdz_2x2(2,2));
         end
     end
 end

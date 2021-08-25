@@ -9,9 +9,10 @@ classdef (Abstract) Report_Base < handle
         end
         
         function printValue(obj)
-            fprintf("Agent: %d\n", obj.SenderID);
+            %fprintf("=========== REPORT Of AGENT %d ============== \n", obj.SenderID);
             % Call the printing information of the child class
             obj.printInfo()
+            %fprintf("\n ===========       END       ================= \n\n");
         end
         
         function out = getSenderID(obj)

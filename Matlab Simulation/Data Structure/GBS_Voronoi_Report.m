@@ -22,8 +22,9 @@ classdef GBS_Voronoi_Report < Report_Base
     
     methods (Access = protected)
          function printInfo(obj)
+            fprintf("Voronoi Partition Information \n");
+            fprintf("Vertexes: ");
             disp(obj.Vertex2D_List);
-            disp(obj.NeighborInfoList);
          end
     end
 end

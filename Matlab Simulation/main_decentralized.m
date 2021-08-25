@@ -18,6 +18,8 @@ GBS = Communication_Link(simConfig.nAgent,ID_LIST);
 
 %% Agent handler
 agentHandle = Agent_Controller.empty(simConfig.nAgent, 0);
+agentConfig.vConstList = zeros(simConfig.nAgent, 1);
+agentConfig.vConstList(1) = 15; 
 for k = 1 : simConfig.nAgent
     agentHandle(k) = Agent_Controller(simConfig.dt, ID_LIST(k), regionConfig.BoundariesCoeff, agentConfig.startPose(k,:), agentConfig.vConstList(k), agentConfig.wOrbitList(k));
     tmp = agentHandle(k).getAgentCoordReport();       
@@ -59,8 +61,8 @@ for iteration = 1: simConfig.maxIter
        %% Mimic the behaviour of Voronoi Topology
        [voronoiInfo, isAvailable] = VoronoiCom.get_Voronoi_Parition(agentHandle(k).ID);        
        if(isAvailable)
-            [CVT, Vk, dVkdzk, neighbordVdz] = agentHandle(k).computeLyapunovFeedback(voronoiInfo);
-            GBS.uploadVoronoiProperty(agentHandle(k).ID, neighbordVdz);
+            [CVT, Vk, dVkdzk, neighborLyapunov] = agentHandle(k).computeLyapunovFeedback(voronoiInfo);
+            GBS.uploadVoronoiProperty(agentHandle(k).ID, neighborLyapunov);
             
             CVT_2d_List(k,:) = CVT;
             Vk_List(k) = Vk; 
