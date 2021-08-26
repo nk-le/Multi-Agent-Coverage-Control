@@ -1,5 +1,4 @@
-[simConfig, regionConfig, agentConfig] = Config()
-botColors = cool(simConfig.nAgent);
+botColors = cool(CONST_PARAM.N_AGENT);
 len = logger.curCnt - 1;
 startId = 5;
 xAxis = startId:len;
@@ -8,7 +7,7 @@ V = zeros(1, len);
 % BLF
 figure(1)
 hold on; grid on;
-for i = 1:simConfig.nAgent
+for i = 1:CONST_PARAM.N_AGENT
     nameLegend = sprintf("V_%d",i);
     plot(xAxis, logger.V_BLF(i,xAxis), 'Color', botColors(i,:), 'LineWidth',2, 'DisplayName',nameLegend);
     V(xAxis) = V(xAxis) + logger.V_BLF(i,xAxis);
@@ -26,7 +25,7 @@ set(gca,'FontSize',18)
 % % Control input
 % figure(2)
 % hold on; grid on;
-% for i = 1:simConfig.nAgent
+% for i = 1:CONST_PARAM.N_AGENT
 %     plot(xAxis, logger.ControlOutput(i,xAxis), 'Color', botColors(i,:), 'LineWidth',2);
 % end
 % plot(xAxis, -wMax*ones(1, numel(xAxis)), '-r', 'LineWidth',4);
@@ -45,9 +44,9 @@ set(gca,'FontSize',18)
 % for i = 1: size(worldVertexes,1)-1                
 %    plot([worldVertexes(i,1) worldVertexes(i+1,1)],[worldVertexes(i,2) worldVertexes(i+1,2)],'Color','r','LineWidth',4);                    
 % end
-% for i = 1:simConfig.nAgent
-%    dataVMX = zeros(simConfig.nAgent, loopCnt);
-%    dataVMY = zeros(simConfig.nAgent, loopCnt);
+% for i = 1:CONST_PARAM.N_AGENT
+%    dataVMX = zeros(CONST_PARAM.N_AGENT, loopCnt);
+%    dataVMY = zeros(CONST_PARAM.N_AGENT, loopCnt);
 %    
 %    dataVMX(i,xAxis) =  logger.PoseVM(i,1,xAxis);
 %    dataVMY(i,xAxis) =  logger.PoseVM(i,2,xAxis);
