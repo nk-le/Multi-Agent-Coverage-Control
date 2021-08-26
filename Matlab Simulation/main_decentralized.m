@@ -18,8 +18,8 @@ GBS = Communication_Link(simConfig.nAgent,ID_LIST);
 
 %% Agent handler
 agentHandle = Agent_Controller.empty(simConfig.nAgent, 0);
-agentConfig.vConstList = zeros(simConfig.nAgent, 1);
-agentConfig.vConstList(1) = 15; 
+%agentConfig.vConstList = zeros(simConfig.nAgent, 1);
+%agentConfig.vConstList(1) = 15; 
 for k = 1 : simConfig.nAgent
     agentHandle(k) = Agent_Controller(simConfig.dt, ID_LIST(k), regionConfig.BoundariesCoeff, agentConfig.startPose(k,:), agentConfig.vConstList(k), agentConfig.wOrbitList(k));
     tmp = agentHandle(k).getAgentCoordReport();       
