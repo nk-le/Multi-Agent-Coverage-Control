@@ -1,16 +1,19 @@
 classdef (Abstract) Report_Base < handle
     properties (Access  = public)
         SenderID
+        Timestamp
     end
     
     methods
         function obj = Report_Base(initID)
             obj.SenderID = initID;
+            obj.Timestamp = rem(now,1);
         end
         
         function printValue(obj)
             %fprintf("=========== REPORT Of AGENT %d ============== \n", obj.SenderID);
             % Call the printing information of the child class
+            fprintf("Time: %.7f ", obj.Timestamp);
             obj.printInfo()
             %fprintf("\n ===========       END       ================= \n\n");
         end

@@ -150,6 +150,7 @@ classdef Agent_Controller < handle
         end
         
         function [Vk] = computeControlInput(obj, report)
+            obj.PartialDerivativeReport = report;
             format long;
             %% Compute the partial derivate of Lyapunov from the received partial derivative of CVTs from adjacent agents
             Q = eye(2);

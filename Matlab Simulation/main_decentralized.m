@@ -29,6 +29,9 @@ end
 logger = DataLogger(simConfig.nAgent, simConfig.maxIter);
 logger.bndVertexes = regionConfig.bndVertexes;
 
+%% SETUP
+
+
 %% MAIN
 for iteration = 1: simConfig.maxIter
     %% Logging only
@@ -38,21 +41,12 @@ for iteration = 1: simConfig.maxIter
     
     %% Get the latest pose and update inside the Voronoi Handler
     vmCmoord_2d_list = zeros(simConfig.nAgent, 2);
-    for k = 1 : simConfig.nAgent 
-       %% Perform the control algorithm
-       [report, isAvailable] = GBS.downloadVoronoiProperty(agentHandle(k).ID);
-       
-       %% Move
-       if(isAvailable)
-           Vk_List(k) = agentHandle(k).computeControlInput(report);    
-           agentHandle(k).move();
-       else
-           fprintf("Check \n");
-       end
-       %% Update the data to Environment
+    
+    for k = 1: simConfig.nAgent
+        %% Update the data to Environment
        agentReport = agentHandle(k).getAgentCoordReport();
        vmCmoord_2d_list(k, :) = agentReport.poseVM_2d;   
-       pose_3d_list(k,:) = agentReport.poseCoord_3d;   
+       pose_3d_list(k,:) = agentReport.poseCoord_3d;  
     end
     
     %% Thread Voronoi Updater
@@ -68,6 +62,19 @@ for iteration = 1: simConfig.maxIter
        else
             fprintf("Check \n");
        end
+    end
+    
+    for k = 1 : simConfig.nAgent 
+       %% Perform the control algorithm
+       [report, isAvailable] = GBS.downloadVoronoiProperty(agentHandle(k).ID);
+       
+       %% Move
+       if(isAvailable)
+           Vk_List(k) = agentHandle(k).computeControlInput(report);    
+           agentHandle(k).move();
+       else
+           fprintf("Check \n");
+       end    
     end
     
     %% Logging
