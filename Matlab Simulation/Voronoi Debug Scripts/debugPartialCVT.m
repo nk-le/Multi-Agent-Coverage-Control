@@ -1,4 +1,8 @@
+disp("START")
 [dCi_dzi_AdjacentJ, dCi_dzj] = ComputePartialDerivativeCVTs(obj.curVMPose, obj.CVTCoord_2d, mVi, adjCoord_2d, vertex1_2d, vertex2_2d)
+disp("NEXT")
+[dCi_dzi_AdjacentJ, dCi_dzj] = ComputePartialDerivativeCVTs(obj.curVMPose, obj.CVTCoord_2d, mVi, adjCoord_2d, vertex1_2d, vertex2_2d)
+disp("END")
 
 function [dCi_dzi_AdjacentJ, dCi_dzj] = ComputePartialDerivativeCVTs(thisCoord_2d, thisCVT_2d, mVi, adjCoord_2d, vertex1_2d, vertex2_2d)
     % Parse the struct

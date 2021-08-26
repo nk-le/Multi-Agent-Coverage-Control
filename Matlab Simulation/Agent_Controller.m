@@ -102,7 +102,7 @@ classdef Agent_Controller < handle
                 tol = 0; % Tolerance to relax the state constraint
 
                 %% Computation
-                zk = [obj.curPose(1) obj.curPose(2)]';
+                zk = [obj.curVMPose(1) obj.curVMPose(2)]';
                 sum_1_div_Hj = 0;
                 sum_aj_HjSquared = 0;
                 for j = 1: size(obj.regionCoeff)
