@@ -19,7 +19,7 @@ classdef Struct_Neighbor_Lyapunov < Struct_Neighbor_Info_Base
     
     methods (Access = protected)
         function printInfo(obj)
-            fprintf("Neighbor Partial Derivative. k: %d, i: %d | ", obj.SenderID, obj.ReceiverID);
+            fprintf("Neighbor Partial Derivative. i: %d, k: %d | ", obj.SenderID, obj.ReceiverID);
             fprintf("VM Coordinates zi :[%.9f %.9f]. CVT Ci: [%.9f %.9f] ", obj.zk(1), obj.zk(2), obj.Ck(1), obj.Ck(2));
             fprintf("dCi_dzk: [%.9f %.9f; %.9f %.9f] \n", obj.dCdz_2x2(1,1), obj.dCdz_2x2(1,2), obj.dCdz_2x2(2,1), obj.dCdz_2x2(2,2));
         end
