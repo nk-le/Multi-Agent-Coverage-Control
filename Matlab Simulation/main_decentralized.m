@@ -15,10 +15,11 @@ VoronoiCom.setup(CONST_PARAM.BOUNDARIES_VERTEXES);
 GBS = Communication_Link(CONST_PARAM.N_AGENT, CONST_PARAM.ID_LIST); 
 
 %% Agent handler
+rng(6);
 vConstList = 15 .* ones(1,CONST_PARAM.N_AGENT);
 wOrbitList = 0.8 .* ones(1,CONST_PARAM.N_AGENT);
 centerCoord = [100, 100];    % deploy all agents near this coord
-rXY = 30;                   % agents formualates a circle at the beginning
+rXY = 50;                   % agents formualates a circle at the beginning
 startPose = zeros(CONST_PARAM.N_AGENT, 3);
 startPose(:,1) = centerCoord(1) + rXY.*rand(CONST_PARAM.N_AGENT,1); %x
 startPose(:,2) = centerCoord(2) + rXY.*rand(CONST_PARAM.N_AGENT,1); %y
@@ -32,7 +33,7 @@ for k = 1 : CONST_PARAM.N_AGENT
 end
 
 % Instance of logger for data post processing, persistent over all files
-logger = DataLogger(CONST_PARAM.N_AGENT, CONST_PARAM.MAX_ITER);
+logger = DataLogger(CONST_PARAM.N_AGENT, CONST_PARAM.MAX_ITER + 1);
 logger.bndVertexes = CONST_PARAM.BOUNDARIES_VERTEXES;
 
 %% MAIN
@@ -81,10 +82,6 @@ for iteration = 1: CONST_PARAM.MAX_ITER
     %% Logging
     logger.logDecentralized(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List);
     fprintf("Iter: %d. L: %f \n", iteration, sum(Vk_List)); 
-    
-%     if(mod(iteration, 10) == 0)
-%        fprintf("Running... \n"); 
-%     end
 end
 %% END
 

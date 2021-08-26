@@ -162,7 +162,7 @@ classdef Agent_Controller < handle
             epsSigmoid = 3;
             mu = 3; % Control gain %% ADJUST THE CONTROL GAIN HERE
             sigmoid_func = @(x,eps) x / (abs(x) + eps);  
-            w0 = 1.2; 
+            w0 = 0.4; 
             
             %% Compute the control policy
             obj.w = w0 + mu * w0 * sigmoid_func(dV_dzk_total' * [cos(obj.curPose(3)) ;sin(obj.curPose(3))], epsSigmoid); 

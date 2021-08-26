@@ -13,7 +13,7 @@ for i = 1:CONST_PARAM.N_AGENT
     V(xAxis) = V(xAxis) + logger.V_BLF(i,xAxis);
 end
 plot(xAxis, V(xAxis), '-r', 'LineWidth',2, 'DisplayName', "V");
-ylim([0, max(V)]);
+%ylim([0, max(V)]);
 xlim([startId, len]);
 xlabel("Iteration");
 ylabel("V_k");
