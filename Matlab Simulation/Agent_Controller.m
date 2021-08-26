@@ -113,7 +113,7 @@ classdef Agent_Controller < handle
                 Q_zDiff_div_hj = Q * (zk - obj.CVTCoord_2d) * sum_1_div_Hj;
                  
                 %% Compute the Partial dVi_dzi of itself
-                obj.Vk = (zk - obj.CVTCoord_2d)' * Q * (zk - obj.CVTCoord_2d) * sum_1_div_Hj;
+                obj.Vk = (zk - obj.CVTCoord_2d)' * Q * (zk - obj.CVTCoord_2d) * sum_1_div_Hj / 2;
                 Vk = obj.Vk;
                 obj.dVkdzk = (eye(2) - dCk_dzk')*Q_zDiff_div_hj + sum_aj_HjSquared * (zk - obj.CVTCoord_2d)' * Q * (zk - obj.CVTCoord_2d);
                 dVkdzk = obj.dVkdzk; 
