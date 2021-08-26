@@ -1,14 +1,18 @@
 classdef Struct_Neighbor_Lyapunov < Struct_Neighbor_Info_Base
     properties    
-        dVdz_2d
         dCdz_2x2
+        zk
+        Ck
     end
     
     methods
-        function obj = Struct_Neighbor_Lyapunov(myID, neighborID, i_dVdz_2d, i_dCdz_2x2)
-            obj@Struct_Neighbor_Info_Base(myID, neighborID);
-            assert(all(size(i_dVdz_2d) == [2,1]));
-            obj.dVdz_2d = i_dVdz_2d;
+        function obj = Struct_Neighbor_Lyapunov(myID, receiverID, i_zk, i_Ck, i_dCdz_2x2)
+            obj@Struct_Neighbor_Info_Base(myID, receiverID);
+            assert(all(size(i_zk) == [2,1]));
+            assert(all(size(i_Ck) == [2,1]));
+            assert(all(size(i_dCdz_2x2) == [2,2]));
+            obj.zk = i_zk;
+            obj.Ck = i_Ck;
             obj.dCdz_2x2 = i_dCdz_2x2;
         end
     end
@@ -16,7 +20,7 @@ classdef Struct_Neighbor_Lyapunov < Struct_Neighbor_Info_Base
     methods (Access = protected)
         function printInfo(obj)
             fprintf("Neighbor Partial Derivative Info. Owner: %d, Adjacent: %d | ", obj.SenderID, obj.ReceiverID);
-            fprintf("dVk_dzi: [%.9f %.9f], ", obj.dVdz_2d(1), obj.dVdz_2d(2));
+            fprintf("Coordinates z%d :[%.9f %.9f]. CVT C%d: [%.9f %.9f]", obj.SenderID, obj.zk(1), obj.zk(2), obj.Ck(1), obj.Ck(2));
             fprintf("dCk_dzi: [%.9f %.9f; %.9f %.9f] \n", obj.dCdz_2x2(1,1), obj.dCdz_2x2(1,2), obj.dCdz_2x2(2,1), obj.dCdz_2x2(2,2));
         end
     end

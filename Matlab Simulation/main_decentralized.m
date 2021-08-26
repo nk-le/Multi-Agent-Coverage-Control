@@ -44,7 +44,7 @@ for iteration = 1: simConfig.maxIter
        
        %% Move
        if(isAvailable)
-           agentHandle(k).computeControlInput(report);    
+           Vk_List(k) = agentHandle(k).computeControlInput(report);    
            agentHandle(k).move();
        else
            fprintf("Check \n");
@@ -61,11 +61,10 @@ for iteration = 1: simConfig.maxIter
        %% Mimic the behaviour of Voronoi Topology
        [voronoiInfo, isAvailable] = VoronoiCom.get_Voronoi_Parition(agentHandle(k).ID);        
        if(isAvailable)
-            [CVT, Vk, dVkdzk, neighborLyapunov] = agentHandle(k).computeLyapunovFeedback(voronoiInfo);
+            [CVT, neighborLyapunov] = agentHandle(k).computeLyapunovFeedback(voronoiInfo);
             GBS.uploadVoronoiProperty(agentHandle(k).ID, neighborLyapunov);
             
             CVT_2d_List(k,:) = CVT;
-            Vk_List(k) = Vk; 
        else
             fprintf("Check \n");
        end
