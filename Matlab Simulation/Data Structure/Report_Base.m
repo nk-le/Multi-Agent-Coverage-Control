@@ -15,7 +15,6 @@ classdef (Abstract) Report_Base < handle
             % Call the printing information of the child class
             fprintf("Time: %.7f ", obj.Timestamp);
             obj.printInfo()
-            %fprintf("\n ===========       END       ================= \n\n");
         end
         
         function out = getSenderID(obj)

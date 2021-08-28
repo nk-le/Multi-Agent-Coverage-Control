@@ -25,7 +25,7 @@ classdef Communication_Link < handle
         end
 
         function uploadVoronoiPartialDerivativeProperty(obj, UploaderID, report)
-            assert(isa(report, 'Struct_Neighbor_Lyapunov'));
+            assert(isa(report, 'Struct_Neighbor_CVT_PD'));
             txAgentIndex = find(obj.ID_List  == UploaderID);
             assert(~isempty(txAgentIndex)); %% Agent not yet registered in the communication link so it can not upload
 
