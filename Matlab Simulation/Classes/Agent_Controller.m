@@ -71,7 +71,7 @@ classdef Agent_Controller < handle
             obj.VMCoord_2d(2) = obj.curPose(2) + (obj.vConst/obj.wOrbit) * cos(obj.curPose(3)); 
         end
         
-        function [CVT, dCk_dzi_For_Neighbor] = computeLyapunovFeedback(obj, i_last_received_VoronoiPartitionInfo)
+        function [CVT, dCk_dzi_For_Neighbor] = computePartialDerivativeCVT(obj, i_last_received_VoronoiPartitionInfo)
              format long;
              %% For debugging only
             

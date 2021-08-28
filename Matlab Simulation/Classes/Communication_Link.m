@@ -24,7 +24,7 @@ classdef Communication_Link < handle
             obj.ID_List = ID_List;          
         end
 
-        function uploadVoronoiProperty(obj, UploaderID, report)
+        function uploadVoronoiPartialDerivativeProperty(obj, UploaderID, report)
             assert(isa(report, 'Struct_Neighbor_Lyapunov'));
             txAgentIndex = find(obj.ID_List  == UploaderID);
             assert(~isempty(txAgentIndex)); %% Agent not yet registered in the communication link so it can not upload
@@ -39,7 +39,7 @@ classdef Communication_Link < handle
             end
         end
         
-        function [out, isAvailable] = downloadVoronoiProperty(obj, agentID)
+        function [out, isAvailable] = downloadVoronoiPartialDerivativeProperty(obj, agentID)
             requestAgentIndex = find(obj.ID_List == agentID);
             out = cell(obj.nAgent, 1);
             isAvailable = false;

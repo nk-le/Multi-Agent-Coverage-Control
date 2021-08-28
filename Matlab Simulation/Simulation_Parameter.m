@@ -1,7 +1,4 @@
-classdef Simulation_Parameter
-    %SIMULATION_PARAMETER Summary of this class goes here
-    %   Detailed explanation goes here
-    
+classdef Simulation_Parameter < handle
     properties (Constant)
         TIME_STEP = 0.001;
         MAX_ITER = 40000;

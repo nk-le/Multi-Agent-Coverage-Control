@@ -11,14 +11,10 @@ classdef Voronoi2D_Handler < handle
     end
     
     methods
-        function obj = Voronoi2D_Handler()
-            %obj.ID_List = [];
-        end
-        
-        function setup(obj, bndVertexes)
+        function obj = Voronoi2D_Handler(bndVertexes)
             obj.boundVertex = bndVertexes;
         end
-        
+                
         function [v, c] = exec_partition(obj, pose2D, IDList)
             format long;
             assert(size(pose2D, 2) == 2);
