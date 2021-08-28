@@ -22,9 +22,6 @@ classdef Centralized_Controller < handle
         xrange                                  % Max range of x Axis
         yrange                                  % Max range of y Axis
    
-        % Handler
-        agentList
-        
         % State variable
         lastInfo
         currentInfo
@@ -33,21 +30,13 @@ classdef Centralized_Controller < handle
 
     methods
         %% Initialization constant variables
-        function obj = Centralized_Controller(nAgent, dt, bndCoeff, bndVertexes, initPose, vConstList, wOrbitList)
+        function obj = Centralized_Controller(nAgent, bndCoeff, bndVertexes)
             % Default empty variables
             obj.nAgent = nAgent;
             obj.boundariesVertexes = bndVertexes;
             obj.boundariesCoeff = bndCoeff;
             obj.xrange = max(bndVertexes(:,1));
             obj.yrange = max(bndVertexes(:,2));
-
-            % Init list of controller
-            obj.agentList = Agent_Controller.empty(obj.nAgent, 0);
-            for i = 1 : obj.nAgent
-                botID = i;
-                obj.agentList(i) = Agent_Controller(dt);
-                obj.agentList(i).begin(botID, obj.boundariesCoeff, initPose(i, :), vConstList(i), wOrbitList(i));
-            end
         end   
         
         %% Assign the parameters for each controller
@@ -65,11 +54,13 @@ classdef Centralized_Controller < handle
         %                           ...
         %                   
         %       
-        function [Info, poseCVT_2D] = updateCoverage(obj, newPoseVM_3D)
+        function [Info, poseCVT_2D, ControlInput, V_BLF_List] = updateCoverage(obj, curPose_3D, newPoseVM_2D, wOrbitList)
             format long;
+            V_BLF_List = zeros(obj.nAgent, 1);
+            
             % Save all the current VM   
             %% The used methods were developed by Aaron_Becker
-            [v, c]= Function_VoronoiBounded(newPoseVM_3D(:,1), newPoseVM_3D(:,2), obj.boundariesVertexes);
+            [v, c]= Function_VoronoiBounded(newPoseVM_2D(:,1), newPoseVM_2D(:,2), obj.boundariesVertexes);
             
             %% Added a layer to outlier the duplicated vertexes
             c = outlierVertexList(v, c, [0 obj.xrange], [0 obj.yrange]);
@@ -87,7 +78,7 @@ classdef Centralized_Controller < handle
             end
            
             %% Update the partial derivative of each cells and construct the broadcased information matrix
-            Info = ComputeVoronoiProperty(newPoseVM_3D, poseCVT_2D, v, c);
+            Info = ComputeVoronoiProperty(newPoseVM_2D, poseCVT_2D, v, c);
 
             %% Compute the Lyapunov partial derivative according to the latest state of Agents            
             assert(isfield(Info, "Common"));
@@ -117,7 +108,9 @@ classdef Centralized_Controller < handle
                 dCi_dzi = [Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCx_dVMx, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCx_dVMy;
                            Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCy_dVMx, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCy_dVMy];
                 
-                Vk = (zk - Ck)' * Q * (zk - Ck) * sum_1_div_Hj;
+                Vk = (zk - Ck)' * Q * (zk - Ck) * sum_1_div_Hj / 2;
+                V_BLF_List(thisAgent) = Vk;
+                
                 dVkdzk = (eye(2) - dCi_dzi')*Q_zDiff_div_hj + sum_aj_HjSquared * (zk - Ck)' * Q * (zk - Ck);
                 % Assign to the Info handle
                 Info.AgentReport(thisAgent).MyInfo.LyapunovState.V = Vk;
@@ -157,14 +150,8 @@ classdef Centralized_Controller < handle
                 Info.AgentReport(thisAgent).MyInfo.LyapunovState.dVk.x = sumdVi_dzkx;
                 Info.AgentReport(thisAgent).MyInfo.LyapunovState.dVk.y = sumdVi_dzky;
             end
-        end
-           
-        function [Info, ControlInput] = controlCentralize(obj, Info)
-            assert(isfield(Info, "Common"));
-            assert(isfield(Info, "AgentReport"));
-            assert(isfield(Info.AgentReport(:), "MyInfo"));
-            assert(isfield(Info.AgentReport(:), "FriendAgentInfo"));
             
+            %% Compute the control output
             %% Adjustable variable
             epsSigmoid = 3;
             mu = 3; % Control gain %% ADJUST THE CONTROL GAIN HERE
@@ -173,91 +160,16 @@ classdef Centralized_Controller < handle
             %% Compute the control policy
             ControlInput = zeros(obj.nAgent, 1);
             for thisAgent = 1 : obj.nAgent
-                w0 = obj.agentList(thisAgent).wOrbit;
-                cosTheta = cos(obj.agentList(thisAgent).curPose(3));   % agentStatus.curPose(3): Actual Orientation
-                sinTheta = sin(obj.agentList(thisAgent).curPose(3)); 
+                w0 = wOrbitList(thisAgent);
+                cosTheta = cos(curPose_3D(thisAgent,3));   % agentStatus.curPose(3): Actual Orientation
+                sinTheta = sin(curPose_3D(thisAgent,3)); 
                 dVkx = Info.AgentReport(thisAgent).MyInfo.LyapunovState.dVk.x;
                 dVky = Info.AgentReport(thisAgent).MyInfo.LyapunovState.dVk.y;
                 ControlInput(thisAgent) = w0 + mu * w0 * sigmoid_func(dVkx * cosTheta + dVky * sinTheta, epsSigmoid); 
-                
-                % Send control output to each agent
-                holdingOtherAgents = 0;
-                %% This part hold another agents' movement to evaluate the compuatation of Voronoi partial derivative. Will be removed later
-                if(holdingOtherAgents)
-                    if(thisAgent == 1)
-                        Info.AgentReport(thisAgent).MyInfo.ControlInput.w = ControlInput(thisAgent);
-                        obj.agentList(thisAgent).setAngularVel(ControlInput(thisAgent));
-                    else
-                        w = w0;
-                        Info.AgentReport(thisAgent).MyInfo.ControlInput.w = w0;
-                        obj.agentList(thisAgent).setAngularVel(w0);
-                        obj.agentList(thisAgent).setHeadingVel(0)
-                    end
-               %% Here is the normal input setup
-                else 
-                    Info.AgentReport(thisAgent).MyInfo.ControlInput.w = ControlInput(thisAgent);
-                    % Send the control input to agent
-                    obj.agentList(thisAgent).setAngularVel(ControlInput(thisAgent));
-                end
-                
+                Info.AgentReport(thisAgent).MyInfo.ControlInput.w = ControlInput(thisAgent);
             end
         end
-
-        %% MAIN
-        % Main loop of the simulation 
-        % [@in]  --
-        % [@out]:    
-        %       Current pose of agents for simulation      
-        %       
-        %
-        function [Info, BLF, loggedTopics] = loop(obj)
-            %% Update dynamic - Each agents move according to the updated control policy
-            % This method should be called independent from centralized
-            % controller (inside the loop), however put it here for
-            % simplicity
-            agentPose = zeros(obj.nAgent,3);
-            newPoseVM = zeros(obj.nAgent,2);
-            for i = 1:obj.nAgent
-               obj.agentList(i).move();
-               
-               agentPose(i, :) = obj.agentList(i).getPose_3d();
-               newPoseVM(i,:) =  obj.agentList(i).getVirtualMass_2d();
-            end
-            
-            %% Update the broadcasted information
-            [AgentReport, poseCVT_2D] = obj.updateCoverage(newPoseVM);
-            
-            %% Update the control policy for each agent
-            [Info, ControlInput] = obj.controlCentralize(AgentReport);
-            
-            %% Final update for the next process
-            % ...
-            % disp(curLypCost)
-            
-            %% Save the last Info Sample before updating the control input
-            
-            %% Update Lyapunov Value 
-            newV = zeros(obj.nAgent, 1);
-            for thisAgent = 1:obj.nAgent
-                [newV(thisAgent)] = Info.AgentReport(thisAgent).MyInfo.LyapunovState.V;
-                if(newV(thisAgent) < 0)
-                    error("State constraint is violated. Check inital position of virtual centers or the control algorithm");
-                end
-            end   
-            BLF = sum(newV);
-
-            %% Update the Info structure for debugging
-            obj.lastInfo = obj.currentInfo;
-            obj.currentInfo = Info;
-            
-            % Logging for post processing
-            loggedTopics.CurPose = agentPose;
-            loggedTopics.CurPoseVM = newPoseVM;
-            loggedTopics.CurPoseCVT = poseCVT_2D;
-            loggedTopics.CurAngularVel = ControlInput;
-            loggedTopics.LyapunovCost = newV;
-
-        end
+        
     end
 
 end
