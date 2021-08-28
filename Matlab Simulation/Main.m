@@ -5,7 +5,6 @@ addpath('./Library');
 addpath('./Voronoi Debug Scripts');
 
 format long;
-
 CONST_PARAM = Simulation_Parameter();
 
 %% Agent handler
@@ -28,7 +27,7 @@ end
 logger = DataLogger(CONST_PARAM.N_AGENT, CONST_PARAM.MAX_ITER + 1);
 logger.bndVertexes = CONST_PARAM.BOUNDARIES_VERTEXES;
 
-MODE = "Centralized";
+%MODE = "Centralized";
 MODE = "Decentralized";
 %% Centralized Controller %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MAIN
@@ -41,7 +40,7 @@ if(MODE == "Centralized")
         newPoseVM_2d = zeros(CONST_PARAM.N_AGENT, 2);
         for k = 1: CONST_PARAM.N_AGENT
             agentHandle(k).move();
-            newPose_3d(k,:) = agentHandle(k).curPose(:);
+            newPose_3d(k,:) = agentHandle(k).AgentPose_3d(:);
             newPoseVM_2d(k,:) = agentHandle(k).VMCoord_2d(:);
         end
 

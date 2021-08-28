@@ -2,41 +2,43 @@
 %
 
 classdef Agent_Controller < handle
-    %AGENT_CONTROLLER Summary of this class goes here
-    %   Detailed explanation goes here
-    
     properties
         ID              % int
-        curPose = zeros(3,1)         % [x y theta]
-        
         regionCoeff     % [a1 a2 b] --> a1*x + a2*y - b <= 0
         
         %% Should be private
-        dt              % Simulation time step
         vConst          % const float
         wOrbit          % const float
-        
         w               % float: current angular velocity
         v               % float: current heading velocity
         
-        
-        
-        %% Newly added
         VoronoiInfo
+        AgentPose_3d = zeros(3,1)         % [x y theta]
         CVTCoord_2d = zeros(2,1)
         VMCoord_2d = zeros(2,1);
         dVkdzk
         dCkdzk
         Vk
-        
-        %% For debug only
-        last_received_VoronoiPartitionInfo
-        last_published_dC_neighbor
-        last_received_Adjacent_Reports
+        dVkdzi_List
     end
     
     properties (Access = private)
+        dt              % Simulation time step
+        received_VoronoiPartitionInfo
+        published_dC_neighbor
+        received_Adjacent_Reports
         
+        %% Save the last result to evaluate the computation of the partial derivative
+        prev_dCkdzk
+        prev_dVkdzk
+        prev_Vk
+        prev_CVTCoord_2d
+        prev_AgentPose_3d
+        prev_VMCoord_2d 
+        prev_received_VoronoiPartitionInfo
+        prev_published_dC_neighbor
+        prev_received_Adjacent_Reports
+        prev_dVkdzi_List
     end
     
     methods
@@ -53,9 +55,9 @@ classdef Agent_Controller < handle
             obj.wOrbit = w0;
             
             %% Update initial position and the virtual center
-            obj.curPose(:) = initPose_3d(:);
-            obj.VMCoord_2d(1) = obj.curPose(1) - (obj.vConst/obj.wOrbit) * sin(obj.curPose(3)); 
-            obj.VMCoord_2d(2) = obj.curPose(2) + (obj.vConst/obj.wOrbit) * cos(obj.curPose(3)); 
+            obj.AgentPose_3d(:) = initPose_3d(:);
+            obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.vConst/obj.wOrbit) * sin(obj.AgentPose_3d(3)); 
+            obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.vConst/obj.wOrbit) * cos(obj.AgentPose_3d(3)); 
         end
 
         %% Simulate dynamic model 
@@ -63,28 +65,33 @@ classdef Agent_Controller < handle
         % to simulate the movement.
         function move(obj) 
             % Unicycle Dynamic
-            obj.curPose(1) = obj.curPose(1) + obj.dt * (obj.vConst * cos(obj.curPose(3)));
-            obj.curPose(2) = obj.curPose(2) + obj.dt * (obj.vConst * sin(obj.curPose(3)));
-            obj.curPose(3) = obj.curPose(3) + obj.dt * obj.w;
+            obj.prev_AgentPose_3d = obj.AgentPose_3d;
+            obj.AgentPose_3d(1) = obj.AgentPose_3d(1) + obj.dt * (obj.vConst * cos(obj.AgentPose_3d(3)));
+            obj.AgentPose_3d(2) = obj.AgentPose_3d(2) + obj.dt * (obj.vConst * sin(obj.AgentPose_3d(3)));
+            obj.AgentPose_3d(3) = obj.AgentPose_3d(3) + obj.dt * obj.w;
             %% Update the virtual mass
-            obj.VMCoord_2d(1) = obj.curPose(1) - (obj.vConst/obj.wOrbit) * sin(obj.curPose(3)); 
-            obj.VMCoord_2d(2) = obj.curPose(2) + (obj.vConst/obj.wOrbit) * cos(obj.curPose(3)); 
+            obj.prev_VMCoord_2d = obj.VMCoord_2d;
+            obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.vConst/obj.wOrbit) * sin(obj.AgentPose_3d(3)); 
+            obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.vConst/obj.wOrbit) * cos(obj.AgentPose_3d(3)); 
         end
         
-        function [CVT, dCk_dzi_For_Neighbor] = computePartialDerivativeCVT(obj, i_last_received_VoronoiPartitionInfo)
+        function [CVT, dCk_dzi_For_Neighbor] = computePartialDerivativeCVT(obj, i_received_VoronoiPartitionInfo)
              format long;
-             %% For debugging only
-            
-             assert(isa(i_last_received_VoronoiPartitionInfo, 'GBS_Voronoi_Report'));             
+             obj.prev_received_VoronoiPartitionInfo = obj.received_VoronoiPartitionInfo;
+             obj.received_VoronoiPartitionInfo = i_received_VoronoiPartitionInfo;
+             obj.prev_CVTCoord_2d = obj.CVTCoord_2d;
+             obj.prev_dCkdzk = obj.dCkdzk;
+             
+             assert(isa(i_received_VoronoiPartitionInfo, 'GBS_Voronoi_Report'));             
              % Initally no vertex passed 
-             if(~isempty(i_last_received_VoronoiPartitionInfo.Vertex2D_List))
-                [obj.CVTCoord_2d] = Voronoi2D_calcCVT(i_last_received_VoronoiPartitionInfo.Vertex2D_List);
+             if(~isempty(i_received_VoronoiPartitionInfo.Vertex2D_List))
+                [obj.CVTCoord_2d] = Voronoi2D_calcCVT(i_received_VoronoiPartitionInfo.Vertex2D_List);
                 CVT = obj.CVTCoord_2d;
                
-                nNeighbor = numel(i_last_received_VoronoiPartitionInfo.NeighborInfoList);
+                nNeighbor = numel(i_received_VoronoiPartitionInfo.NeighborInfoList);
                 dCk_dzk = zeros(2,2);
                 %% Iterate to obtain the aggregated dCi_dzi
-                mVi = Voronoi2D_calcPartitionMass(i_last_received_VoronoiPartitionInfo.Vertex2D_List);
+                mVi = Voronoi2D_calcPartitionMass(i_received_VoronoiPartitionInfo.Vertex2D_List);
                 dCk_dzi_For_Neighbor = Struct_Neighbor_Lyapunov.empty(nNeighbor, 0);
                 for i = 1: nNeighbor
                     % Compute the partial derivative related to each
@@ -93,11 +100,11 @@ classdef Agent_Controller < handle
                                                         obj.VMCoord_2d, ...
                                                         obj.CVTCoord_2d, ...
                                                         mVi, ... 
-                                                        i_last_received_VoronoiPartitionInfo.NeighborInfoList{i}.Neighbor_Coord_2d, ... 
-                                                        i_last_received_VoronoiPartitionInfo.NeighborInfoList{i}.CommonVertex_2d_1, ...
-                                                        i_last_received_VoronoiPartitionInfo.NeighborInfoList{i}.CommonVertex_2d_2);
+                                                        i_received_VoronoiPartitionInfo.NeighborInfoList{i}.Neighbor_VM_Coord_2d, ... 
+                                                        i_received_VoronoiPartitionInfo.NeighborInfoList{i}.CommonVertex_2d_1, ...
+                                                        i_received_VoronoiPartitionInfo.NeighborInfoList{i}.CommonVertex_2d_2);
                     % Result for an adjacent agent to be published
-                    dCk_dzi_For_Neighbor(i) = Struct_Neighbor_Lyapunov(obj.ID, i_last_received_VoronoiPartitionInfo.NeighborInfoList{i}.getReceiverID(), ...
+                    dCk_dzi_For_Neighbor(i) = Struct_Neighbor_Lyapunov(obj.ID, i_received_VoronoiPartitionInfo.NeighborInfoList{i}.getReceiverID(), ...
                                                                        obj.VMCoord_2d, ...
                                                                        obj.CVTCoord_2d, ...
                                                                        dCk_dzi); %% Create a report with neighbor ID to publish             
@@ -107,9 +114,10 @@ classdef Agent_Controller < handle
                 obj.dCkdzk = dCk_dzk;
                 
                 %% For debugging only
-                obj.last_received_VoronoiPartitionInfo = i_last_received_VoronoiPartitionInfo;
-                obj.last_published_dC_neighbor = dCk_dzi_For_Neighbor;
+                obj.prev_published_dC_neighbor = obj.published_dC_neighbor;
+                obj.published_dC_neighbor = dCk_dzi_For_Neighbor;
                 
+             
              else
                  fprintf("WARN: Agent %d: No vertex for region partitioning detected \n", obj.ID);
                  CVT = [];
@@ -119,12 +127,16 @@ classdef Agent_Controller < handle
 
         function [tmp] = getAgentCoordReport(obj)
             tmp = Agent_Coordinates_Report(obj.ID);
-            tmp.poseCoord_3d =  obj.curPose;
+            tmp.poseCoord_3d =  obj.AgentPose_3d;
             tmp.poseVM_2d = obj.VMCoord_2d;
         end
         
         function [Vk] = computeControlInput(obj, report)
-            obj.last_received_Adjacent_Reports = report;
+            obj.prev_received_Adjacent_Reports = obj.received_Adjacent_Reports;
+            obj.received_Adjacent_Reports = report;
+            obj.prev_Vk = obj.Vk;
+            obj.prev_dVkdzk = obj.dVkdzk;
+            obj.prev_dVkdzi_List = obj.dVkdzi_List;
             format long;
             %% Compute the partial derivate of Lyapunov from the received partial derivative of CVTs from adjacent agents
             Q = eye(2);
@@ -135,25 +147,29 @@ classdef Agent_Controller < handle
             
             % Own Lyapunov Partial Derivative
             sum_1_div_Hj = 0;
-            sum_aj_HjSquared = zeros(2,1);
+            sum_aj_div_2xHjSquared = zeros(2,1);
             for j = 1: size(obj.regionCoeff, 1)
                 hj = (obj.regionCoeff(j,3)- (obj.regionCoeff(j,1:2) * obj.VMCoord_2d+ tol)); 
                 sum_1_div_Hj = sum_1_div_Hj + 1/hj;
-                sum_aj_HjSquared = sum_aj_HjSquared + obj.regionCoeff(j,1:2)' / hj^2 / 2; 
+                sum_aj_div_2xHjSquared = sum_aj_div_2xHjSquared + obj.regionCoeff(j,1:2)' / hj^2 / 2; 
             end
             
             normQ_func = @(vec, Q2x2) sqrt(vec' * Q2x2 * vec);
             obj.Vk = normQ_func(obj.VMCoord_2d - obj.CVTCoord_2d, Q)^2 * sum_1_div_Hj / 2;
             obj.dVkdzk = (eye(2) - obj.dCkdzk') * Q * (obj.VMCoord_2d - obj.CVTCoord_2d) * sum_1_div_Hj ...
-                        + normQ_func(obj.VMCoord_2d - obj.CVTCoord_2d, Q) * sum_aj_HjSquared;
+                        + normQ_func(obj.VMCoord_2d - obj.CVTCoord_2d, Q)^2 * sum_aj_div_2xHjSquared;
             
             
             adjdV_numerator_func = @(zi_2, Ci_2, dCi2x2, Q2x2) -dCi2x2' * Q2x2 * (zi_2 - Ci_2);
+            obj.dVkdzi_List = zeros(numel(report), 2);
             for i = 1: numel(report)
                 Ci = report{i}.Ck;
                 zi = report{i}.zk;
                 dCi_dzk = report{i}.dCdz_2x2;   
                 dV_Adjacent_Numerator_Term = dV_Adjacent_Numerator_Term + adjdV_numerator_func(zi, Ci, dCi_dzk, Q); 
+                
+                %% For debugging only
+                obj.dVkdzi_List(i,:) = dV_Adjacent_Numerator_Term * sum_1_div_Hj;
             end
             dV_Adjacent_Term = dV_Adjacent_Numerator_Term * sum_1_div_Hj;
             dV_dzk_total =  obj.dVkdzk + dV_Adjacent_Term;
@@ -165,7 +181,7 @@ classdef Agent_Controller < handle
             w0 = 0.4; 
             
             %% Compute the control policy
-            obj.w = w0 + mu * w0 * sigmoid_func(dV_dzk_total' * [cos(obj.curPose(3)) ;sin(obj.curPose(3))], epsSigmoid); 
+            obj.w = w0 + mu * w0 * sigmoid_func(dV_dzk_total' * [cos(obj.AgentPose_3d(3)) ;sin(obj.AgentPose_3d(3))], epsSigmoid); 
             
             %% Debugging
             Vk = obj.Vk;
@@ -174,25 +190,77 @@ classdef Agent_Controller < handle
         function printReceivedReport(obj)
             fprintf("============ START REPORT OF AGENT %d =================== \n", obj.ID);
             fprintf("Pose: [%.9f %.9f %.9f], VM: [%.9f %.9f] CVT: [%.9f %.9f] \n", ...
-            obj.curPose(1), obj.curPose(2), obj.curPose(3), obj.VMCoord_2d(1), obj.VMCoord_2d(2), obj.CVTCoord_2d(1), obj.CVTCoord_2d(2))
+            obj.AgentPose_3d(1), obj.AgentPose_3d(2), obj.AgentPose_3d(3), obj.VMCoord_2d(1), obj.VMCoord_2d(2), obj.CVTCoord_2d(1), obj.CVTCoord_2d(2))
             fprintf("dCk_dzk : [%.9f %.9f; %.9f %.9f]. dVk_dzk: [%.9f %.9f]. Vk %.9f \n", ...
                 obj.dCkdzk(1,1), obj.dCkdzk(1,2), obj.dCkdzk(2,1), obj.dCkdzk(2,2), obj.dVkdzk(1), obj.dVkdzk(2), obj.Vk);
             fprintf("VORONOI PARTITION INFORMATION RECEIVED FROM THE ""NATURE"" \n");
-            for i = 1: numel(obj.last_received_VoronoiPartitionInfo.NeighborInfoList)
-               obj.last_received_VoronoiPartitionInfo.NeighborInfoList{i}.printValue();
+            for i = 1: numel(obj.received_VoronoiPartitionInfo.NeighborInfoList)
+               obj.received_VoronoiPartitionInfo.NeighborInfoList{i}.printValue();
             end
             fprintf("COMPUTED PARTIAL DERIVATIVE \n");
-            for i = 1:numel(obj.last_published_dC_neighbor)
-                obj.last_published_dC_neighbor(i).printValue();
+            for i = 1:numel(obj.published_dC_neighbor)
+                obj.published_dC_neighbor(i).printValue();
             end
             fprintf("PARTIAL DERIVATIVE INFORMATION DOWNLOADED FROM THE COMMUNICATION LINK\n");
-            for i = 1: numel(obj.last_received_Adjacent_Reports)
-                obj.last_received_Adjacent_Reports{i}.printValue();
+            for i = 1: numel(obj.received_Adjacent_Reports)
+                obj.received_Adjacent_Reports{i}.printValue();
             end
             fprintf("=============== END ================= \n");
-           
         end
         
+        function evaluateComputation(obj)
+            fprintf("============ START LAST REPORT OF AGENT %d =================== \n", obj.ID);
+            fprintf("Pose: [%.9f %.9f %.9f], VM: [%.9f %.9f] CVT: [%.9f %.9f] \n", ...
+            obj.prev_AgentPose_3d(1), obj.prev_AgentPose_3d(2), obj.prev_AgentPose_3d(3), obj.prev_VMCoord_2d(1), obj.prev_VMCoord_2d(2), ...
+                                        obj.prev_CVTCoord_2d(1), obj.prev_CVTCoord_2d(2))
+            fprintf("dCk_dzk : [%.9f %.9f; %.9f %.9f]. dVk_dzk: [%.9f %.9f]. Vk %.9f \n", ...
+                obj.prev_dCkdzk(1,1), obj.prev_dCkdzk(1,2), obj.prev_dCkdzk(2,1), obj.prev_dCkdzk(2,2), obj.prev_dVkdzk(1), obj.prev_dVkdzk(2), obj.prev_Vk);
+            fprintf("VORONOI PARTITION INFORMATION RECEIVED FROM THE ""NATURE"" \n");
+            for i = 1: numel(obj.prev_received_VoronoiPartitionInfo.NeighborInfoList)
+               obj.prev_received_VoronoiPartitionInfo.NeighborInfoList{i}.printValue();
+            end
+            fprintf("COMPUTED PARTIAL DERIVATIVE \n");
+            for i = 1:numel(obj.prev_published_dC_neighbor)
+                obj.prev_published_dC_neighbor(i).printValue();
+            end
+            fprintf("PARTIAL DERIVATIVE INFORMATION DOWNLOADED FROM THE COMMUNICATION LINK\n");
+            for i = 1: numel(obj.prev_received_Adjacent_Reports)
+                obj.prev_received_Adjacent_Reports{i}.printValue();
+            end
+            
+            fprintf("============ CURRENT REPORT OF AGENT %d =================== \n", obj.ID);
+            fprintf("Pose: [%.9f %.9f %.9f], VM: [%.9f %.9f] CVT: [%.9f %.9f] \n", ...
+            obj.AgentPose_3d(1), obj.AgentPose_3d(2), obj.AgentPose_3d(3), obj.VMCoord_2d(1), obj.VMCoord_2d(2), obj.CVTCoord_2d(1), obj.CVTCoord_2d(2))
+            fprintf("dCk_dzk : [%.9f %.9f; %.9f %.9f]. dVk_dzk: [%.9f %.9f]. Vk %.9f \n", ...
+                obj.dCkdzk(1,1), obj.dCkdzk(1,2), obj.dCkdzk(2,1), obj.dCkdzk(2,2), obj.dVkdzk(1), obj.dVkdzk(2), obj.Vk);
+            fprintf("VORONOI PARTITION INFORMATION RECEIVED FROM THE ""NATURE"" \n");
+            for i = 1: numel(obj.received_VoronoiPartitionInfo.NeighborInfoList)
+               obj.received_VoronoiPartitionInfo.NeighborInfoList{i}.printValue();
+            end
+            fprintf("COMPUTED PARTIAL DERIVATIVE \n");
+            for i = 1:numel(obj.published_dC_neighbor)
+                obj.published_dC_neighbor(i).printValue();
+            end
+            fprintf("PARTIAL DERIVATIVE INFORMATION DOWNLOADED FROM THE COMMUNICATION LINK\n");
+            for i = 1: numel(obj.received_Adjacent_Reports)
+                obj.received_Adjacent_Reports{i}.printValue();
+            end
+            fprintf("=============== END ================= \n");
+            
+            fprintf("============ COMPUTATION EVALUATION =================== \n");
+            calc_dCk = obj.prev_dCkdzk * (obj.VMCoord_2d - obj.prev_VMCoord_2d);
+            calc_dV = obj.prev_dVkdzk' * (obj.VMCoord_2d - obj.prev_VMCoord_2d);
+            for i = 1:numel(obj.published_dC_neighbor)
+                dzi = obj.received_VoronoiPartitionInfo.NeighborInfoList{i}.Neighbor_VM_Coord_2d - obj.prev_received_VoronoiPartitionInfo.NeighborInfoList{i}.Neighbor_VM_Coord_2d;
+                calc_dCk = calc_dCk + obj.prev_published_dC_neighbor(i).dCdz_2x2 * dzi;
+                calc_dV = calc_dV + obj.prev_dVkdzi_List(i,:) * dzi;
+            end
+            real_dCk =  obj.CVTCoord_2d - obj.prev_CVTCoord_2d;
+            real_dV = obj.Vk - obj.prev_Vk;
+            fprintf("Calculated dC: [%.9f %.9f]. Real dC: [%.9f %.9f] \n", calc_dCk(1), calc_dCk(2), real_dCk(1), real_dCk(2));
+            fprintf("Calculated dV: %.9f. Real dV: %.9f \n", calc_dV, real_dV);
+            fprintf("=============== END ================= \n");
+        end
     end
 end
 

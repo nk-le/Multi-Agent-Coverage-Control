@@ -26,13 +26,11 @@ function [adjacentTable] = Voronoi2D_getNeightbor(points2d, vertexes, vertexInde
                        elseif(nComVer == 1)
                            disp("Warning: only 1 common vertex found");
                        elseif(nComVer == 2)
-                            tmp = Struct_Neighbor_Coordinates(IDList(thisAgentIndex), IDList(friendAgentIndex));
-                            tmp.Neighbor_Coord_2d = points2d(friendAgentIndex, :);
-                            tmp.CommonVertex_2d_1 = vertexes(commonVertex(1),:);
-                            tmp.CommonVertex_2d_2 = vertexes(commonVertex(2),:);
-                            
-                            % Attention: not yet optimized
-                            % Currently this changes the size of variables.
+                            tmp = Struct_Neighbor_Coordinates(IDList(thisAgentIndex), IDList(friendAgentIndex), ...
+                                                               points2d(friendAgentIndex, :)', ...
+                                                               vertexes(commonVertex(1),:)', ...
+                                                               vertexes(commonVertex(2),:)');
+                           
                             adjacentTable{thisAgentIndex}{friendAgentIndex} = tmp;
                        else
                            error("More than 3 vertexes for 1 common line detected");
