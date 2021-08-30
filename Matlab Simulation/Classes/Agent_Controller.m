@@ -138,35 +138,13 @@ classdef Agent_Controller < handle
            
             %% Compute the partial derivate of Lyapunov from the received partial derivative of CVTs from adjacent agents
             Q = eye(2);
-
-            % Own Lyapunov Partial Derivative
-%             sum_1_div_Hj = 0;
-%             sum_aj_div_2xHjSquared = zeros(2,1);
-%             for j = 1: size(obj.regionCoeff, 1)
-%                 hj = (obj.regionCoeff(j,3)- (obj.regionCoeff(j,1:2) * obj.VMCoord_2d)); 
-%                 sum_1_div_Hj = sum_1_div_Hj + 1/hj;
-%                 sum_aj_div_2xHjSquared = sum_aj_div_2xHjSquared + obj.regionCoeff(j,1:2)' / hj^2 / 2; 
-%             end
-%             
-%             normQ_func = @(vec2x1, Q2x2) sqrt(vec2x1' * Q2x2 * vec2x1);
-%             obj.Vk = normQ_func(obj.VMCoord_2d - obj.CVTCoord_2d, Q)^2 * sum_1_div_Hj / 2;
-%             obj.dVkdzk = (eye(2) - obj.dCkdzk') * Q * (obj.VMCoord_2d - obj.CVTCoord_2d) * sum_1_div_Hj ...
-%                         + normQ_func(obj.VMCoord_2d - obj.CVTCoord_2d, Q)^2 * sum_aj_div_2xHjSquared;
-            
-            
             [obj.Vk, obj.dVkdzk] = Lyapunov_Self_PD_Computation(obj.VMCoord_2d, obj.CVTCoord_2d, obj.dCkdzk , Q, obj.regionCoeff(:,1:2), obj.regionCoeff(:,3));         
-                    
-                    
-                    
                     
             %% Aggregate the Lyapunov feedback from neighbor agents
             obj.Local_dVkdzi_List = Struct_Neighbor_CVT_PD_Extended.empty(numel(report), 0);
-            adjdV_numerator_func = @(zi_2, Ci_2, dCidzk2x2, Q2x2) -dCidzk2x2' * Q2x2 * (zi_2 - Ci_2);
             dV_Accum_Adjacent_Term = zeros(2,1);
             for i = 1: numel(report)
                 [tmp_dV_dAdj] = Lyapunov_Adjacent_PD_Computation(report{i}.z, report{i}.C, report{i}.dCdz_2x2 , Q, obj.regionCoeff(:,1:2), obj.regionCoeff(:,3));
-                
-                %tmp_dV_dAdj = adjdV_numerator_func(report{i}.z, report{i}.C, report{i}.dCdz_2x2, Q) * sum_1_div_Hj;
                 dV_Accum_Adjacent_Term = dV_Accum_Adjacent_Term + tmp_dV_dAdj;    
                 obj.Local_dVkdzi_List(i) = Struct_Neighbor_CVT_PD_Extended(report{i}, tmp_dV_dAdj);
             end
@@ -175,18 +153,13 @@ classdef Agent_Controller < handle
             %% Adjustable variable --> Will move later to constant
             epsSigmoid = 3;
             mu = 3; % Control gain %% ADJUST THE CONTROL GAIN HERE
-            sigmoid_func = @(x,eps) x / (abs(x) + eps);  
-            w0 = 0.4; 
-            
+            sigmoid_func = @(x,eps) x / (abs(x) + eps);              
             %% Compute the control policy
-            obj.w = w0 + mu * w0 * sigmoid_func(dV_dzk_total' * [cos(obj.AgentPose_3d(3)) ;sin(obj.AgentPose_3d(3))], epsSigmoid); 
+            obj.w = obj.wOrbit + mu * obj.wOrbit * sigmoid_func(dV_dzk_total' * [cos(obj.AgentPose_3d(3)) ;sin(obj.AgentPose_3d(3))], epsSigmoid); 
             
-            %% Debugging
+            %% Logging out
             Vk = obj.Vk;
         end
-        
-        
-        
         
         %% Simple controller
 %         function [v,w] = computeControlSimple(obj)

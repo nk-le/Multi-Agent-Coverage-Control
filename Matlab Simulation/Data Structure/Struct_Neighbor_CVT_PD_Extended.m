@@ -14,7 +14,7 @@ classdef Struct_Neighbor_CVT_PD_Extended < Struct_Neighbor_CVT_PD
     methods (Access = protected)
         function printInfo(obj)
             printInfo@Struct_Neighbor_CVT_PD(obj);
-            fprintf("dVkdzi: [%.9f %.9f] \n", obj.calc_dV_dzNeighbor_2d(1), obj.calc_dV_dzNeighbor_2d(2));
+            fprintf("dVidzk: [%.9f %.9f] \n", obj.calc_dV_dzNeighbor_2d(1), obj.calc_dV_dzNeighbor_2d(2));
         end
     end
 end
