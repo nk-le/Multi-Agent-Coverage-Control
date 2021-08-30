@@ -37,6 +37,10 @@ classdef Agent_Controller < handle
         prev_received_VoronoiPartitionInfo
         prev_published_dC_neighbor
         prev_Local_dVkdzi_List
+        
+        %% For debugging only
+        prev_dVk_dzi_List
+        dVk_dzi_List
     end
     
     methods
@@ -139,7 +143,21 @@ classdef Agent_Controller < handle
             %% Compute the partial derivate of Lyapunov from the received partial derivative of CVTs from adjacent agents
             Q = eye(2);
             [obj.Vk, obj.dVkdzk] = Lyapunov_Self_PD_Computation(obj.VMCoord_2d, obj.CVTCoord_2d, obj.dCkdzk , Q, obj.regionCoeff(:,1:2), obj.regionCoeff(:,3));         
-                    
+            
+            %% This is for debugging the changes of the Lyapunov Partial derivative
+            obj.prev_dVk_dzi_List = obj.dVk_dzi_List;
+            obj.dVk_dzi_List = cell(numel(report),1);
+            for i = 1: numel(report)
+                for t = 1: numel(obj.published_dC_neighbor)
+                    if(obj.published_dC_neighbor(t).getReceiverID() == report{i}.getSenderID())
+                        tmpRet = Lyapunov_Adjacent_PD_Computation(obj.VMCoord_2d, obj.CVTCoord_2d, ...
+                                                                    obj.published_dC_neighbor(t).dCdz_2x2 , Q, obj.regionCoeff(:,1:2), obj.regionCoeff(:,3));
+                        obj.dVk_dzi_List{i} = {obj.published_dC_neighbor(t).getReceiverID(), report{i}.z, tmpRet};  
+                        break;
+                    end
+                end
+            end
+            
             %% Aggregate the Lyapunov feedback from neighbor agents
             obj.Local_dVkdzi_List = Struct_Neighbor_CVT_PD_Extended.empty(numel(report), 0);
             dV_Accum_Adjacent_Term = zeros(2,1);
@@ -243,15 +261,39 @@ classdef Agent_Controller < handle
             
             fprintf("============ COMPUTATION EVALUATION =================== \n");
             calc_dCk = obj.prev_dCkdzk * (obj.VMCoord_2d - obj.prev_VMCoord_2d);
-            calc_dV = obj.prev_dVkdzk' * (obj.VMCoord_2d - obj.prev_VMCoord_2d);
             for i = 1:numel(obj.published_dC_neighbor)
                 dzi = obj.Local_dVkdzi_List(i).z - obj.prev_Local_dVkdzi_List(i).z;
                 calc_dCk = calc_dCk + obj.prev_published_dC_neighbor(i).dCdz_2x2 * dzi;
-                calc_dV = calc_dV + obj.prev_Local_dVkdzi_List(i).calc_dV_dzNeighbor_2d' * dzi;
+                %calc_dV = calc_dV + obj.prev_Local_dVkdzi_List(i).calc_dV_dzNeighbor_2d' * dzi;
             end
             real_dCk =  obj.CVTCoord_2d - obj.prev_CVTCoord_2d;
-            real_dV = obj.Vk - obj.prev_Vk;
             fprintf("Calculated dC: [%.9f %.9f]. Real dC: [%.9f %.9f] \n", calc_dCk(1), calc_dCk(2), real_dCk(1), real_dCk(2));
+            fprintf("=============== END ================= \n");
+            
+            fprintf("=============== EXTRA _DEBUG _ ONLY ================= \n");
+            fprintf("Last")
+            for i = 1 : numel(obj.dVk_dzi_List)
+                z = obj.prev_dVk_dzi_List{i}{2};
+                V = obj.prev_dVk_dzi_List{i}{3};
+                fprintf("Neighbor i = %d. zi : [%.9f %.9f] dV_dzi [%.9f %.9f] \n", obj.prev_dVk_dzi_List{i}{1}, z(1), z(2), V(1), V(2));
+            end
+            fprintf("Now")
+            for i = 1 : numel(obj.dVk_dzi_List)
+                z = obj.dVk_dzi_List{i}{2};
+                V = obj.dVk_dzi_List{i}{3};
+                fprintf("Neighbor i = %d. zi : [%.9f %.9f] dV_dzi [%.9f %.9f] \n", obj.prev_dVk_dzi_List{i}{1}, z(1), z(2), V(1), V(2));
+            end
+            
+            fprintf("Computation \n")
+            calc_dV = obj.prev_dVkdzk' * (obj.VMCoord_2d - obj.prev_VMCoord_2d);
+            for i = 1 :numel(obj.dVk_dzi_List)
+                z_last = obj.prev_dVk_dzi_List{i}{2};
+                z_now = obj.dVk_dzi_List{i}{2};
+                V = obj.prev_dVk_dzi_List{i}{3};
+                calc_dV = calc_dV + V' * (z_now - z_last);
+            end
+            real_dV = obj.Vk - obj.prev_Vk;
+            
             fprintf("Calculated dV: %.9f. Real dV: %.9f \n", calc_dV, real_dV);
             fprintf("=============== END ================= \n");
         end

@@ -8,7 +8,7 @@ format long;
 CONST_PARAM = Simulation_Parameter();
 
 %% Agent handler
-rng(6);
+rng(8);
 vConstList = 15 .* ones(1,CONST_PARAM.N_AGENT);
 wOrbitList = 0.4 .* ones(1,CONST_PARAM.N_AGENT);
 centerCoord = [100, 100];    % deploy all agents near this coord
