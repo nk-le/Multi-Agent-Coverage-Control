@@ -9,7 +9,7 @@ CONST_PARAM = Simulation_Parameter();
 
 %% Agent handler
 rng(8);
-vConstList = 15 .* ones(1,CONST_PARAM.N_AGENT);
+vConstList = 8 .* ones(1,CONST_PARAM.N_AGENT);
 wOrbitList = 0.4 .* ones(1,CONST_PARAM.N_AGENT);
 centerCoord = [100, 100];    % deploy all agents near this coord
 rXY = 50;                   % agents formualates a circle at the beginning
@@ -104,7 +104,8 @@ else
            [report, isAvailable] = GBS.downloadVoronoiPartialDerivativeProperty(agentHandle(k).ID);  
            %% Move
            if(isAvailable)
-               Vk_List(k) = agentHandle(k).computeControlInput(report);    
+               Vk_List(k) = agentHandle(k).computeControlInput(report);
+               %Vk_List(k) = agentHandle(k).computeControlSimple();
                agentHandle(k).move();
            else
                % Pass through so
