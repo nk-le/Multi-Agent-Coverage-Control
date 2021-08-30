@@ -80,17 +80,12 @@ classdef Centralized_Controller < handle
             %% Update the partial derivative of each cells and construct the broadcased information matrix
             Info = ComputeVoronoiProperty(newPoseVM_2D, poseCVT_2D, v, c);
 
-            %% Compute the Lyapunov partial derivative according to the latest state of Agents            
-            assert(isfield(Info, "Common"));
-            assert(isfield(Info, "AgentReport"));
-            assert(isfield(Info.AgentReport(:), "MyInfo"));
-            assert(isfield(Info.AgentReport(:), "FriendAgentInfo"));
             %% Update the Lyapunov state 
             for thisAgent = 1: Info.Common.nAgent
                 %% One shot computation before scanning over the adjacent matrix
                 %% Some adjustable variables Parameter
                 Q = eye(2);
-                tol = 1; % Tolerance to relax the state constraint
+                tol = 0; % Tolerance to relax the state constraint
 
                 %% Computation
                 Ck = [Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.CVTCoord.x, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.CVTCoord.y]';

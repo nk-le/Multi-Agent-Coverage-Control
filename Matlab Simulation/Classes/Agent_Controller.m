@@ -140,26 +140,33 @@ classdef Agent_Controller < handle
             Q = eye(2);
 
             % Own Lyapunov Partial Derivative
-            sum_1_div_Hj = 0;
-            sum_aj_div_2xHjSquared = zeros(2,1);
-            for j = 1: size(obj.regionCoeff, 1)
-                hj = (obj.regionCoeff(j,3)- (obj.regionCoeff(j,1:2) * obj.VMCoord_2d)); 
-                sum_1_div_Hj = sum_1_div_Hj + 1/hj;
-                sum_aj_div_2xHjSquared = sum_aj_div_2xHjSquared + obj.regionCoeff(j,1:2)' / hj^2 / 2; 
-            end
+%             sum_1_div_Hj = 0;
+%             sum_aj_div_2xHjSquared = zeros(2,1);
+%             for j = 1: size(obj.regionCoeff, 1)
+%                 hj = (obj.regionCoeff(j,3)- (obj.regionCoeff(j,1:2) * obj.VMCoord_2d)); 
+%                 sum_1_div_Hj = sum_1_div_Hj + 1/hj;
+%                 sum_aj_div_2xHjSquared = sum_aj_div_2xHjSquared + obj.regionCoeff(j,1:2)' / hj^2 / 2; 
+%             end
+%             
+%             normQ_func = @(vec2x1, Q2x2) sqrt(vec2x1' * Q2x2 * vec2x1);
+%             obj.Vk = normQ_func(obj.VMCoord_2d - obj.CVTCoord_2d, Q)^2 * sum_1_div_Hj / 2;
+%             obj.dVkdzk = (eye(2) - obj.dCkdzk') * Q * (obj.VMCoord_2d - obj.CVTCoord_2d) * sum_1_div_Hj ...
+%                         + normQ_func(obj.VMCoord_2d - obj.CVTCoord_2d, Q)^2 * sum_aj_div_2xHjSquared;
             
-            normQ_func = @(vec, Q2x2) sqrt(vec' * Q2x2 * vec);
-            obj.Vk = normQ_func(obj.VMCoord_2d - obj.CVTCoord_2d, Q)^2 * sum_1_div_Hj / 2;
-            obj.dVkdzk = (eye(2) - obj.dCkdzk') * Q * (obj.VMCoord_2d - obj.CVTCoord_2d) * sum_1_div_Hj ...
-                        + normQ_func(obj.VMCoord_2d - obj.CVTCoord_2d, Q)^2 * sum_aj_div_2xHjSquared;
             
-            
+            [obj.Vk, obj.dVkdzk] = Lyapunov_Self_PD_Computation(obj.VMCoord_2d, obj.CVTCoord_2d, obj.dCkdzk , Q, obj.regionCoeff(:,1:2), obj.regionCoeff(:,3));         
+                    
+                    
+                    
+                    
             %% Aggregate the Lyapunov feedback from neighbor agents
             obj.Local_dVkdzi_List = Struct_Neighbor_CVT_PD_Extended.empty(numel(report), 0);
-            adjdV_numerator_func = @(zi_2, Ci_2, dCi2x2, Q2x2) -dCi2x2' * Q2x2 * (zi_2 - Ci_2);
+            adjdV_numerator_func = @(zi_2, Ci_2, dCidzk2x2, Q2x2) -dCidzk2x2' * Q2x2 * (zi_2 - Ci_2);
             dV_Accum_Adjacent_Term = zeros(2,1);
             for i = 1: numel(report)
-                tmp_dV_dAdj = adjdV_numerator_func(report{i}.z, report{i}.C, report{i}.dCdz_2x2, Q) * sum_1_div_Hj;
+                [tmp_dV_dAdj] = Lyapunov_Adjacent_PD_Computation(report{i}.z, report{i}.C, report{i}.dCdz_2x2 , Q, obj.regionCoeff(:,1:2), obj.regionCoeff(:,3));
+                
+                %tmp_dV_dAdj = adjdV_numerator_func(report{i}.z, report{i}.C, report{i}.dCdz_2x2, Q) * sum_1_div_Hj;
                 dV_Accum_Adjacent_Term = dV_Accum_Adjacent_Term + tmp_dV_dAdj;    
                 obj.Local_dVkdzi_List(i) = Struct_Neighbor_CVT_PD_Extended(report{i}, tmp_dV_dAdj);
             end
@@ -178,8 +185,46 @@ classdef Agent_Controller < handle
             Vk = obj.Vk;
         end
         
-        function printReceivedReport(obj)
-            fprintf("============ START REPORT OF AGENT %d =================== \n", obj.ID);
+        
+        
+        
+        %% Simple controller
+%         function [v,w] = computeControlSimple(obj)
+%             %% Some temporary parameter here
+%             gamma = 1;
+%             obj.wOrbit = 0.8;
+%             sigmoid_func = @(x,eps) x / (abs(x) + eps);  
+%             epsSigmoid = 10;
+%             calc_W = obj.wOrbit + gamma * obj.wOrbit * obj.vConst *sigmoid_func((obj.CVTCoord_2d - obj.VMCoord_2d)' * [cos(obj.AgentPose_3d(3)) ; sin(obj.AgentPose_3d(3))],epsSigmoid); 
+%             
+%             % Predict the next state            
+%             predict_Pose_3d = zeros(3,1);
+%             predict_Pose_VM = zeros(2,1);
+%             predict_Pose_3d(3) = obj.AgentPose_3d(3) + obj.dt * calc_W;
+%             predict_Pose_3d(1) = obj.AgentPose_3d(1) + obj.dt * (obj.vConst * cos(obj.AgentPose_3d(3)));
+%             predict_Pose_3d(2) = obj.AgentPose_3d(2) + obj.dt * (obj.vConst * sin(obj.AgentPose_3d(3)));
+%             predict_Pose_VM(1) = predict_Pose_3d(1) - (obj.vConst/obj.wOrbit) * sin(predict_Pose_3d(3)); 
+%             predict_Pose_VM(2) = predict_Pose_3d(2) + (obj.vConst/obj.wOrbit) * cos(predict_Pose_3d(3)); 
+%             
+%             isValid = true;
+%             tol = 1;
+%             for j = 1: size(obj.regionCoeff, 1)
+%                 if(obj.regionCoeff(j,3)- (obj.regionCoeff(j,1:2) * predict_Pose_VM + tol) <= 0)
+%                    isValid = false; 
+%                 end
+%             end
+%                 
+%             if(isValid)
+%                 obj.w = calc_W;
+%             else
+%                 disp("OUT BOUND ALERT");
+%                 obj.w = obj.wOrbit;
+%             end
+%             
+%         end 
+        
+        function PrintReceivedReport(obj)
+            fprintf("============ CURRENT REPORT OF AGENT %d =================== \n", obj.ID);
             fprintf("Pose: [%.9f %.9f %.9f], VM: [%.9f %.9f] CVT: [%.9f %.9f] \n", ...
             obj.AgentPose_3d(1), obj.AgentPose_3d(2), obj.AgentPose_3d(3), obj.VMCoord_2d(1), obj.VMCoord_2d(2), obj.CVTCoord_2d(1), obj.CVTCoord_2d(2))
             fprintf("dCk_dzk : [%.9f %.9f; %.9f %.9f]. dVk_dzk: [%.9f %.9f]. Vk %.9f \n", ...
@@ -193,13 +238,14 @@ classdef Agent_Controller < handle
                 obj.published_dC_neighbor(i).printValue();
             end
             fprintf("PARTIAL DERIVATIVE INFORMATION DOWNLOADED FROM THE COMMUNICATION LINK\n");
-            for i = 1: numel(obj.received_Adjacent_Reports)
-                obj.received_Adjacent_Reports{i}.printValue();
+            for i = 1: numel(obj.Local_dVkdzi_List)
+                obj.Local_dVkdzi_List(i).printValue();
             end
             fprintf("=============== END ================= \n");
         end
         
-        function evaluateComputation(obj)
+        function EvaluateComputation(obj)
+            %% Also print the current registered report
             fprintf("============ START LAST REPORT OF AGENT %d =================== \n", obj.ID);
             fprintf("Pose: [%.9f %.9f %.9f], VM: [%.9f %.9f] CVT: [%.9f %.9f] \n", ...
             obj.prev_AgentPose_3d(1), obj.prev_AgentPose_3d(2), obj.prev_AgentPose_3d(3), obj.prev_VMCoord_2d(1), obj.prev_VMCoord_2d(2), ...
@@ -215,28 +261,12 @@ classdef Agent_Controller < handle
                 obj.prev_published_dC_neighbor(i).printValue();
             end
             fprintf("PD_CVT INFO FROM GBS AND EXTENDED PD_LYAPUNOV INFO\n");
-            for i = 1: numel(obj.Local_dVkdzi_List)
-                obj.Local_dVkdzi_List(i).printValue();
+            for i = 1: numel(obj.prev_Local_dVkdzi_List)
+                obj.prev_Local_dVkdzi_List(i).printValue();
             end
             
-            fprintf("============ CURRENT REPORT OF AGENT %d =================== \n", obj.ID);
-            fprintf("Pose: [%.9f %.9f %.9f], VM: [%.9f %.9f] CVT: [%.9f %.9f] \n", ...
-            obj.AgentPose_3d(1), obj.AgentPose_3d(2), obj.AgentPose_3d(3), obj.VMCoord_2d(1), obj.VMCoord_2d(2), obj.CVTCoord_2d(1), obj.CVTCoord_2d(2))
-            fprintf("dCk_dzk : [%.9f %.9f; %.9f %.9f]. dVk_dzk: [%.9f %.9f]. Vk %.9f \n", ...
-                obj.dCkdzk(1,1), obj.dCkdzk(1,2), obj.dCkdzk(2,1), obj.dCkdzk(2,2), obj.dVkdzk(1), obj.dVkdzk(2), obj.Vk);
-            fprintf("VORONOI PARTITION INFORMATION RECEIVED FROM THE ""NATURE"" \n");
-            for i = 1: numel(obj.received_VoronoiPartitionInfo.NeighborInfoList)
-               obj.received_VoronoiPartitionInfo.NeighborInfoList{i}.printValue();
-            end
-            fprintf("COMPUTED PARTIAL DERIVATIVE \n");
-            for i = 1:numel(obj.published_dC_neighbor)
-                obj.published_dC_neighbor(i).printValue();
-            end
-            fprintf("PD_CVT INFO FROM GBS AND EXTENDED PD_LYAPUNOV INFO\n");
-            for i = 1: numel(obj.Local_dVkdzi_List)
-                obj.Local_dVkdzi_List(i).printValue();
-            end
-            fprintf("=============== END ================= \n");
+            %% Also print the current registered report
+            obj.PrintReceivedReport();
             
             fprintf("============ COMPUTATION EVALUATION =================== \n");
             calc_dCk = obj.prev_dCkdzk * (obj.VMCoord_2d - obj.prev_VMCoord_2d);
@@ -244,7 +274,7 @@ classdef Agent_Controller < handle
             for i = 1:numel(obj.published_dC_neighbor)
                 dzi = obj.Local_dVkdzi_List(i).z - obj.prev_Local_dVkdzi_List(i).z;
                 calc_dCk = calc_dCk + obj.prev_published_dC_neighbor(i).dCdz_2x2 * dzi;
-                calc_dV = calc_dV + obj.Local_dVkdzi_List(i).calc_dV_dzNeighbor_2d' * dzi;
+                calc_dV = calc_dV + obj.prev_Local_dVkdzi_List(i).calc_dV_dzNeighbor_2d' * dzi;
             end
             real_dCk =  obj.CVTCoord_2d - obj.prev_CVTCoord_2d;
             real_dV = obj.Vk - obj.prev_Vk;
@@ -252,6 +282,38 @@ classdef Agent_Controller < handle
             fprintf("Calculated dV: %.9f. Real dV: %.9f \n", calc_dV, real_dV);
             fprintf("=============== END ================= \n");
         end
+        
     end
 end
+
+
+function [p1, p2, flag] = findVertexes(posX, posY, boundaries)
+    distance = zeros(1, numel(boundaries(1,:)) - 1);
+    for i = 1:numel(boundaries(1,:))-1
+        p1(1) = boundaries(1,i);
+        p1(2) = boundaries(2,i);
+        p2(1) = boundaries(1, i + 1);
+        p2(2) = boundaries(2, i + 1); 
+
+        p1Tod =  [posX, posY,0] - [p1(1), p1(2),0];
+        p1Top2 = [p2(1),p2(2),0] - [p1(1), p1(2), 0];   
+        
+        angle = atan2(norm(cross(p1Tod,p1Top2)), dot(p1Tod,p1Top2));
+        distance(i) = norm(p1Tod) * sin(angle); % Find distance 
+    end  
+    [value, minIndex] = min(distance(1,:));
+    p1(1) = boundaries(1,minIndex);
+    p1(2) = boundaries(2,minIndex);
+    p2(1) = boundaries(1,minIndex + 1);
+    p2(2) = boundaries(2,minIndex + 1);
+    if(value < 3) % Stop before going outbound
+        flag = 1;
+    else 
+        flag = 0;
+    end
+end
+
+
+
+
 
