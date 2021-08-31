@@ -1,6 +1,6 @@
 classdef Simulation_Parameter < handle
     properties (Constant)
-        TIME_STEP = 0.01;
+        TIME_STEP = 0.02;
         MAX_ITER = 40000;
         N_AGENT = 4;
         

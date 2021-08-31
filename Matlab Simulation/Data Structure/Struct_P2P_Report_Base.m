@@ -11,9 +11,10 @@ classdef (Abstract) Struct_P2P_Report_Base < Report_Base
             obj@Report_Base(myID);
             obj.ReceiverID = ReceiverID;
         end
-        
-        function out = getReceiverID(obj)
-            out = obj.ReceiverID;
+      
+        function [publisherId, receiverID] = getIDs(obj)
+            publisherId = obj.PublisherID;
+            receiverID = obj.ReceiverID;
         end
     end
 end

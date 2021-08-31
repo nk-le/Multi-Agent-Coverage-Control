@@ -15,13 +15,13 @@ classdef (Abstract) Report_Base < handle
     end
     
     methods
-        function obj = Report_Base(initID)
-            obj.PublisherID = initID;
+        function obj = Report_Base(PublisherID)
+            obj.PublisherID = PublisherID;
             obj.Timestamp = rem(now,1);
         end
         
         function printValue(obj)
-            fprintf("Time: %.7f. Owner: %d ", obj.Timestamp, obj.PublisherID);
+            fprintf("Time: %.7f. Publisher: %d ", obj.Timestamp, obj.PublisherID);
             obj.printInfo()
         end
         
@@ -31,6 +31,9 @@ classdef (Abstract) Report_Base < handle
     end
     
     % Child class must declare these abstract methods 
+    methods (Abstract)
+        getValue(obj)
+    end
     methods (Access = protected, Abstract)
         printInfo(obj) % Print out the internal information of each inherited report
     end    

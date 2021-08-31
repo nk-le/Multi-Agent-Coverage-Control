@@ -29,7 +29,7 @@ classdef Communication_Link < handle
             % Delete the previously transmitted data (In practice, this should be checked by the timestamp)
             obj.NeighborReportTable{txAgentIndex} = cell(obj.nAgent, 1);
             for i = 1: numel(report)
-                rxID = report(i).getReceiverID();
+                [txId, rxID] = report(i).getIDs();
                 rxAgentIndex = find(obj.ID_List  == rxID, 1);
                 assert(~isempty(rxAgentIndex)); %% Receiver Agent not yet registered in the communication link so it can not upload
                 obj.NeighborReportTable{txAgentIndex}{rxAgentIndex} = report(i);

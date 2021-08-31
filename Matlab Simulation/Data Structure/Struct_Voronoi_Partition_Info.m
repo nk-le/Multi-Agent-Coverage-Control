@@ -19,7 +19,7 @@ classdef Struct_Voronoi_Partition_Info < Report_Base
        NAME = "Struct_Voronoi_Partition_Info" 
     end
     
-    properties (Access  = public)
+    properties (Access  = private)
         PartitionOwnerID
         Vertex2D_List
         NeighborInfoList
@@ -33,6 +33,12 @@ classdef Struct_Voronoi_Partition_Info < Report_Base
             obj.PartitionOwnerID = PartitionOwnerID;
             obj.Vertex2D_List = vertex;
             obj.NeighborInfoList = neighborInfo;
+        end
+        
+        function [o_ownerID, o_Vertex2D_List, o_NeighborInfoList] = getValue(obj)
+            o_ownerID = obj.PartitionOwnerID; 
+            o_Vertex2D_List = obj.Vertex2D_List; 
+            o_NeighborInfoList = obj.NeighborInfoList;
         end
     end
     

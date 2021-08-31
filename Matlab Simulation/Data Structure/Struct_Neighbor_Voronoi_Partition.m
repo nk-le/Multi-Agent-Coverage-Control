@@ -2,7 +2,8 @@ classdef Struct_Neighbor_Voronoi_Partition
     properties (Constant)
         NAME = "Struct_Neighbor_Voronoi_Partition"
     end
-    properties
+    
+    properties (Access = private)
         NeighborID
         Neighbor_VM_Coord_2d
         CommonVertex_2d_1
@@ -29,11 +30,11 @@ classdef Struct_Neighbor_Voronoi_Partition
         
     end
     
-    methods (Access = protected)
-        function printInfo(obj)
-            fprintf("Info Voronoi Neighbor %d. ", obj.NeighborID);
-            fprintf("Neighbor VM Coord z%d: [%.9f %.9f]. ", obj.NeighborID, obj.Neighbor_VM_Coord_2d(1), obj.Neighbor_VM_Coord_2d(2));
-            fprintf("Common Vertexes. v1: [%.9f %.9f], v2: [%.9f %.9f] \n", obj.CommonVertex_2d_1(1), obj.CommonVertex_2d_1(2), obj.CommonVertex_2d_2(1), obj.CommonVertex_2d_2(2));
+    methods (Access = public)
+        function printValue(obj)
+            fprintf("Neighbor %d. ", obj.NeighborID);
+            fprintf("VM Coord z%d: [%.9f %.9f]. ", obj.NeighborID, obj.Neighbor_VM_Coord_2d(1), obj.Neighbor_VM_Coord_2d(2));
+            fprintf("Vertexes. v1: [%.9f %.9f], v2: [%.9f %.9f] \n", obj.CommonVertex_2d_1(1), obj.CommonVertex_2d_1(2), obj.CommonVertex_2d_2(1), obj.CommonVertex_2d_2(2));
         end
     end
 end
