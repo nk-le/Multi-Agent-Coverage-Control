@@ -127,10 +127,9 @@ classdef Agent_Controller < handle
              end
         end
 
-        function [tmp] = getAgentCoordReport(obj)
-            tmp = Agent_Coordinates_Report(obj.ID);
-            tmp.poseCoord_3d =  obj.AgentPose_3d;
-            tmp.poseVM_2d = obj.VMCoord_2d;
+        function [Pose_3d, PoseVM_2d] = getPose(obj)
+            Pose_3d =  obj.AgentPose_3d;
+            PoseVM_2d = obj.VMCoord_2d;
         end
         
         function [Vk] = computeControlInput(obj, report)

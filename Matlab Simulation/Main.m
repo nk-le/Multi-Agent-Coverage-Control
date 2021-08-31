@@ -22,7 +22,6 @@ startPose(:,3) = zeros(CONST_PARAM.N_AGENT,1); %theta
 agentHandle = Agent_Controller.empty(CONST_PARAM.N_AGENT, 0);
 for k = 1 : CONST_PARAM.N_AGENT
     agentHandle(k) = Agent_Controller(CONST_PARAM.TIME_STEP, CONST_PARAM.ID_LIST(k), CONST_PARAM.BOUNDARIES_COEFF, startPose(k,:), vConstList(k), wOrbitList(k));
-    tmp = agentHandle(k).getAgentCoordReport();       
 end
 
 % Instance of logger for data post processing, persistent over all files
@@ -80,11 +79,9 @@ else
 
         %% Thread Voronoi Update - Agent interacts with the "nature" and receive the partitions information
         for k = 1: CONST_PARAM.N_AGENT
-            %% Update the data to Environment
-           agentReport = agentHandle(k).getAgentCoordReport();
-           vmCmoord_2d_list(k, :) = agentReport.poseVM_2d;   
-           pose_3d_list(k,:) = agentReport.poseCoord_3d;  
+           [pose_3d_list(k,:), vmCmoord_2d_list(k, :)] = agentHandle(k).getPose();
         end
+        %% Update new coordinates to the Environment
         [v,c] = VoronoiCom.exec_partition(vmCmoord_2d_list, CONST_PARAM.ID_LIST);
 
         %% Thread Agents communicate with adjacent agents through the communication link GBS (sharing dC_dz)
