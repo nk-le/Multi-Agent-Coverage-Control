@@ -10,8 +10,13 @@ classdef Voronoi2D_Handler < handle
         ID_List
     end
     
+    properties (Access = private)
+        ID
+    end
+    
     methods
-        function obj = Voronoi2D_Handler(bndVertexes)
+        function obj = Voronoi2D_Handler(ID, bndVertexes)
+            obj.ID = ID;
             obj.boundVertex = bndVertexes;
         end
                 
@@ -28,13 +33,12 @@ classdef Voronoi2D_Handler < handle
                 o_Vertexes{i} = obj.partitionVertexes(obj.vertexPtr{i}, :);
             end
 
-            %% Creat the report of Voronoi paritions and distributed to decentralized controllers
-            obj.VoronoiReportList = GBS_Voronoi_Report.empty(nPoints, 0);
+            %% Create the report of Voronoi paritions and distributed to decentralized controllers
+            obj.VoronoiReportList = Struct_Voronoi_Partition_Info.empty(nPoints, 0);
             % Only save the information of the registered agents into the
             % internal buffer
             for i = 1: nPoints
-                obj.VoronoiReportList(i) = GBS_Voronoi_Report(IDList(i));
-                obj.VoronoiReportList(i).assign(o_Vertexes{i}, o_neighborInfo{i}) ;
+                obj.VoronoiReportList(i) = Struct_Voronoi_Partition_Info(obj.ID, IDList(i), o_Vertexes{i}, o_neighborInfo{i});
                 obj.ID_List = IDList;
             end
             

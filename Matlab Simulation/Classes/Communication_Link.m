@@ -1,5 +1,3 @@
-%% Todo:
-% Enumeration -1 for unassigned agent
 %%
 
 classdef Communication_Link < handle
@@ -9,8 +7,7 @@ classdef Communication_Link < handle
         
         %% Communication
         nAgent
-        NeighborReportTable
-        
+        NeighborReportTable   
     end
     
     methods

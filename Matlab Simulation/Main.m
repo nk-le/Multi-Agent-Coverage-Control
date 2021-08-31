@@ -66,7 +66,7 @@ if(MODE == "Centralized")
 %% Decentralized Controller %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 else
     %% Voronoi Computer
-    VoronoiCom = Voronoi2D_Handler(CONST_PARAM.BOUNDARIES_VERTEXES);
+    VoronoiCom = Voronoi2D_Handler(9999, CONST_PARAM.BOUNDARIES_VERTEXES);
     
     %% Communication Link for data broadcasting (GBS : global broadcasting service)
     GBS = Communication_Link(CONST_PARAM.N_AGENT, CONST_PARAM.ID_LIST); 

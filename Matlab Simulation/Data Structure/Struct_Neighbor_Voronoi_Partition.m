@@ -1,30 +1,38 @@
-classdef Struct_Neighbor_Coordinates < Struct_Neighbor_Info_Base
+classdef Struct_Neighbor_Voronoi_Partition
     properties (Constant)
-        NAME = "Struct_Neighbor_Coordinates"
+        NAME = "Struct_Neighbor_Voronoi_Partition"
     end
-    
     properties
+        NeighborID
         Neighbor_VM_Coord_2d
         CommonVertex_2d_1
         CommonVertex_2d_2
     end
     
     methods
-        function obj = Struct_Neighbor_Coordinates(myID, neighborID, i_Neighbor_VM_Coord_2d, i_cmV1_2d, i_cmV2_2d)
-            obj@Struct_Neighbor_Info_Base(myID, neighborID);
+        function obj = Struct_Neighbor_Voronoi_Partition(i_NeighborID, i_Neighbor_VM_Coord_2d, i_cmV1_2d, i_cmV2_2d)
             assert(all(size(i_Neighbor_VM_Coord_2d) == [2,1]));
             assert(all(size(i_cmV1_2d) == [2,1]));
             assert(all(size(i_cmV2_2d) == [2,1]));
+            obj.NeighborID = i_NeighborID;
             obj.Neighbor_VM_Coord_2d = i_Neighbor_VM_Coord_2d;
             obj.CommonVertex_2d_1 = i_cmV1_2d;
             obj.CommonVertex_2d_2 = i_cmV2_2d;
         end
+        
+        function [id, vm_2d, v1_2d, v2_2d] = getNeighborInfo(obj)
+            id = obj.NeighborID;
+            vm_2d = obj.Neighbor_VM_Coord_2d;
+            v1_2d = obj.CommonVertex_2d_1;
+            v2_2d = obj.CommonVertex_2d_2;
+        end
+        
     end
     
     methods (Access = protected)
         function printInfo(obj)
-            fprintf("Info Voronoi Neighbor %d. ", obj.ReceiverID);
-            fprintf("Neighbor VM Coord z%d: [%.9f %.9f]. ", obj.ReceiverID, obj.Neighbor_VM_Coord_2d(1), obj.Neighbor_VM_Coord_2d(2));
+            fprintf("Info Voronoi Neighbor %d. ", obj.NeighborID);
+            fprintf("Neighbor VM Coord z%d: [%.9f %.9f]. ", obj.NeighborID, obj.Neighbor_VM_Coord_2d(1), obj.Neighbor_VM_Coord_2d(2));
             fprintf("Common Vertexes. v1: [%.9f %.9f], v2: [%.9f %.9f] \n", obj.CommonVertex_2d_1(1), obj.CommonVertex_2d_1(2), obj.CommonVertex_2d_2(1), obj.CommonVertex_2d_2(2));
         end
     end
