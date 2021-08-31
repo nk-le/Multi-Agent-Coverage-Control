@@ -1,4 +1,4 @@
-addpath('./Library/*');
+addpath(genpath('./Library'));
 
 cellColors = cool(CONST_PARAM.N_AGENT);    
 env = MultiRobotEnv(CONST_PARAM.N_AGENT);

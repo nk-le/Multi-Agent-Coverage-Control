@@ -1,8 +1,10 @@
-addpath('./Classes');
-addpath('./Data Structure');
-addpath('./Evaluation Scripts');
-addpath('./Library');
-addpath('./Voronoi Debug Scripts');
+addpath(genpath('./Classes'));
+addpath(genpath('./Data Structure'));
+addpath(genpath('./Evaluation Scripts'));
+addpath(genpath('./Library'));
+addpath(genpath('./Algorithm'));
+addpath(genpath('./Voronoi Debug Scripts'));
+
 
 format long;
 CONST_PARAM = Simulation_Parameter();
