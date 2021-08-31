@@ -3,63 +3,35 @@ classdef DataLogger < handle
     %   Detailed explanation goes here
     
     properties
-        nAgent
+        CONST_PARAM
+        startPose
+        vConstList
+        wOrbitList
+        
         maxCnt 
         curCnt
+        
         PoseAgent
         PoseVM 
         ControlOutput 
         CVT
-        V_BLF 
-        V_BLF_Den
-        bndVertexes
+        V_BLF
     end
     
     methods
-        function obj = DataLogger(amountAgent, maxIter)
-            obj.nAgent = amountAgent;
-            obj.maxCnt = maxIter;
+        function obj = DataLogger(CONST_PARAM, startPose, vList, wList)
+            obj.CONST_PARAM = CONST_PARAM;
+            obj.vConstList = vList;
+            obj.wOrbitList = wList;
+            obj.startPose = startPose;
             obj.curCnt = 0;
-            obj.PoseAgent = zeros(amountAgent, 3, maxIter);
-            obj.PoseVM = zeros(amountAgent, 2, maxIter);
-            obj.ControlOutput = zeros(amountAgent, maxIter);
-            obj.CVT = zeros(amountAgent, 2, maxIter);
-            obj.V_BLF = zeros(amountAgent, maxIter);
-            obj.V_BLF_Den = zeros(amountAgent, maxIter);
-        end
-        
-        function updateBot(obj, curBot, newPoseAgent, newPoseVM, newWk, newCVT)
-            if(obj.curCnt <= obj.maxCnt)
-                obj.PoseAgent(curBot, :,obj.curCnt) = newPoseAgent(:,:,:);
-                obj.PoseVM(curBot, :,obj.curCnt)           = newPoseVM(:,:);
-                obj.ControlOutput(curBot, obj.curCnt)    = newWk(:);
-                obj.CVT(curBot,:, obj.curCnt)              = newCVT(:,:);
-            else 
-                disp('Max CNT already, logging stopped!');
-            end
-        end
-        
-        function updateBLF(obj, newV, newVden)
-            obj.curCnt = obj.curCnt + 1;
-            if(obj.curCnt <= obj.maxCnt)
-                obj.V_BLF(:, obj.curCnt)            = newV(:);
-                obj.V_BLF_Den(:, obj.curCnt)        = newVden(:);
-            else 
-                disp('Max CNT already, logging stopped!');
-            end
-        end
-        
-        function log(obj, newPoseAgent, newPoseVM, newCVT, newW, newV)
-            obj.curCnt = obj.curCnt + 1;
-            if(obj.curCnt <= obj.maxCnt)
-                obj.V_BLF(:, obj.curCnt)            = newV(:);
-                obj.PoseAgent(:, :,obj.curCnt)      = newPoseAgent(:,:);
-                obj.PoseVM(:, :,obj.curCnt)    = newPoseVM(:,:);
-                obj.ControlOutput(:, obj.curCnt)    = newW(:);
-                obj.CVT(:,:, obj.curCnt)       = newCVT(:,:);
-            else 
-                disp('Max CNT already, logging stopped!');
-            end
+            
+            obj.maxCnt = CONST_PARAM.MAX_ITER + 10;
+            obj.PoseAgent = zeros(CONST_PARAM.N_AGENT, 3, obj.maxCnt);
+            obj.PoseVM = zeros(CONST_PARAM.N_AGENT, 2, obj.maxCnt);
+            obj.ControlOutput = zeros(CONST_PARAM.N_AGENT, obj.maxCnt);
+            obj.CVT = zeros(CONST_PARAM.N_AGENT, 2, obj.maxCnt);
+            obj.V_BLF = zeros(CONST_PARAM.N_AGENT, obj.maxCnt);
         end
         
         function logCentralizedController(obj, centralController)

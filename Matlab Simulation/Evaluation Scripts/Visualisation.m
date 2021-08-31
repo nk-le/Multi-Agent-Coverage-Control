@@ -2,7 +2,7 @@ addpath(genpath('./Library'));
 
 cellColors = cool(CONST_PARAM.N_AGENT);    
 env = MultiRobotEnv(CONST_PARAM.N_AGENT);
-iter = logger.curCnt;
+
 spX = logger.CVT(:,1,:);
 spY = logger.CVT(:,2,:);
 vmX = logger.PoseVM(:,1,:);
@@ -10,20 +10,14 @@ vmY = logger.PoseVM(:,2,:);
 poseX =  logger.PoseAgent(:,1,:);
 poseY =  logger.PoseAgent(:,2,:);
 poseTheta =  logger.PoseAgent(:,3,:);
-bndVertexes = logger.bndVertexes;
-
-
 
 poseInit = zeros(3, CONST_PARAM.N_AGENT);
 env((1:CONST_PARAM.N_AGENT), poseInit);
 hold on; grid on; %axis equal
 
 % Plot Boundaries
-% for i = 1: size(bndVertexes,1)-1                
-%    plot([bndVertexes(i,1) bndVertexes(i+1,1)],[bndVertexes(i,2) bndVertexes(i+1,2)], '-r', 'LineWidth',2);
-% end
-xrange = max(bndVertexes(:,1));
-yrange = max(bndVertexes(:,2));
+xrange = max(logger.CONST_PARAM.BOUNDARIES_VERTEXES(:,1));
+yrange = max(logger.CONST_PARAM.BOUNDARIES_VERTEXES(:,2));
 offset = 20;
 xlim([0 - offset, xrange + offset]);
 ylim([0 - offset, yrange + offset]);
@@ -35,13 +29,13 @@ vmPlotHandle = [];
 spPlotHandle = [];
 showColorPlot = true;
 
-for loopCnt = 1:iter    
+for loopCnt = 1:logger.curCnt    
     if(loopCnt == 1) % Plot only once
             %figure(2);
             %hold on;  grid on;
             % Boundaries
-            for i = 1: size(bndVertexes,1)-1                
-               plot([bndVertexes(i,1) bndVertexes(i+1,1)],[bndVertexes(i,2) bndVertexes(i+1,2)], '-r', 'LineWidth',4);                    
+            for i = 1: size(logger.CONST_PARAM.BOUNDARIES_VERTEXES,1)-1                
+               plot([logger.CONST_PARAM.BOUNDARIES_VERTEXES(i,1) logger.CONST_PARAM.BOUNDARIES_VERTEXES(i+1,1)],[logger.CONST_PARAM.BOUNDARIES_VERTEXES(i,2) logger.CONST_PARAM.BOUNDARIES_VERTEXES(i+1,2)], '-r', 'LineWidth',4);                    
             end   
             % Color Patch
             verCellHandle = zeros(CONST_PARAM.N_AGENT,1);
@@ -77,7 +71,6 @@ for loopCnt = 1:iter
             for i = 1:CONST_PARAM.N_AGENT % update Voronoi cells
                set(spPlotColorHandle(i),'XData', spX(i,loopCnt) ,'YData', spY(i,loopCnt)); %plot current position
                set(vmPlotColorHandle(i),'XData', vmX(i,loopCnt) ,'YData', vmY(i,loopCnt)); 
-               %set(verCellHandle(i), 'XData',com.v(com.c{i},1),'YData',com.v(com.c{i},2));
             end
         end
     end

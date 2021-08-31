@@ -11,13 +11,12 @@ CONST_PARAM = Simulation_Parameter();
 
 %% Agent handler
 rng(8);
-vConstList = 8 .* ones(1,CONST_PARAM.N_AGENT);
-wOrbitList = 0.4 .* ones(1,CONST_PARAM.N_AGENT);
-centerCoord = [100, 100];    % deploy all agents near this coord
-rXY = 50;                   % agents formualates a circle at the beginning
-startPose = zeros(CONST_PARAM.N_AGENT, 3);
-startPose(:,1) = centerCoord(1) + rXY.*rand(CONST_PARAM.N_AGENT,1); %x
-startPose(:,2) = centerCoord(2) + rXY.*rand(CONST_PARAM.N_AGENT,1); %y
+vConstList = 10 .* ones(1,CONST_PARAM.N_AGENT);
+wOrbitList = 0.8 .* ones(1,CONST_PARAM.N_AGENT);
+%centerCoord = [100, 100];    % deploy all agents near this coord
+rXY = 100;                   % agents formualates a circle at the beginning
+startPose(:,1) = rXY.*rand(CONST_PARAM.N_AGENT,1); %x
+startPose(:,2) = rXY.*rand(CONST_PARAM.N_AGENT,1); %y
 startPose(:,3) = zeros(CONST_PARAM.N_AGENT,1); %theta
 agentHandle = Agent_Controller.empty(CONST_PARAM.N_AGENT, 0);
 for k = 1 : CONST_PARAM.N_AGENT
@@ -25,14 +24,11 @@ for k = 1 : CONST_PARAM.N_AGENT
 end
 
 % Instance of logger for data post processing, persistent over all files
-logger = DataLogger(CONST_PARAM.N_AGENT, CONST_PARAM.MAX_ITER + 1);
-logger.bndVertexes = CONST_PARAM.BOUNDARIES_VERTEXES;
+logger = DataLogger(CONST_PARAM, startPose, vConstList, wOrbitList);
 
-%MODE = "Centralized";
-MODE = "Decentralized";
-%% Centralized Controller %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MAIN
-if(MODE == "Centralized")
+%% Centralized Controller %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if(CONST_PARAM.MODE == "Centralized")
     centralCom = Centralized_Controller(CONST_PARAM.N_AGENT, CONST_PARAM.BOUNDARIES_COEFF, CONST_PARAM.BOUNDARIES_VERTEXES);
     
     for iteration = 1: CONST_PARAM.MAX_ITER
