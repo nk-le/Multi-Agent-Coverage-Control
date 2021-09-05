@@ -137,7 +137,7 @@ classdef Agent_Controller < handle
             PoseVM_2d = obj.VMCoord_2d;
         end
         
-        function [Vk] = computeControlInput(obj, report)
+        function [Vk, wOut] = computeControlInput(obj, report)
             assert(isa(report{1}, 'Struct_Neighbor_CVT_PD'));
             obj.prev_Vk = obj.Vk;
             obj.prev_dVkdzk = obj.dVkdzk;
@@ -183,7 +183,7 @@ classdef Agent_Controller < handle
             sigmoid_func = @(x,eps) x / (abs(x) + eps);              
             %% Compute the control policy
             obj.w = obj.wOrbit + mu * obj.wOrbit * sigmoid_func(dV_dzk_total' * [cos(obj.AgentPose_3d(3)) ;sin(obj.AgentPose_3d(3))], epsSigmoid); 
-            
+            wOut = obj.w;
             %% Logging out
             Vk = obj.Vk;
         end
