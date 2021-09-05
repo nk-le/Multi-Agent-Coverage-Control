@@ -104,6 +104,8 @@ classdef Centralized_Controller < handle
                            Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCy_dVMx, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCy_dVMy];
                 
                 Vk = (zk - Ck)' * Q * (zk - Ck) * sum_1_div_Hj / 2;
+                %% If Vk >= 0, the state constraint is already violated. Assert
+                assert(Vk >= 0);
                 V_BLF_List(thisAgent) = Vk;
                 
                 dVkdzk = (eye(2) - dCi_dzi')*Q_zDiff_div_hj + sum_aj_HjSquared * (zk - Ck)' * Q * (zk - Ck);

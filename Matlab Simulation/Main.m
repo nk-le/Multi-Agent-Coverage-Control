@@ -7,7 +7,7 @@ addpath(genpath('./Voronoi Debug Scripts'));
 
 
 format long;
-CONST_PARAM = Simulation_Parameter();
+CONST_PARAM = Simulation_Parameter(1);
 
 %% Agent handler
 rng(4);

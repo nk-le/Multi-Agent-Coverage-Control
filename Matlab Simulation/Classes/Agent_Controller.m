@@ -147,7 +147,7 @@ classdef Agent_Controller < handle
             %% Compute the partial derivate of Lyapunov from the received partial derivative of CVTs from adjacent agents
             Q = eye(2);
             [obj.Vk, obj.dVkdzk] = Lyapunov_Self_PD_Computation(obj.VMCoord_2d, obj.CVTCoord_2d, obj.dCkdzk , Q, obj.regionCoeff(:,1:2), obj.regionCoeff(:,3));         
-            
+            assert(obj.Vk >= 0);
             %% This is for debugging the changes of the Lyapunov Partial derivative
             obj.prev_dVk_dzi_List = obj.dVk_dzi_List;
             obj.dVk_dzi_List = cell(numel(report),1);
