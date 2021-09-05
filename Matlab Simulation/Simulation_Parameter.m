@@ -1,14 +1,14 @@
 classdef Simulation_Parameter < handle
     properties (Constant)
-        TIME_STEP = 0.001;
+        TIME_STEP = 0.01;
         MAX_ITER = 40000;
-        N_AGENT = 4;
+        N_AGENT = 6;
         
         REGION_MAX_X = 200;
         REGION_MAX_Y = 200;
         
-        %MODE = "Centralized";
-        MODE = "Decentralized";
+        MODE = "Centralized";
+        %MODE = "Decentralized";
     end
     
     properties

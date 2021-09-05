@@ -15,6 +15,7 @@ vConstList = 10 .* ones(1,CONST_PARAM.N_AGENT);
 wOrbitList = 0.8 .* ones(1,CONST_PARAM.N_AGENT);
 %centerCoord = [100, 100];    % deploy all agents near this coord
 rXY = 100;                   % agents formualates a circle at the beginning
+startPose = zeros(CONST_PARAM.N_AGENT, 3);
 startPose(:,1) = rXY.*rand(CONST_PARAM.N_AGENT,1); %x
 startPose(:,2) = rXY.*rand(CONST_PARAM.N_AGENT,1); %y
 startPose(:,3) = zeros(CONST_PARAM.N_AGENT,1); %theta
@@ -36,7 +37,6 @@ if(CONST_PARAM.MODE == "Centralized")
         newPose_3d = zeros(CONST_PARAM.N_AGENT, 3);
         newPoseVM_2d = zeros(CONST_PARAM.N_AGENT, 2);
         for k = 1: CONST_PARAM.N_AGENT
-            agentHandle(k).move();
             newPose_3d(k,:) = agentHandle(k).AgentPose_3d(:);
             newPoseVM_2d(k,:) = agentHandle(k).VMCoord_2d(:);
         end
@@ -45,6 +45,7 @@ if(CONST_PARAM.MODE == "Centralized")
 
         for k = 1: CONST_PARAM.N_AGENT
             agentHandle(k).w = ControlInput(k);
+            agentHandle(k).move();
         end
 
         % Displaying for debugging
