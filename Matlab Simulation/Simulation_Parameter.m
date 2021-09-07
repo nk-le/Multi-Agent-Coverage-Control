@@ -45,8 +45,8 @@ classdef Simulation_Parameter < handle
                                         0 , -1, 0];
             %% Triangle   
             elseif(RegionSelection == 2)
-                obj.REGION_MAX_X = 200;
-                obj.REGION_MAX_Y = 200;
+                obj.REGION_MAX_X = 600;
+                obj.REGION_MAX_Y = 600;
                 obj.BOUNDARIES_VERTEXES = [ 0, 0; 
                                     0, obj.REGION_MAX_Y; ...
                                     obj.REGION_MAX_X, 0; ...
@@ -56,19 +56,20 @@ classdef Simulation_Parameter < handle
                                         obj.REGION_MAX_Y/obj.REGION_MAX_X , 1, obj.REGION_MAX_Y];
            %% Polygon
            elseif(RegionSelection == 3)
-                obj.REGION_MAX_X = 200;
-                obj.REGION_MAX_Y = 200;
+                SCALE = 100;
                 obj.BOUNDARIES_VERTEXES = [0,   0; 
                                            0,   6; 
                                            6,   12; 
                                            16,  6;
                                            6,   0;
-                                           0,   0];
+                                           0,   0] * SCALE;
                 obj.BOUNDARIES_COEFF = [-1 , 0, 0 ; ...
                                         0 , -1, 0; ...
                                         -1 , 1, 6; ...
                                         0.6, 1, 15.6; ...
-                                        0.6, -1, 3.6];
+                                        0.6, -1, 3.6] * SCALE;
+                obj.REGION_MAX_X = max(obj.BOUNDARIES_VERTEXES(:,1));
+                obj.REGION_MAX_Y = max(obj.BOUNDARIES_VERTEXES(:,2));
            end
 
             

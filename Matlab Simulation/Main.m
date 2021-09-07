@@ -7,15 +7,15 @@ addpath(genpath('./Voronoi Debug Scripts'));
 
 
 format long;
-CONST_PARAM = Simulation_Parameter(1);
+CONST_PARAM = Simulation_Parameter(2);
 
 %% Some adjustable control parameter, will be moved to Simulation_Parameter later
 rng(4);
-V_CONST_LIST = 5 .* ones(1,CONST_PARAM.N_AGENT);
+V_CONST_LIST = 40 .* ones(1,CONST_PARAM.N_AGENT);
 W_ORBIT_LIST = 0.8 .* ones(1,CONST_PARAM.N_AGENT);
 Q_2x2 = 2 * eye(2);
 P = 1;
-rXY = 30;                   % agents formualates a circle at the beginning
+rXY = 200;      
 startPose = zeros(CONST_PARAM.N_AGENT, 3);
 startPose(:,1) = rXY.*rand(CONST_PARAM.N_AGENT,1); %x
 startPose(:,2) = rXY.*rand(CONST_PARAM.N_AGENT,1); %y
