@@ -15,6 +15,7 @@ V_CONST_LIST = 40 .* ones(1,CONST_PARAM.N_AGENT);
 W_ORBIT_LIST = 0.8 .* ones(1,CONST_PARAM.N_AGENT);
 Q_2x2 = 2 * eye(2);
 P = 1;
+EPS_SIGMOID = 5;
 rXY = 200;      
 startPose = zeros(CONST_PARAM.N_AGENT, 3);
 startPose(:,1) = rXY.*rand(CONST_PARAM.N_AGENT,1); %x
@@ -25,7 +26,7 @@ agentHandle = Agent_Controller.empty(CONST_PARAM.N_AGENT, 0);
 %% Agent handler
 for k = 1 : CONST_PARAM.N_AGENT
     agentHandle(k) = Agent_Controller(CONST_PARAM.TIME_STEP, CONST_PARAM.ID_LIST(k), CONST_PARAM.BOUNDARIES_COEFF, ...
-                    startPose(k,:), V_CONST_LIST(k), W_ORBIT_LIST(k), Q_2x2, P);
+                    startPose(k,:), V_CONST_LIST(k), W_ORBIT_LIST(k), Q_2x2, P, EPS_SIGMOID);
 end
 
 % Instance of Logger for data post processing, persistent over all files
@@ -34,7 +35,7 @@ Logger = DataLogger(CONST_PARAM, startPose, V_CONST_LIST, W_ORBIT_LIST);
 %% MAIN
 %% Centralized Controller %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if(CONST_PARAM.MODE == "Centralized")
-    centralCom = Centralized_Controller(CONST_PARAM.N_AGENT, CONST_PARAM.BOUNDARIES_COEFF, CONST_PARAM.BOUNDARIES_VERTEXES, Q_2x2);
+    centralCom = Centralized_Controller(CONST_PARAM.N_AGENT, CONST_PARAM.BOUNDARIES_COEFF, CONST_PARAM.BOUNDARIES_VERTEXES, Q_2x2, P, EPS_SIGMOID);
     
     for iteration = 1: CONST_PARAM.MAX_ITER
         %% Agent Move

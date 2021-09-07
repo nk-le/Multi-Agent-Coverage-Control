@@ -27,12 +27,14 @@ classdef Centralized_Controller < handle
         currentInfo
         
         % Control Parameter
+        P
         Q_2x2
+        EPS_SIGMOID
     end
 
     methods
         %% Initialization constant variables
-        function obj = Centralized_Controller(nAgent, bndCoeff, bndVertexes, Q_2x2)
+        function obj = Centralized_Controller(nAgent, bndCoeff, bndVertexes, Q_2x2, P, EPS_SIGMOID)
             % Default empty variables
             obj.nAgent = nAgent;
             obj.boundariesVertexes = bndVertexes;
@@ -40,6 +42,8 @@ classdef Centralized_Controller < handle
             obj.xrange = max(bndVertexes(:,1));
             obj.yrange = max(bndVertexes(:,2));
             obj.Q_2x2 = Q_2x2;
+            obj.P = P;
+            obj.EPS_SIGMOID = EPS_SIGMOID;
         end   
         
         %% Assign the parameters for each controller
@@ -148,8 +152,6 @@ classdef Centralized_Controller < handle
             
             %% Compute the control output
             %% Adjustable variable
-            epsSigmoid = 3;
-            mu = 3; % Control gain %% ADJUST THE CONTROL GAIN HERE
             sigmoid_func = @(x,eps) x / (abs(x) + eps);  
             
             %% Compute the control policy
@@ -160,7 +162,7 @@ classdef Centralized_Controller < handle
                 sinTheta = sin(curPose_3D(thisAgent,3)); 
                 dVkx = Info.AgentReport(thisAgent).MyInfo.LyapunovState.dVk.x;
                 dVky = Info.AgentReport(thisAgent).MyInfo.LyapunovState.dVk.y;
-                ControlInput(thisAgent) = w0 + mu * w0 * sigmoid_func(dVkx * cosTheta + dVky * sinTheta, epsSigmoid); 
+                ControlInput(thisAgent) = w0 + obj.P * w0 * sigmoid_func(dVkx * cosTheta + dVky * sinTheta, obj.EPS_SIGMOID); 
                 Info.AgentReport(thisAgent).MyInfo.ControlInput.w = ControlInput(thisAgent);
             end
         end

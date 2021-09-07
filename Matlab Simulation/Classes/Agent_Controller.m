@@ -55,7 +55,7 @@ classdef Agent_Controller < handle
     
     methods
         %% Initalize class handler
-        function obj = Agent_Controller(dt, botID, coverage_region_coeff, initPose_3d, V_CONST, W_ORBIT, i_Q_2x2, i_P)
+        function obj = Agent_Controller(dt, botID, coverage_region_coeff, initPose_3d, V_CONST, W_ORBIT, i_Q_2x2, i_P, epsSigmoid)
             assert(dt~=0);
             obj.dt = dt;
             obj.w = 0;            
@@ -189,10 +189,9 @@ classdef Agent_Controller < handle
             
             %% Adjustable variable --> Will move later to constant
             epsSigmoid = 3;
-            mu = 3; % Control gain %% ADJUST THE CONTROL GAIN HERE
             sigmoid_func = @(x,eps) x / (abs(x) + eps);              
             %% Compute the control policy
-            wOut = obj.W_ORBIT + mu * obj.W_ORBIT * sigmoid_func(dV_dzk_total' * [cos(obj.AgentPose_3d(3)) ;sin(obj.AgentPose_3d(3))], epsSigmoid); 
+            wOut = obj.W_ORBIT + obj.P * obj.W_ORBIT * sigmoid_func(dV_dzk_total' * [cos(obj.AgentPose_3d(3)) ;sin(obj.AgentPose_3d(3))], epsSigmoid); 
             %wOut = obj.w;
             %% Logging out
             Vk = obj.Vk;
