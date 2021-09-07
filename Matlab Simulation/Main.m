@@ -7,7 +7,7 @@ addpath(genpath('./Voronoi Debug Scripts'));
 
 
 format long;
-CONST_PARAM = Simulation_Parameter(2);
+CONST_PARAM = Simulation_Parameter(3);
 
 %% Some adjustable control parameter, will be moved to Simulation_Parameter later
 rng(4);
