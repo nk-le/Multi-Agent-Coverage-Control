@@ -25,22 +25,25 @@ classdef Centralized_Controller < handle
         % State variable
         lastInfo
         currentInfo
-      
+        
+        % Control Parameter
+        Q_2x2
     end
 
     methods
         %% Initialization constant variables
-        function obj = Centralized_Controller(nAgent, bndCoeff, bndVertexes)
+        function obj = Centralized_Controller(nAgent, bndCoeff, bndVertexes, Q_2x2)
             % Default empty variables
             obj.nAgent = nAgent;
             obj.boundariesVertexes = bndVertexes;
             obj.boundariesCoeff = bndCoeff;
             obj.xrange = max(bndVertexes(:,1));
             obj.yrange = max(bndVertexes(:,2));
+            obj.Q_2x2 = Q_2x2;
         end   
         
         %% Assign the parameters for each controller
-        function setupControlParameter(obj, eps, gamma, Q)
+        function setupControlParameter(obj, eps, gamma, Q_2x2)
             % TBD
         end
         
@@ -83,32 +86,27 @@ classdef Centralized_Controller < handle
             %% Update the Lyapunov state 
             for thisAgent = 1: Info.Common.nAgent
                 %% One shot computation before scanning over the adjacent matrix
-                %% Some adjustable variables Parameter
-                Q = eye(2);
-                tol = 0; % Tolerance to relax the state constraint
-
-                %% Computation
                 Ck = [Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.CVTCoord.x, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.CVTCoord.y]';
                 zk = [Info.AgentReport(thisAgent).MyInfo.Coord.x, Info.AgentReport(thisAgent).MyInfo.Coord.y]';
                 sum_1_div_Hj = 0;
                 sum_aj_HjSquared = 0;
                 for j = 1: size(obj.boundariesCoeff)
-                    hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1)*zk(1) + obj.boundariesCoeff(j,2)*zk(2) + tol)); 
+                    hj = (obj.boundariesCoeff(j,3)- (obj.boundariesCoeff(j,1)*zk(1) + obj.boundariesCoeff(j,2)*zk(2))); 
                     sum_1_div_Hj = sum_1_div_Hj + 1/hj;
                     sum_aj_HjSquared = sum_aj_HjSquared + [obj.boundariesCoeff(j,1); obj.boundariesCoeff(j,2)] / hj^2 / 2; 
                 end
-                Q_zDiff_div_hj = Q * (zk - Ck) * sum_1_div_Hj;
+                Q_zDiff_div_hj = obj.Q_2x2 * (zk - Ck) * sum_1_div_Hj;
                  
                 %% Compute the Partial dVi_dzi of itself
                 dCi_dzi = [Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCx_dVMx, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCx_dVMy;
                            Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCy_dVMx, Info.AgentReport(thisAgent).MyInfo.VoronoiInfo.partialCVT.dCy_dVMy];
                 
-                Vk = (zk - Ck)' * Q * (zk - Ck) * sum_1_div_Hj / 2;
+                Vk = (zk - Ck)' * obj.Q_2x2 * (zk - Ck) * sum_1_div_Hj / 2;
                 %% If Vk >= 0, the state constraint is already violated. Assert
                 assert(Vk >= 0);
                 V_BLF_List(thisAgent) = Vk;
                 
-                dVkdzk = (eye(2) - dCi_dzi')*Q_zDiff_div_hj + sum_aj_HjSquared * (zk - Ck)' * Q * (zk - Ck);
+                dVkdzk = (eye(2) - dCi_dzi')*Q_zDiff_div_hj + sum_aj_HjSquared * (zk - Ck)' * obj.Q_2x2 * (zk - Ck);
                 % Assign to the Info handle
                 Info.AgentReport(thisAgent).MyInfo.LyapunovState.V = Vk;
                 Info.AgentReport(thisAgent).MyInfo.LyapunovState.dV_dVM.x = dVkdzk(1);

@@ -3,78 +3,89 @@
 
 classdef Agent_Controller < handle
     properties
-        ID              % int
-        regionCoeff     % [a1 a2 b] --> a1*x + a2*y - b <= 0
-        
         %% Should be private
-        vConst          % const float
-        wOrbit          % const float
         w               % float: current angular velocity
-        v               % float: current heading velocity
+    end
+    
+    properties (SetAccess = immutable)
+        % Simulation time step
+        dt           
+        ID              % int
+        REG_COEFF     % [a1 a2 b] --> a1*x + a2*y - b <= 0
         
-        VoronoiInfo
+        V_CONST         
+        W_ORBIT  
+        Q_2x2
+        P
+    end
+    
+    
+    properties (Access = private)
+        %% Coordinates of agent, its virtual masses and the calculated CVT
         AgentPose_3d = zeros(3,1)         % [x y theta]
         CVTCoord_2d = zeros(2,1)
         VMCoord_2d = zeros(2,1);
-        dVkdzk
-        dCkdzk
-        Vk
-    end
-    
-    properties (Access = private)
-        dt              % Simulation time step
-        received_VoronoiPartitionInfo
-        published_dC_neighbor
-        Local_dVkdzi_List
-        
-        %% Save the last result to evaluate the computation of the partial derivative
-        prev_dCkdzk
-        prev_dVkdzk
-        prev_Vk
+        % Save the last computed result to evaluate the calculation
         prev_CVTCoord_2d
         prev_AgentPose_3d
         prev_VMCoord_2d 
+        
+        %% Obtained Voronoi partitions from the centralized Voronoi computer (Simulation)
+        received_VoronoiPartitionInfo
         prev_received_VoronoiPartitionInfo
+        
+        %% Computed partial derivative of CVT related to the adjacent agents
+        dCkdzk
+        published_dC_neighbor
+        prev_dCkdzk
         prev_published_dC_neighbor
+
+        %% Computed partial derivative of Lyapunov function
+        dVkdzk
+        Vk
+        Local_dVkdzi_List
+        prev_dVkdzk
+        prev_Vk
         prev_Local_dVkdzi_List
         
-        %% For debugging only
-        prev_dVk_dzi_List
+        %% For debugging only, these results are computed but only used internally
         dVk_dzi_List
+        prev_dVk_dzi_List
     end
     
     methods
         %% Initalize class handler
-        function obj = Agent_Controller(dt, botID, coverageRegionCoeff, initPose_3d, v0, w0)
+        function obj = Agent_Controller(dt, botID, coverage_region_coeff, initPose_3d, V_CONST, W_ORBIT, i_Q_2x2, i_P)
             assert(dt~=0);
             obj.dt = dt;
-            obj.v = 0;
-            obj.w = 0;
-            
+            obj.w = 0;            
             obj.ID = botID;
-            obj.regionCoeff = coverageRegionCoeff;
-            obj.vConst = v0;
-            obj.wOrbit = w0;
+            obj.REG_COEFF = coverage_region_coeff;
+            obj.V_CONST = V_CONST;
+            obj.W_ORBIT = W_ORBIT;
+            obj.Q_2x2 = i_Q_2x2;
+            obj.P = i_P;
             
             %% Update initial position and the virtual center
             obj.AgentPose_3d(:) = initPose_3d(:);
-            obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.vConst/obj.wOrbit) * sin(obj.AgentPose_3d(3)); 
-            obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.vConst/obj.wOrbit) * cos(obj.AgentPose_3d(3)); 
+            obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.V_CONST/obj.W_ORBIT) * sin(obj.AgentPose_3d(3)); 
+            obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.V_CONST/obj.W_ORBIT) * cos(obj.AgentPose_3d(3)); 
         end
 
         %% Simulate dynamic model 
         % Call this function once every time the control policy is updated
         % to simulate the movement.
-        function move(obj) 
+        function move(obj, calc_w) 
+            obj.w = calc_w;
             % Unicycle Dynamic
             obj.prev_AgentPose_3d = obj.AgentPose_3d;
-            obj.AgentPose_3d(1) = obj.AgentPose_3d(1) + obj.dt * (obj.vConst * cos(obj.AgentPose_3d(3)));
-            obj.AgentPose_3d(2) = obj.AgentPose_3d(2) + obj.dt * (obj.vConst * sin(obj.AgentPose_3d(3)));
+            obj.AgentPose_3d(1) = obj.AgentPose_3d(1) + obj.dt * (obj.V_CONST * cos(obj.AgentPose_3d(3)));
+            obj.AgentPose_3d(2) = obj.AgentPose_3d(2) + obj.dt * (obj.V_CONST * sin(obj.AgentPose_3d(3)));
             obj.AgentPose_3d(3) = obj.AgentPose_3d(3) + obj.dt * obj.w;
             %% Update the virtual mass
             obj.prev_VMCoord_2d = obj.VMCoord_2d;
-            obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.vConst/obj.wOrbit) * sin(obj.AgentPose_3d(3)); 
-            obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.vConst/obj.wOrbit) * cos(obj.AgentPose_3d(3)); 
+            obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.V_CONST/obj.W_ORBIT) * sin(obj.AgentPose_3d(3)); 
+            obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.V_CONST/obj.W_ORBIT) * cos(obj.AgentPose_3d(3)); 
         end
         
         function [CVT, dCk_dzi_For_Neighbor] = computePartialDerivativeCVT(obj, i_received_VoronoiPartitionInfo)
@@ -145,8 +156,7 @@ classdef Agent_Controller < handle
             format long;
            
             %% Compute the partial derivate of Lyapunov from the received partial derivative of CVTs from adjacent agents
-            Q = eye(2);
-            [obj.Vk, obj.dVkdzk] = Lyapunov_Self_PD_Computation(obj.VMCoord_2d, obj.CVTCoord_2d, obj.dCkdzk , Q, obj.regionCoeff(:,1:2), obj.regionCoeff(:,3));         
+            [obj.Vk, obj.dVkdzk] = Lyapunov_Self_PD_Computation(obj.VMCoord_2d, obj.CVTCoord_2d, obj.dCkdzk , obj.Q_2x2, obj.REG_COEFF(:,1:2), obj.REG_COEFF(:,3));         
             assert(obj.Vk >= 0);
             %% This is for debugging the changes of the Lyapunov Partial derivative
             obj.prev_dVk_dzi_List = obj.dVk_dzi_List;
@@ -159,7 +169,7 @@ classdef Agent_Controller < handle
                         [~, ~, zk, Ck, dCkdzi_2x2] = obj.published_dC_neighbor(t).getValue();
                         [~, ~, zi, Ci, dCidzk_2x2] = report{i}.getValue();
                         dVk_dzi = Lyapunov_Adjacent_PD_Computation(obj.VMCoord_2d, obj.CVTCoord_2d, ...
-                                                                    dCkdzi_2x2 , Q, obj.regionCoeff(:,1:2), obj.regionCoeff(:,3));
+                                                                    dCkdzi_2x2 , obj.Q_2x2, obj.REG_COEFF(:,1:2), obj.REG_COEFF(:,3));
                         obj.dVk_dzi_List{i} = {rxID, zi, dVk_dzi};  
                         break;
                     end
@@ -171,7 +181,7 @@ classdef Agent_Controller < handle
             dV_Accum_Adjacent_Term = zeros(2,1);
             for i = 1: numel(report)
                 [~, ~, zi, Ci, dCidzk_2x2] = report{i}.getValue();
-                [tmp_dV_dAdj] = Lyapunov_Adjacent_PD_Computation(zi, Ci, dCidzk_2x2 , Q, obj.regionCoeff(:,1:2), obj.regionCoeff(:,3));
+                [tmp_dV_dAdj] = Lyapunov_Adjacent_PD_Computation(zi, Ci, dCidzk_2x2 , obj.Q_2x2, obj.REG_COEFF(:,1:2), obj.REG_COEFF(:,3));
                 dV_Accum_Adjacent_Term = dV_Accum_Adjacent_Term + tmp_dV_dAdj;    
                 obj.Local_dVkdzi_List(i) = Struct_Neighbor_CVT_PD_Extended(report{i}, tmp_dV_dAdj);
             end
@@ -182,8 +192,8 @@ classdef Agent_Controller < handle
             mu = 3; % Control gain %% ADJUST THE CONTROL GAIN HERE
             sigmoid_func = @(x,eps) x / (abs(x) + eps);              
             %% Compute the control policy
-            obj.w = obj.wOrbit + mu * obj.wOrbit * sigmoid_func(dV_dzk_total' * [cos(obj.AgentPose_3d(3)) ;sin(obj.AgentPose_3d(3))], epsSigmoid); 
-            wOut = obj.w;
+            wOut = obj.W_ORBIT + mu * obj.W_ORBIT * sigmoid_func(dV_dzk_total' * [cos(obj.AgentPose_3d(3)) ;sin(obj.AgentPose_3d(3))], epsSigmoid); 
+            %wOut = obj.w;
             %% Logging out
             Vk = obj.Vk;
         end
@@ -197,23 +207,23 @@ classdef Agent_Controller < handle
             
             %% Some temporary parameter here
             gamma = 5;
-            obj.wOrbit = 0.4;
+            obj.W_ORBIT = 0.4;
             sigmoid_func = @(x,eps) x / (abs(x) + eps);  
             epsSigmoid = 10;
-            calc_W = obj.wOrbit + gamma * obj.wOrbit * obj.vConst *sigmoid_func((obj.VMCoord_2d - obj.CVTCoord_2d)' * [cos(obj.AgentPose_3d(3)) ; sin(obj.AgentPose_3d(3))],epsSigmoid); 
+            calc_W = obj.W_ORBIT + gamma * obj.W_ORBIT * obj.V_CONST *sigmoid_func((obj.VMCoord_2d - obj.CVTCoord_2d)' * [cos(obj.AgentPose_3d(3)) ; sin(obj.AgentPose_3d(3))],epsSigmoid); 
             
             % Predict the next state            
             predict_Pose_3d = zeros(3,1);
             predict_Pose_VM = zeros(2,1);
-            predict_Pose_3d(1) = obj.AgentPose_3d(1) + obj.dt * (obj.vConst * cos(obj.AgentPose_3d(3)));
-            predict_Pose_3d(2) = obj.AgentPose_3d(2) + obj.dt * (obj.vConst * sin(obj.AgentPose_3d(3)));
+            predict_Pose_3d(1) = obj.AgentPose_3d(1) + obj.dt * (obj.V_CONST * cos(obj.AgentPose_3d(3)));
+            predict_Pose_3d(2) = obj.AgentPose_3d(2) + obj.dt * (obj.V_CONST * sin(obj.AgentPose_3d(3)));
             predict_Pose_3d(3) = obj.AgentPose_3d(3) + obj.dt * calc_W;
-            predict_Pose_VM(1) = predict_Pose_3d(1) - (obj.vConst/obj.wOrbit) * sin(predict_Pose_3d(3)); 
-            predict_Pose_VM(2) = predict_Pose_3d(2) + (obj.vConst/obj.wOrbit) * cos(predict_Pose_3d(3)); 
+            predict_Pose_VM(1) = predict_Pose_3d(1) - (obj.V_CONST/obj.W_ORBIT) * sin(predict_Pose_3d(3)); 
+            predict_Pose_VM(2) = predict_Pose_3d(2) + (obj.V_CONST/obj.W_ORBIT) * cos(predict_Pose_3d(3)); 
             
             isValid = true;
-            for j = 1: size(obj.regionCoeff, 1)
-                if(obj.regionCoeff(j,3)- (obj.regionCoeff(j,1:2) * predict_Pose_VM) <= 0)
+            for j = 1: size(obj.REG_COEFF, 1)
+                if(obj.REG_COEFF(j,3)- (obj.REG_COEFF(j,1:2) * predict_Pose_VM) <= 0)
                    isValid = false; 
                 end
             end
@@ -222,7 +232,7 @@ classdef Agent_Controller < handle
                 obj.w = calc_W;
             else
                 %disp("OUT BOUND ALERT");
-                obj.w = obj.wOrbit;
+                obj.w = obj.W_ORBIT;
             end
         end 
         

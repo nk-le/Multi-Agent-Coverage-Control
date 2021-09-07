@@ -9,43 +9,45 @@ addpath(genpath('./Voronoi Debug Scripts'));
 format long;
 CONST_PARAM = Simulation_Parameter(1);
 
-%% Agent handler
+%% Some adjustable control parameter, will be moved to Simulation_Parameter later
 rng(4);
-vConstList = 12 .* ones(1,CONST_PARAM.N_AGENT);
-wOrbitList = 0.8 .* ones(1,CONST_PARAM.N_AGENT);
-%centerCoord = [100, 100];    % deploy all agents near this coord
-rXY = 100;                   % agents formualates a circle at the beginning
+V_CONST_LIST = 5 .* ones(1,CONST_PARAM.N_AGENT);
+W_ORBIT_LIST = 0.8 .* ones(1,CONST_PARAM.N_AGENT);
+Q_2x2 = 2 * eye(2);
+P = 1;
+rXY = 30;                   % agents formualates a circle at the beginning
 startPose = zeros(CONST_PARAM.N_AGENT, 3);
 startPose(:,1) = rXY.*rand(CONST_PARAM.N_AGENT,1); %x
 startPose(:,2) = rXY.*rand(CONST_PARAM.N_AGENT,1); %y
 startPose(:,3) = zeros(CONST_PARAM.N_AGENT,1); %theta
 agentHandle = Agent_Controller.empty(CONST_PARAM.N_AGENT, 0);
+
+%% Agent handler
 for k = 1 : CONST_PARAM.N_AGENT
-    agentHandle(k) = Agent_Controller(CONST_PARAM.TIME_STEP, CONST_PARAM.ID_LIST(k), CONST_PARAM.BOUNDARIES_COEFF, startPose(k,:), vConstList(k), wOrbitList(k));
+    agentHandle(k) = Agent_Controller(CONST_PARAM.TIME_STEP, CONST_PARAM.ID_LIST(k), CONST_PARAM.BOUNDARIES_COEFF, ...
+                    startPose(k,:), V_CONST_LIST(k), W_ORBIT_LIST(k), Q_2x2, P);
 end
 
 % Instance of Logger for data post processing, persistent over all files
-Logger = DataLogger(CONST_PARAM, startPose, vConstList, wOrbitList);
+Logger = DataLogger(CONST_PARAM, startPose, V_CONST_LIST, W_ORBIT_LIST);
 
 %% MAIN
 %% Centralized Controller %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if(CONST_PARAM.MODE == "Centralized")
-    centralCom = Centralized_Controller(CONST_PARAM.N_AGENT, CONST_PARAM.BOUNDARIES_COEFF, CONST_PARAM.BOUNDARIES_VERTEXES);
+    centralCom = Centralized_Controller(CONST_PARAM.N_AGENT, CONST_PARAM.BOUNDARIES_COEFF, CONST_PARAM.BOUNDARIES_VERTEXES, Q_2x2);
     
     for iteration = 1: CONST_PARAM.MAX_ITER
         %% Agent Move
         newPose_3d = zeros(CONST_PARAM.N_AGENT, 3);
         newPoseVM_2d = zeros(CONST_PARAM.N_AGENT, 2);
         for k = 1: CONST_PARAM.N_AGENT
-            newPose_3d(k,:) = agentHandle(k).AgentPose_3d(:);
-            newPoseVM_2d(k,:) = agentHandle(k).VMCoord_2d(:);
+            [newPose_3d(k,:), newPoseVM_2d(k,:)] =  agentHandle(k).getPose();  
         end
 
-        [Info, poseCVT_2D, ControlOutput, V_BLF_List] = centralCom.updateCoverage(newPose_3d, newPoseVM_2d, wOrbitList);
+        [Info, poseCVT_2D, ControlOutput, V_BLF_List] = centralCom.updateCoverage(newPose_3d, newPoseVM_2d, W_ORBIT_LIST);
 
         for k = 1: CONST_PARAM.N_AGENT
-            agentHandle(k).w = ControlOutput(k);
-            agentHandle(k).move();
+            agentHandle(k).move(ControlOutput(k));
         end
 
         % Displaying for debugging
@@ -99,9 +101,8 @@ else
                % Barrier Lyapunov based controller 
                [Vk_List(k), ControlOutput(k)] = agentHandle(k).computeControlInput(report);
                % Controller proposed by Qingchen
-               %[Vk_List(k), ControlOutput(k)] = agentHandle(k).computeControlSimple(); % This
-               
-               agentHandle(k).move();
+               %[Vk_List(k), ControlOutput(k)] = agentHandle(k).computeControlSimple(); 
+               agentHandle(k).move(ControlOutput(k));
            else
                % Pass through so
                error("Unavailable information required by agent %d", CONST_PARAM.ID_LIST(k));

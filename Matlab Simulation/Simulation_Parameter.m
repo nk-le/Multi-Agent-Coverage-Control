@@ -5,10 +5,11 @@ classdef Simulation_Parameter < handle
         N_AGENT = 6;
         %% Simulation Mode
         MODE = "Centralized";
+        
         %MODE = "Decentralized";
     end
     
-    properties
+    properties (SetAccess = immutable)
         REGION_MAX_X
         REGION_MAX_Y
         BOUNDARIES_VERTEXES      
