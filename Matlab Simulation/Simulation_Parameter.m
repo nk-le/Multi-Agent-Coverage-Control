@@ -43,7 +43,7 @@ classdef Simulation_Parameter < handle
                                         1 , 0, obj.REGION_MAX_X; ...
                                         0 , 1, obj.REGION_MAX_Y; ...
                                         0 , -1, 0];
-            %% Triangle   
+            %% Triangle (special)
             elseif(RegionSelection == 2)
                 obj.REGION_MAX_X = 600;
                 obj.REGION_MAX_Y = 600;
