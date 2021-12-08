@@ -8,6 +8,9 @@ class dC_dz:
     dCy_dzx = 0 
     dCy_dzy = 0
 
+    def print(self):
+        print("dCx_dzx", self.dCx_dzx, "dCx_dzy", self.dCx_dzy, "dCy_dzx", self.dCy_dzx, "dCy_dzy", self.dCy_dzy)
+
 
 def dq__dZix_n_func(qX, ziX, dZiZj):
     return (qX - ziX) / dZiZj
@@ -34,8 +37,24 @@ def dCix_dzix_func(t, v1x, v2x, ziX, dZiZj, dqTodtParam):
 
 def dCiy_dzix_func(t, v1x, v2x, v1y, v2y, ziX, dZiZj, dqTodtParam):
     return YtoT_func(t,v1y,v2y) * dq__dZix_n_func(XtoT_func(t,v1x,v2x), ziX, dZiZj) * dqTodtParam
- 
 
+def dCix_dziy_func(t, v1x, v2x, v1y, v2y, ziY, dZiZj, dqTodtParam):
+    return XtoT_func(t,v1x,v2x) * dq__dZiy_n_func(YtoT_func(t,v1y,v2y), ziY, dZiZj) * dqTodtParam
+
+def dCiy_dziy_func(t, v1y, v2y, ziY, dZiZj, dqTodtParam):
+    return YtoT_func(t,v1y,v2y) * dq__dZiy_n_func(YtoT_func(t,v1y,v2y), ziY, dZiZj) * dqTodtParam
+  
+def dCix_dzjx_func(t, v1x, v2x, zjx, dZiZj, dqTodtParam):
+    return XtoT_func(t,v1x,v2x) * dq__dZjx_n_func(XtoT_func(t,v1x,v2x), zjx, dZiZj) * dqTodtParam
+
+def dCiy_dzjx_func(t, v1x, v2x, v1y, v2y, zjx, dZiZj, dqTodtParam):
+    return YtoT_func(t,v1y,v2y) * dq__dZjx_n_func(XtoT_func(t,v1x,v2x), zjx, dZiZj) * dqTodtParam
+
+def dCix_dzjy_func(t, v1x, v2x, v1y, v2y, zjy, dZiZj, dqTodtParam):
+    return XtoT_func(t,v1x,v2x) * dq__dZjy_n_func(YtoT_func(t,v1y,v2y), zjy, dZiZj) * dqTodtParam
+
+def dCiy_dzjy_func(t, v1y, v2y, zjy, dZiZj, dqTodtParam):
+    return YtoT_func(t,v1y,v2y) * dq__dZjy_n_func(YtoT_func(t,v1y,v2y), zjy, dZiZj) * dqTodtParam
 
 def Voronoi2D_calCVTPartialDerivative(thisCoord_2d, thisCVT_2d, mVi, adjCoord_2d, vertex1_2d, vertex2_2d):
     # Function definition for partial derivative
@@ -53,22 +72,28 @@ def Voronoi2D_calCVTPartialDerivative(thisCoord_2d, thisCVT_2d, mVi, adjCoord_2d
     dCix_dzix_firstTermInt = integrate.quad(dCix_dzix_func, 0, 1, args = (v1x, v2x, thisCoord_2d[0], distanceZiZj, dqTodtParam))
     dCiy_dzix_firstTermInt = integrate.quad(dCiy_dzix_func, 0, 1, args = (v1x, v2x, v1y, v2y, thisCoord_2d[0], distanceZiZj, dqTodtParam))
     dCix_dzix = (dCix_dzix_firstTermInt[0] - dCi_dzix_secondTermInt[0] * thisCVT_2d[0])/ mVi
-    dCiy_dzix = (dCiy_dzix_firstTermInt[0] - dCi_dzix_secondTermInt[0] * thisCVT_2d[1]) / mVi
+    dCiy_dzix = (dCiy_dzix_firstTermInt[0] - dCi_dzix_secondTermInt[0] * thisCVT_2d[1])/ mVi
     
     # dCi_dziy
     dCi_dziy_secondTermInt = integrate.quad(lambda t: dq__dZiy_n_func(YtoT_func(t, v1y, v2y), thisCoord_2d[1], distanceZiZj) * dqTodtParam , 0, 1)
-    dCix_dziy = (integrate.quad(lambda t: XtoT_func(t,v1x,v2x) * dq__dZiy_n_func(YtoT_func(t,v1y,v2y), thisCoord_2d[1], distanceZiZj) * dqTodtParam, 0, 1) - dCi_dziy_secondTermInt[0] * thisCVT_2d[0]) / mVi
-    dCiy_dziy = (integrate.quad(lambda t: YtoT_func(t,v1y,v2y) * dq__dZiy_n_func(YtoT_func(t,v1y,v2y), thisCoord_2d[1], distanceZiZj) * dqTodtParam, 0, 1) - dCi_dziy_secondTermInt[0] * thisCVT_2d[1]) / mVi
+    dCix_dziy_firstTermInt = integrate.quad(dCix_dziy_func, 0, 1, args = (v1x, v2x, v1y, v2y, thisCoord_2d[1], distanceZiZj, dqTodtParam))
+    dCiy_dziy_firstTermInt = integrate.quad(dCiy_dziy_func, 0, 1, args = (v1y, v2y, thisCoord_2d[1], distanceZiZj, dqTodtParam))
+    dCix_dziy = (dCix_dziy_firstTermInt[0] - dCi_dziy_secondTermInt[0] * thisCVT_2d[0]) / mVi
+    dCiy_dziy = (dCiy_dziy_firstTermInt[0] - dCi_dziy_secondTermInt[0] * thisCVT_2d[1]) / mVi
     
     # dCi_dzjx
     dCi_dzjx_secondTermInt = integrate.quad(lambda t: dq__dZjx_n_func(XtoT_func(t,v1x, v2x), adjCoord_2d[0], distanceZiZj) * dqTodtParam , 0, 1 )
-    dCix_dzjx = (integrate.quad(lambda t: XtoT_func(t,v1x,v2x) * dq__dZjx_n_func(XtoT_func(t,v1x,v2x), adjCoord_2d[0], distanceZiZj) * dqTodtParam, 0, 1) - dCi_dzjx_secondTermInt[0] * thisCVT_2d[0]) / mVi
-    dCiy_dzjx = (integrate.quad(lambda t: YtoT_func(t,v1y,v2y) * dq__dZjx_n_func(XtoT_func(t,v1x,v2x), adjCoord_2d[0], distanceZiZj) * dqTodtParam, 0, 1) - dCi_dzjx_secondTermInt[0] * thisCVT_2d[1]) / mVi
-    
+    dCix_dzjx_firstTermInt = integrate.quad(dCix_dzjx_func , 0, 1, args = (v1x, v2x, adjCoord_2d[0], distanceZiZj, dqTodtParam))
+    dCiy_dzjx_firstTermInt = integrate.quad(dCiy_dzjx_func , 0, 1, args = (v1x, v2x, v1y, v2y, adjCoord_2d[0], distanceZiZj, dqTodtParam)) 
+    dCix_dzjx = (dCix_dzjx_firstTermInt[0] - dCi_dzjx_secondTermInt[0] * thisCVT_2d[0]) / mVi
+    dCiy_dzjx = (dCiy_dzjx_firstTermInt[0] - dCi_dzjx_secondTermInt[0] * thisCVT_2d[1]) / mVi
+
     # dCi_dzjy
     dCi_dzjy_secondTermInt = integrate.quad(lambda t: dq__dZjy_n_func(YtoT_func(t, v1y, v2y), adjCoord_2d[1], distanceZiZj) * dqTodtParam , 0, 1 )
-    dCix_dzjy =  (integrate.quad(lambda t: XtoT_func(t,v1x,v2x) * dq__dZjy_n_func(YtoT_func(t,v1y,v2y), adjCoord_2d[1], distanceZiZj) * dqTodtParam, 0, 1) - dCi_dzjy_secondTermInt[0] * thisCVT_2d[0]) / mVi
-    dCiy_dzjy =  (integrate.quad(lambda t: YtoT_func(t,v1y,v2y) * dq__dZjy_n_func(YtoT_func(t,v1y,v2y), adjCoord_2d[1], distanceZiZj) * dqTodtParam, 0, 1) - dCi_dzjy_secondTermInt[0] * thisCVT_2d[1]) / mVi
+    dCix_dzjy_firstTermInt =  integrate.quad(dCix_dzjy_func , 0, 1, args = (v1x, v2x, v1y, v2y, adjCoord_2d[1], distanceZiZj, dqTodtParam)) 
+    dCiy_dzjy_firstTermInt =  integrate.quad(dCiy_dzjy_func , 0, 1, args = (v1y, v2y, adjCoord_2d[1], distanceZiZj, dqTodtParam)) 
+    dCix_dzjy = (dCix_dzjy_firstTermInt[0] - dCi_dzjy_secondTermInt[0] * thisCVT_2d[0]) / mVi
+    dCiy_dzjy = (dCiy_dzjy_firstTermInt[0] - dCi_dzjy_secondTermInt[0] * thisCVT_2d[1]) / mVi
     
     # Return
     dCi_dzi_AdjacentJ = dC_dz()
@@ -82,3 +107,6 @@ def Voronoi2D_calCVTPartialDerivative(thisCoord_2d, thisCVT_2d, mVi, adjCoord_2d
     dCi_dzj.dCx_dzy = dCix_dzjy
     dCi_dzj.dCy_dzx = dCiy_dzjx
     dCi_dzj.dCy_dzy = dCiy_dzjy
+
+    print("Hi")
+    return [dCi_dzi_AdjacentJ, dCi_dzj]
