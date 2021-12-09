@@ -2,15 +2,30 @@ import math
 import numpy as np
 import scipy.integrate as integrate
 
-class dC_dz:
-    dCx_dzx = 0
-    dCx_dzy = 0 
-    dCy_dzx = 0 
-    dCy_dzy = 0
+class grad_2d:
+    dx_dx = 0
+    dx_dy = 0 
+    dy_dx = 0 
+    dy_dy = 0
+
+    def __init__(self, mat2x2):
+        self.dx_dx = mat2x2[0,0]
+        self.dx_dy = mat2x2[0,1]
+        self.dy_dx = mat2x2[1,0]
+        self.dy_dy = mat2x2[1,1]
+        pass
+
+   
+    def npForm(self):
+        return np.array([[self.dx_dx, self.dx_dy],
+                        [self.dy_dx, self.dy_dy]])
+
+    def __call__(self):
+        return np.array([[self.dx_dx, self.dx_dy],
+                        [self.dy_dx, self.dy_dy]])
 
     def print(self):
-        print("dCx_dzx", self.dCx_dzx, "dCx_dzy", self.dCx_dzy, "dCy_dzx", self.dCy_dzx, "dCy_dzy", self.dCy_dzy)
-
+        print("dCx_dzx", self.dx_dx, "dCx_dzy", self.dx_dy, "dCy_dzx", self.dy_dx, "dCy_dzy", self.dy_dy)
 
 def dq__dZix_n_func(qX, ziX, dZiZj):
     return (qX - ziX) / dZiZj
@@ -96,17 +111,7 @@ def Voronoi2D_calCVTPartialDerivative(thisCoord_2d, thisCVT_2d, mVi, adjCoord_2d
     dCiy_dzjy = (dCiy_dzjy_firstTermInt[0] - dCi_dzjy_secondTermInt[0] * thisCVT_2d[1]) / mVi
     
     # Return
-    dCi_dzi_AdjacentJ = dC_dz()
-    dCi_dzi_AdjacentJ.dCx_dzx = dCix_dzix
-    dCi_dzi_AdjacentJ.dCx_dzy = dCix_dziy
-    dCi_dzi_AdjacentJ.dCy_dzx = dCiy_dzix
-    dCi_dzi_AdjacentJ.dCy_dzy = dCiy_dziy
-
-    dCi_dzj = dC_dz()
-    dCi_dzj.dCx_dzx = dCix_dzjx
-    dCi_dzj.dCx_dzy = dCix_dzjy
-    dCi_dzj.dCy_dzx = dCiy_dzjx
-    dCi_dzj.dCy_dzy = dCiy_dzjy
-
-    print("Hi")
+    dCi_dzi_AdjacentJ = np.array([[dCix_dzix, dCix_dziy], [dCiy_dzix, dCiy_dziy]])
+    dCi_dzj = np.array([[dCix_dzjx, dCix_dzjy], [dCiy_dzjx, dCiy_dzjy]])
+    
     return [dCi_dzi_AdjacentJ, dCi_dzj]
