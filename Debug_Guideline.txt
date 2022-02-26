@@ -1,8 +1,8 @@
 The debug process is split into these parts
 
 1) Movement of agents: 
-constant heading velocity, computation of the virtual mass --> Agent_Controller.m --> move(), updateVirtualCenter()
 
+constant heading velocity, computation of the virtual mass --> Agent_Controller.m --> move(), updateVirtualCenter()
 2) Computation of Voronoi partition:
 Voronoi partitions and CVTs according to the virtual mass coordinate --> Centralized_Controller.m --> updateCoverage()
 """

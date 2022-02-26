@@ -32,7 +32,7 @@ classdef Simulation_Parameter < handle
            %             am1 am2 bm]
            %% Rectangle
            if(RegionSelection == 1)
-                obj.REGION_MAX_X = 200;
+                obj.REGION_MAX_X = 600;
                 obj.REGION_MAX_Y = 200;
                 obj.BOUNDARIES_VERTEXES = [ 0, 0; 
                                     0, obj.REGION_MAX_X; ...
