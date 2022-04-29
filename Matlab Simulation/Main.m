@@ -29,7 +29,7 @@ for k = 1 : SIM_PARAM.N_AGENT
 end
 
 % Instance of Logger for data post processing, persistent over all files
-Logger = DataLogger(SIM_PARAM, startPose, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
+Logger = DataLogger(SIM_PARAM, REGION_CONFIG, startPose, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
 
 %% MAIN
 
