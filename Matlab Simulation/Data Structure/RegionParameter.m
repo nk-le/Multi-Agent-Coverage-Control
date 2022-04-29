@@ -1,28 +1,16 @@
-classdef Simulation_Parameter < handle
-    properties (Constant)
-        TIME_STEP = 0.01;
-        MAX_ITER = 50000;
-        N_AGENT = 6;
-        %% Simulation Mode
-        MODE = "Decentralized";
-        
-        %MODE = "Decentralized";
-    end
+classdef RegionParameter
     
     properties (SetAccess = immutable)
         REGION_MAX_X
         REGION_MAX_Y
         BOUNDARIES_VERTEXES      
         BOUNDARIES_COEFF;
-        ID_LIST ;
     end
     
-    methods 
-       function obj = Simulation_Parameter(RegionSelection)
-           % Assigned specific IDs for each agents to clarify the coommunication protocol  
-           obj.ID_LIST = (1:obj.N_AGENT) * 10; % For examples: 10, 20, 30, ...
-           
-           % Modify region
+    
+    methods
+        function obj = RegionParameter(RegionSelection)
+             % Modify region
            % Declare the coverage region by givin
            %    Vertexes 
            %    Boundaries coefficient: aj1*x + aj2*y - b <= 0
@@ -72,12 +60,8 @@ classdef Simulation_Parameter < handle
                 obj.REGION_MAX_Y = max(obj.BOUNDARIES_VERTEXES(:,2));
            end
 
-            
-       end
+        end
+        
     end
-    
-    
-    
 end
-
 
