@@ -4,7 +4,7 @@ classdef Simulation_Parameter < handle
         MAX_ITER = 50000;
         N_AGENT = 6;
         %% Simulation Mode
-        MODE = "Centralized";
+        MODE = "Decentralized";
         
         %MODE = "Decentralized";
     end
