@@ -9,9 +9,7 @@ classdef SICoverageController < CoverageControllerBase
     methods
         
         function v = compute(obj, pIst_3, pSoll_3)            
-            v = obj.controlParam.P * (pSoll_3 - pIst_3);
-            v(v > 30) = 30;
-            v(v < -30) = -30;
+            v = obj.controlParam.P * (pSoll_3 - pIst_3)/norm(pSoll_3 - pIst_3);
         end
     end
 end

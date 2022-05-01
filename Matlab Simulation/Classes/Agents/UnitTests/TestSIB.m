@@ -8,6 +8,8 @@ addpath(genpath('./Voronoi Debug Scripts'));
 
 format long;
 SIM_PARAM = SimulationParameter();
+SIM_PARAM.set_n_agents(10);
+
 COVERAGE_PARAM = CoverageParameter();
 
 REGION_CONFIG = RegionParameter();
@@ -21,6 +23,7 @@ REGION_CONFIG.set_vertexes(vertexes);
 
 
 CONTROL_PARAM = ControlParameter();
+CONTROL_PARAM.P = 50;
 
 %% Some adjustable control parameter, will be moved to Simulation_Parameter later
 rng(4);
