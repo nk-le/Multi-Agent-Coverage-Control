@@ -6,6 +6,7 @@ classdef (Abstract) AgentBase < handle
     
     properties
         dt = SimulationParameter.TIME_STEP;
+        ID = -1
         
         coord_3
         attitude_3
@@ -13,11 +14,13 @@ classdef (Abstract) AgentBase < handle
     end
     
     methods
-        function obj = AgentBase(obj)
-            
+        function obj = AgentBase(id)
+            obj.ID = id;
         end
         
-        
+        function id = get_id(obj)
+           id = obj.ID;
+        end
     end
     
     methods (Abstract)

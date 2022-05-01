@@ -1,7 +1,7 @@
 %% Agent_Controller - distributed controller for unicycle agent
 %
 
-classdef UnicycleCoverageAgent < FixedWingBase
+classdef UnicycleCoverageAgent < FixedWingBase & CoverageAgentBase
     properties
         %% Should be private
         % w               % float: current angular velocity
@@ -14,15 +14,11 @@ classdef UnicycleCoverageAgent < FixedWingBase
     properties (SetAccess = immutable)
         % Simulation time step
         %dt           
-        ID              % int        
         regionParam
         %controlParam
     end
     
     properties (Access = private)
-        %% Obtained Voronoi partitions from the centralized Voronoi computer (Simulation)
-        received_VoronoiPartitionInfo
-        prev_received_VoronoiPartitionInfo
         
         CVTCoord_2d = zeros(2,1)
         % Save the last computed result to evaluate the calculation
@@ -41,7 +37,7 @@ classdef UnicycleCoverageAgent < FixedWingBase
         %% Initalize class handler
         %function obj = Agent_Controller(dt, botID, coverage_region_coeff, initPose_3d, )
         function obj = UnicycleCoverageAgent(dt, botID, initPose_3d, regionParam, controlParam)
-            obj@FixedWingBase(controlParam, initPose_3d);
+            obj@FixedWingBase(botID, controlParam, initPose_3d);
             
             obj.controller = BLFController(controlParam, regionParam);
             obj.voronoiComputer = VoronoiComputer(botID);
@@ -49,28 +45,31 @@ classdef UnicycleCoverageAgent < FixedWingBase
             assert(dt~=0);
             obj.dt = dt;
             obj.w = 0;            
-            obj.ID = botID;
             obj.regionParam = regionParam;
             obj.controlParam = controlParam;
         end
 
         function move(obj, w)
-            obj.w = w;
             move@FixedWingBase(obj, obj.controlParam.V_CONST, w);
         end
         
-        function [CVT, dCk_dzi_For_Neighbor] = computePartialDerivativeCVT(obj, i_received_VoronoiPartitionInfo)
-            assert(isa(i_received_VoronoiPartitionInfo, 'Struct_Voronoi_Partition_Info'));  
-            [assignedID, ~, ~] = i_received_VoronoiPartitionInfo.getValue();
-            assert(assignedID == obj.ID);
-            obj.prev_received_VoronoiPartitionInfo = obj.received_VoronoiPartitionInfo;
-            obj.received_VoronoiPartitionInfo = i_received_VoronoiPartitionInfo;
-            z_2d = obj.VMCoord_2d;
-            [CVT, dCk_dzi_For_Neighbor] = obj.voronoiComputer.computePartialDerivativeCVT(z_2d, i_received_VoronoiPartitionInfo);
+%         function [CVT, dCk_dzi_For_Neighbor] = computePartialDerivativeCVT(obj, i_received_VoronoiPartitionInfo)
+%             assert(isa(i_received_VoronoiPartitionInfo, 'Struct_Voronoi_Partition_Info'));  
+%             [assignedID, ~, ~] = i_received_VoronoiPartitionInfo.getValue();
+%             assert(assignedID == obj.ID);
+%             obj.prev_received_VoronoiPartitionInfo = obj.received_VoronoiPartitionInfo;
+%             obj.received_VoronoiPartitionInfo = i_received_VoronoiPartitionInfo;
+%             z_2d = obj.VMCoord_2d;
+%             [CVT, dCk_dzi_For_Neighbor] = obj.voronoiComputer.computePartialDerivativeCVT(z_2d, i_received_VoronoiPartitionInfo);
+%         end
+        
+        function z = get_voronoi_generator_2(obj)
+            z = obj.VMCoord_2d;
         end
 
         
-        function [Vk, wOut] = computeControlInput(obj, report)
+        
+        function [Vk, wOut] = compute_control_input(obj, report)
             assert(isa(report{1}, 'Struct_Neighbor_CVT_PD'));
             
             format long;

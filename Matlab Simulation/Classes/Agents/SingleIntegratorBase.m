@@ -1,22 +1,20 @@
-classdef SingleIntegratorBase < AgentBase
+classdef SingleIntegratorBase < AgentBase & CoverageAgentBase
     %SINGLEINTEGRATORAGENT Summary of this class goes here
     %   Detailed explanation goes here
     
     properties
-        Property1
+        velocity_3
     end
     
     methods
-        function obj = SingleIntegratorBase(inputArg1,inputArg2)
-            %SINGLEINTEGRATORAGENT Construct an instance of this class
-            %   Detailed explanation goes here
-            obj.Property1 = inputArg1 + inputArg2;
+        function obj = SingleIntegratorBase(id, initPose_3d)
+            obj@AgentBase(id);
+            obj.coord_3 = initPose_3d;
         end
         
-        function outputArg = method1(obj,inputArg)
-            %METHOD1 Summary of this method goes here
-            %   Detailed explanation goes here
-            outputArg = obj.Property1 + inputArg;
+        function obj = move(obj, v) 
+            obj.velocity_3 = v;
+            obj.coord_3 = obj.coord_3 + obj.velocity_3 * obj.dt;
         end
     end
 end

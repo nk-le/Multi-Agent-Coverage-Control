@@ -2,7 +2,7 @@ classdef CoverageControllerBase < ControllerBase
     
     properties
         regionParam 
-    
+        
     end
     
     methods

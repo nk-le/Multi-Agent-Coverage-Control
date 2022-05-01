@@ -15,11 +15,11 @@ CONTROL_PARAM = ControlParameter();
 %% Some adjustable control parameter, will be moved to Simulation_Parameter later
 rng(4);
 startPose = REGION_CONFIG.generate_start_pose(SIM_PARAM.N_AGENT);
-agentHandle = UnicycleCoverageAgent.empty(SIM_PARAM.N_AGENT, 0);
+agentHandle = SingleIntegratorAgent.empty(SIM_PARAM.N_AGENT, 0);
 
 %% Agent handler
 for k = 1 : SIM_PARAM.N_AGENT
-    agentHandle(k) = UnicycleCoverageAgent(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), startPose(k,:), REGION_CONFIG, CONTROL_PARAM);
+    agentHandle(k) = SingleIntegratorAgent(SIM_PARAM.ID_LIST(k), startPose(k,:), REGION_CONFIG, CONTROL_PARAM);
 end
 
 % Instance of Logger for data post processing, persistent over all files
@@ -37,13 +37,14 @@ for iteration = 1: SIM_PARAM.MAX_ITER
     %% Logging instances
     pose_3d_list = zeros(SIM_PARAM.N_AGENT, 3);
     CVT_2d_List = zeros(SIM_PARAM.N_AGENT, 2);
-    ControlOutput = zeros(SIM_PARAM.N_AGENT, 1);
+    ControlOutput = zeros(SIM_PARAM.N_AGENT, 3);
     Vk_List = zeros(SIM_PARAM.N_AGENT, 1);
     vmCmoord_2d_list = zeros(SIM_PARAM.N_AGENT, 2);
 
     %% Thread Voronoi Update - Agent interacts with the "nature" and receive the partitions information
     for k = 1: SIM_PARAM.N_AGENT
-       [pose_3d_list(k,:), vmCmoord_2d_list(k, :)] = agentHandle(k).getPose();
+       [pose_3d_list(k,:)] = agentHandle(k).getPose();
+        vmCmoord_2d_list(k, :) = pose_3d_list(k,1:2);
     end
     %% Update new coordinates to the Environment
     [v,c] = VoronoiCom.exec_partition(vmCmoord_2d_list, SIM_PARAM.ID_LIST);
@@ -68,10 +69,10 @@ for iteration = 1: SIM_PARAM.MAX_ITER
        %% Move
        if(isAvailable)
            % Barrier Lyapunov based controller 
-           [Vk_List(k), ControlOutput(k)] = agentHandle(k).compute_control_input(report);
            % Controller proposed by Qingchen
-           %[Vk_List(k), ControlOutput(k)] = agentHandle(k).computeControlSimple(); 
-           agentHandle(k).move(ControlOutput(k));
+           %[Vk_List(k), ControlOutput(k)] = agentHandle(k).computeControlSimple();
+           [Vk_List(k), ControlOutput(k,:)] = agentHandle(k).compute_control_input(report);
+           agentHandle(k).move(ControlOutput(k,:));
        else
            % Pass through so
            error("Unavailable information required by agent %d", SIM_PARAM.ID_LIST(k));
@@ -79,6 +80,6 @@ for iteration = 1: SIM_PARAM.MAX_ITER
     end
 
     %% Logging
-    Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, ControlOutput);
+    Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, zeros(SIM_PARAM.N_AGENT, 1));
     fprintf("Decentralized. Iter: %d. L: %f \n", iteration, sum(Vk_List)); 
 end

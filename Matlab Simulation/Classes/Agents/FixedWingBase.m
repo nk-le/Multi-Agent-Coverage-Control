@@ -15,7 +15,8 @@ classdef FixedWingBase < handle & AgentBase
     end
     
     methods
-        function obj = FixedWingBase(controlParam, startPose)
+        function obj = FixedWingBase(id, controlParam, startPose)
+            obj@AgentBase(id);
             obj.controlParam = controlParam;
             obj.AgentPose_3d = startPose;
             
