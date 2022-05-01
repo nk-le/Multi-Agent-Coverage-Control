@@ -6,6 +6,8 @@ classdef AgentController < FixedWingBase
         %% Should be private
         % w               % float: current angular velocity
         logger = LogHandle()
+        
+        controller
     end
     
     properties (SetAccess = immutable)
@@ -54,36 +56,18 @@ classdef AgentController < FixedWingBase
         %% Initalize class handler
         %function obj = Agent_Controller(dt, botID, coverage_region_coeff, initPose_3d, )
         function obj = AgentController(dt, botID, initPose_3d, regionParam, controlParam)
-            obj = obj@FixedWingBase(controlParam, initPose_3d);
+            obj@FixedWingBase(controlParam, initPose_3d);
+            
+            obj.controller = BLFController(controlParam, regionParam);
+            
             assert(dt~=0);
             obj.dt = dt;
             obj.w = 0;            
             obj.ID = botID;
             obj.regionParam = regionParam;
             obj.controlParam = controlParam;
-            
-            %% Update initial position and the virtual center
-            obj.AgentPose_3d(:) = initPose_3d(:);
-            obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * sin(obj.AgentPose_3d(3)); 
-            obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * cos(obj.AgentPose_3d(3)); 
         end
 
-        %% Simulate dynamic model 
-        % Call this function once every time the control policy is updated
-        % to simulate the movement.
-%         function move(obj, calc_w) 
-%             obj.w = calc_w;
-%             % Unicycle Dynamic
-%             obj.prev_AgentPose_3d = obj.AgentPose_3d;
-%             obj.AgentPose_3d(1) = obj.AgentPose_3d(1) + obj.dt * (obj.controlParam.V_CONST * cos(obj.AgentPose_3d(3)));
-%             obj.AgentPose_3d(2) = obj.AgentPose_3d(2) + obj.dt * (obj.controlParam.V_CONST * sin(obj.AgentPose_3d(3)));
-%             obj.AgentPose_3d(3) = obj.AgentPose_3d(3) + obj.dt * obj.w;
-%             %% Update the virtual mass
-%             obj.prev_VMCoord_2d = obj.VMCoord_2d;
-%             obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * sin(obj.AgentPose_3d(3)); 
-%             obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * cos(obj.AgentPose_3d(3)); 
-%         end
-        
         function move(obj, w)
             obj.w = w;
             move@FixedWingBase(obj, obj.controlParam.V_CONST, w);
@@ -146,10 +130,6 @@ classdef AgentController < FixedWingBase
              end
         end
 
-        function [Pose_3d, PoseVM_2d] = getPose(obj)
-            Pose_3d =  obj.AgentPose_3d;
-            PoseVM_2d = obj.VMCoord_2d;
-        end
         
         function [Vk, wOut] = computeControlInput(obj, report)
             assert(isa(report{1}, 'Struct_Neighbor_CVT_PD'));

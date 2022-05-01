@@ -18,8 +18,14 @@ classdef FixedWingBase < handle & AgentBase
         function obj = FixedWingBase(controlParam, startPose)
             obj.controlParam = controlParam;
             obj.AgentPose_3d = startPose;
+            
+            %% Update initial position and the virtual center
+            obj.AgentPose_3d(:) = startPose(:);
+            obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * sin(obj.AgentPose_3d(3)); 
+            obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * cos(obj.AgentPose_3d(3)); 
         end
 
+        %% Simulate dynamic model 
         function obj = move(obj, v, w) 
             obj.v = v;
             obj.w = w;
@@ -32,6 +38,11 @@ classdef FixedWingBase < handle & AgentBase
             obj.prev_VMCoord_2d = obj.VMCoord_2d;
             obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.v/obj.controlParam.W_ORBIT) * sin(obj.AgentPose_3d(3)); 
             obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.v/obj.controlParam.W_ORBIT) * cos(obj.AgentPose_3d(3)); 
+        end
+        
+        function [Pose_3d, PoseVM_2d] = getPose(obj)
+            Pose_3d =  obj.AgentPose_3d;
+            PoseVM_2d = obj.VMCoord_2d;
         end
     end
 end

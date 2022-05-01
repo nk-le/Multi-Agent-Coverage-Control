@@ -32,22 +32,29 @@ class FixedWingBase
 class UnicycleCoverageAgent
 class DroneCoverageAgent
 
-class BLFController
+'class BLFController
+' Interfaces
+Interface ControlParameter
 
 ' Relationship
 
 AgentBase <|-d- FixedWingBase
 AgentBase <|-d- SingleIntegratorBase
 
+ControllerBase --> ControlParameter
+AgentBase --> ControlParameter
+
 AgentBase -r-> ControllerBase
 CoverageControllerBase -u-|> ControllerBase
 
 UnicycleCoverageAgent -u-|> FixedWingBase
 UnicycleCoverageAgent -u-|> CoverageAgentBase
-CoverageAgentBase -[hidden]r-> FixedWingBase
+CoverageAgentBase -[hidden]r-> AgentBase
 
 DroneCoverageAgent -u-|> SingleIntegratorBase
 DroneCoverageAgent -u-|> CoverageAgentBase
 
-BLFController --|> CoverageControllerBase
+SafetyController -u-|> CoverageControllerBase
+SingleIntegratorController -u-> CoverageControllerBase
+
 @enduml
