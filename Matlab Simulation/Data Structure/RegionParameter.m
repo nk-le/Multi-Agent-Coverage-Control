@@ -1,6 +1,6 @@
 classdef RegionParameter < handle
     
-    properties (SetAccess = immutable)
+    properties
         REGION_MAX_X
         REGION_MAX_Y
         BOUNDARIES_VERTEXES      
@@ -10,8 +10,30 @@ classdef RegionParameter < handle
     
     methods
 
-        function obj = RegionParameter(RegionSelection)
-             % Modify region
+        function obj = RegionParameter()
+             
+        end
+        
+        function startPose = generate_start_pose(obj, n)
+            rXY = 200;      
+            startPose = zeros(n, 3);
+            startPose(:,1) = rXY.*rand(n,1); %x
+            startPose(:,2) = rXY.*rand(n,1); %y
+            startPose(:,3) = zeros(n,1); %theta 
+        end
+        
+        function set_vertexes(obj, vArr)
+            % Each row is one vertex point
+            assert(size(vArr,2) == 2);
+            [A, b] = vert2con(vArr);
+            obj.BOUNDARIES_VERTEXES = vArr;
+            obj.BOUNDARIES_COEFF = [A, b];
+            obj.REGION_MAX_X = max(vArr(:,1));
+            obj.REGION_MAX_Y = max(vArr(:,2));
+        end
+        
+        function set_manual(obj, RegionSelection)
+           % Modify region
            % Declare the coverage region by givin
            %    Vertexes 
            %    Boundaries coefficient: aj1*x + aj2*y - b <= 0
@@ -60,18 +82,9 @@ classdef RegionParameter < handle
                 obj.REGION_MAX_X = max(obj.BOUNDARIES_VERTEXES(:,1));
                 obj.REGION_MAX_Y = max(obj.BOUNDARIES_VERTEXES(:,2));
            end
-
+ 
+            
         end
-        
-        function startPose = generate_start_pose(obj, n)
-            rXY = 200;      
-            startPose = zeros(n, 3);
-            startPose(:,1) = rXY.*rand(n,1); %x
-            startPose(:,2) = rXY.*rand(n,1); %y
-            startPose(:,3) = zeros(n,1); %theta 
-        end
-        
-        
         
     end
 end

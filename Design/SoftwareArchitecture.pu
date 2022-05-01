@@ -35,16 +35,16 @@ class DroneCoverageAgent
 'class BLFController
 ' Interfaces
 Interface ControlParameter
-
+Interface VoronoiPartitionInfo
 ' Relationship
 
 AgentBase <|-d- FixedWingBase
 AgentBase <|-d- SingleIntegratorBase
 
-ControllerBase --> ControlParameter
-AgentBase --> ControlParameter
+ControllerBase -r-> ControlParameter
+AgentBase *-r-> ControlParameter
 
-AgentBase -r-> ControllerBase
+AgentBase *-r-> ControllerBase
 CoverageControllerBase -u-|> ControllerBase
 
 UnicycleCoverageAgent -u-|> FixedWingBase
@@ -55,6 +55,6 @@ DroneCoverageAgent -u-|> SingleIntegratorBase
 DroneCoverageAgent -u-|> CoverageAgentBase
 
 SafetyController -u-|> CoverageControllerBase
-SingleIntegratorController -u-> CoverageControllerBase
+SingleIntegratorController -u-|> CoverageControllerBase
 
 @enduml

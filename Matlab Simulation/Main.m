@@ -9,7 +9,16 @@ addpath(genpath('./Voronoi Debug Scripts'));
 format long;
 SIM_PARAM = SimulationParameter();
 COVERAGE_PARAM = CoverageParameter();
-REGION_CONFIG = RegionParameter(3);
+REGION_CONFIG = RegionParameter();
+vertexes = [0,   0; 
+            0,   300; 
+            300, 600; 
+            800, 300;
+            300,   0;
+            0,   0];
+REGION_CONFIG.set_vertexes(vertexes);
+REGION_CONFIG.set_manual(3);
+
 CONTROL_PARAM = ControlParameter();
 
 %% Some adjustable control parameter, will be moved to Simulation_Parameter later
