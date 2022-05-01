@@ -1,6 +1,6 @@
 %%
 
-classdef Communication_Link < handle
+classdef CommunicationLink < handle
     properties (Access = private)
         %% Help variables
         ID_List
@@ -11,7 +11,7 @@ classdef Communication_Link < handle
     end
     
     methods
-        function obj = Communication_Link(nAgents, ID_List)
+        function obj = CommunicationLink(nAgents, ID_List)
             obj.nAgent = nAgents;
             obj.ID_List = ID_List;
             obj.NeighborReportTable = cell(nAgents, 1);

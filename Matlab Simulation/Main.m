@@ -14,18 +14,12 @@ CONTROL_PARAM = ControlParameter();
 
 %% Some adjustable control parameter, will be moved to Simulation_Parameter later
 rng(4);
-rXY = 200;      
-startPose = zeros(SIM_PARAM.N_AGENT, 3);
-startPose(:,1) = rXY.*rand(SIM_PARAM.N_AGENT,1); %x
-startPose(:,2) = rXY.*rand(SIM_PARAM.N_AGENT,1); %y
-startPose(:,3) = zeros(SIM_PARAM.N_AGENT,1); %theta
-agentHandle = Agent_Controller.empty(SIM_PARAM.N_AGENT, 0);
+startPose = REGION_CONFIG.generate_start_pose(SIM_PARAM.N_AGENT);
+agentHandle = AgentController.empty(SIM_PARAM.N_AGENT, 0);
 
 %% Agent handler
 for k = 1 : SIM_PARAM.N_AGENT
-    %agentHandle(k) = Agent_Controller(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), REGION_CONFIG.BOUNDARIES_COEFF, ...
-    %                startPose(k,:), V_CONST_LIST(k), W_ORBIT_LIST(k), Q_2x2, P, EPS_SIGMOID);
-    agentHandle(k) = Agent_Controller(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), startPose(k,:), REGION_CONFIG, CONTROL_PARAM);
+    agentHandle(k) = AgentController(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), startPose(k,:), REGION_CONFIG, CONTROL_PARAM);
 end
 
 % Instance of Logger for data post processing, persistent over all files
@@ -37,7 +31,7 @@ Logger = DataLogger(SIM_PARAM, REGION_CONFIG, startPose, CONTROL_PARAM.V_CONST* 
 VoronoiCom = Voronoi2D_Handler(9999, REGION_CONFIG.BOUNDARIES_VERTEXES);
 
 %% Communication Link for data broadcasting (GBS : global broadcasting service)
-GBS = Communication_Link(SIM_PARAM.N_AGENT, SIM_PARAM.ID_LIST); 
+GBS = CommunicationLink(SIM_PARAM.N_AGENT, SIM_PARAM.ID_LIST); 
 for iteration = 1: SIM_PARAM.MAX_ITER
     %% Logging instances
     pose_3d_list = zeros(SIM_PARAM.N_AGENT, 3);

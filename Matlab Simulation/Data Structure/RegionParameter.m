@@ -1,4 +1,4 @@
-classdef RegionParameter
+classdef RegionParameter < handle
     
     properties (SetAccess = immutable)
         REGION_MAX_X
@@ -9,6 +9,7 @@ classdef RegionParameter
     
     
     methods
+
         function obj = RegionParameter(RegionSelection)
              % Modify region
            % Declare the coverage region by givin
@@ -61,6 +62,16 @@ classdef RegionParameter
            end
 
         end
+        
+        function startPose = generate_start_pose(obj, n)
+            rXY = 200;      
+            startPose = zeros(n, 3);
+            startPose(:,1) = rXY.*rand(n,1); %x
+            startPose(:,2) = rXY.*rand(n,1); %y
+            startPose(:,3) = zeros(n,1); %theta 
+        end
+        
+        
         
     end
 end
