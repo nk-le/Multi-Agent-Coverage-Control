@@ -1,30 +1,30 @@
 %% Agent_Controller - distributed controller for unicycle agent
 %
 
-classdef AgentController < handle
+classdef AgentController < FixedWingBase
     properties
         %% Should be private
-        w               % float: current angular velocity
+        % w               % float: current angular velocity
         logger = LogHandle()
     end
     
     properties (SetAccess = immutable)
         % Simulation time step
-        dt           
+        %dt           
         ID              % int        
         regionParam
-        controlParam
+        %controlParam
     end
     
     properties (Access = private)
         %% Coordinates of agent, its virtual masses and the calculated CVT
-        AgentPose_3d = zeros(3,1)         % [x y theta]
+        %AgentPose_3d = zeros(3,1)         % [x y theta]
         CVTCoord_2d = zeros(2,1)
-        VMCoord_2d = zeros(2,1);
+        %VMCoord_2d = zeros(2,1);
         % Save the last computed result to evaluate the calculation
         prev_CVTCoord_2d
-        prev_AgentPose_3d
-        prev_VMCoord_2d 
+        %prev_AgentPose_3d
+        %prev_VMCoord_2d 
         
         %% Obtained Voronoi partitions from the centralized Voronoi computer (Simulation)
         received_VoronoiPartitionInfo
@@ -54,6 +54,7 @@ classdef AgentController < handle
         %% Initalize class handler
         %function obj = Agent_Controller(dt, botID, coverage_region_coeff, initPose_3d, )
         function obj = AgentController(dt, botID, initPose_3d, regionParam, controlParam)
+            obj = obj@FixedWingBase(controlParam, initPose_3d);
             assert(dt~=0);
             obj.dt = dt;
             obj.w = 0;            
@@ -70,18 +71,25 @@ classdef AgentController < handle
         %% Simulate dynamic model 
         % Call this function once every time the control policy is updated
         % to simulate the movement.
-        function move(obj, calc_w) 
-            obj.w = calc_w;
-            % Unicycle Dynamic
-            obj.prev_AgentPose_3d = obj.AgentPose_3d;
-            obj.AgentPose_3d(1) = obj.AgentPose_3d(1) + obj.dt * (obj.controlParam.V_CONST * cos(obj.AgentPose_3d(3)));
-            obj.AgentPose_3d(2) = obj.AgentPose_3d(2) + obj.dt * (obj.controlParam.V_CONST * sin(obj.AgentPose_3d(3)));
-            obj.AgentPose_3d(3) = obj.AgentPose_3d(3) + obj.dt * obj.w;
-            %% Update the virtual mass
-            obj.prev_VMCoord_2d = obj.VMCoord_2d;
-            obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * sin(obj.AgentPose_3d(3)); 
-            obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * cos(obj.AgentPose_3d(3)); 
+%         function move(obj, calc_w) 
+%             obj.w = calc_w;
+%             % Unicycle Dynamic
+%             obj.prev_AgentPose_3d = obj.AgentPose_3d;
+%             obj.AgentPose_3d(1) = obj.AgentPose_3d(1) + obj.dt * (obj.controlParam.V_CONST * cos(obj.AgentPose_3d(3)));
+%             obj.AgentPose_3d(2) = obj.AgentPose_3d(2) + obj.dt * (obj.controlParam.V_CONST * sin(obj.AgentPose_3d(3)));
+%             obj.AgentPose_3d(3) = obj.AgentPose_3d(3) + obj.dt * obj.w;
+%             %% Update the virtual mass
+%             obj.prev_VMCoord_2d = obj.VMCoord_2d;
+%             obj.VMCoord_2d(1) = obj.AgentPose_3d(1) - (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * sin(obj.AgentPose_3d(3)); 
+%             obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * cos(obj.AgentPose_3d(3)); 
+%         end
+        
+        function move(obj, w)
+            obj.w = w;
+            move@FixedWingBase(obj, obj.controlParam.V_CONST, w);
         end
+        
+        
         
         function [CVT, dCk_dzi_For_Neighbor] = computePartialDerivativeCVT(obj, i_received_VoronoiPartitionInfo)
              format long;

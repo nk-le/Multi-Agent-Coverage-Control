@@ -1,0 +1,53 @@
+@startuml
+' Settings
+' ============================
+
+' use +,#,- instead of icons
+'skinparam classAttributeIconSize 0
+
+' horizontal distance in px
+skinparam nodesep 100 
+
+' vertical distance in px
+skinparam ranksep 100
+
+' use only straight lines (ortho/polyline)
+skinparam linetype polyline
+
+' title
+title Multi-Agent Coverage Control
+
+class AgentBase
+
+class CoverageAgentBase
+
+class ControllerBase
+
+class CoverageControllerBase
+
+class SingleIntegratorBase
+
+class FixedWingBase
+
+class UnicycleCoverageAgent
+class DroneCoverageAgent
+
+class BLFController
+
+' Relationship
+
+AgentBase <|-d- FixedWingBase
+AgentBase <|-d- SingleIntegratorBase
+
+AgentBase -r-> ControllerBase
+CoverageControllerBase -u-|> ControllerBase
+
+UnicycleCoverageAgent -u-|> FixedWingBase
+UnicycleCoverageAgent -u-|> CoverageAgentBase
+CoverageAgentBase -[hidden]r-> FixedWingBase
+
+DroneCoverageAgent -u-|> SingleIntegratorBase
+DroneCoverageAgent -u-|> CoverageAgentBase
+
+BLFController --|> CoverageControllerBase
+@enduml
