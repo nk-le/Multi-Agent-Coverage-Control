@@ -5,6 +5,7 @@ addpath(genpath('./Library'));
 addpath(genpath('./Algorithm'));
 addpath(genpath('./Voronoi Debug Scripts'));
 
+clear all;
 
 format long;
 SIM_PARAM = SimulationParameter();
@@ -17,7 +18,8 @@ vertexes = [0,   0;
             300,   0;
             0,   0];
 REGION_CONFIG.set_vertexes(vertexes);
-REGION_CONFIG.set_manual(3);
+REGION_CONFIG.BOUNDARIES_COEFF = REGION_CONFIG.BOUNDARIES_COEFF * 1000;
+%REGION_CONFIG.set_manual(3);
 
 CONTROL_PARAM = ControlParameter();
 
