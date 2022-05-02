@@ -1,4 +1,4 @@
-classdef Control_Parameter_Constraint_Lyapunov < handle
+classdef Control_Parameter_Constraint_Lyapunov < ControlParameter
     properties  (SetAccess = immutable)
         V_CONST     % Constant heading velocity
         W_ORBIT     % Orbital (desired angular) velocity

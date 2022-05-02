@@ -1,0 +1,2 @@
+Credits to Michael Kleder
+https://de.mathworks.com/matlabcentral/fileexchange/7895-vert2con-vertices-to-constraints
