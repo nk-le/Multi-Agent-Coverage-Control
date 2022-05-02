@@ -19,7 +19,7 @@ classdef Struct_Voronoi_Partition_Info < Report_Base
        NAME = "Struct_Voronoi_Partition_Info" 
     end
     
-    properties (Access  = private)
+    properties (Access  = public)
         PartitionOwnerID
         Vertex2D_List
         NeighborInfoList

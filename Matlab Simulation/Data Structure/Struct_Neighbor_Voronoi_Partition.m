@@ -3,7 +3,7 @@ classdef Struct_Neighbor_Voronoi_Partition
         NAME = "Struct_Neighbor_Voronoi_Partition"
     end
     
-    properties (Access = private)
+    properties (Access = public)
         NeighborID
         Neighbor_VM_Coord_2d
         CommonVertex_2d_1
