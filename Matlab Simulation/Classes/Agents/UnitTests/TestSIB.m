@@ -5,6 +5,7 @@ addpath(genpath('./Library'));
 addpath(genpath('./Algorithm'));
 addpath(genpath('./Voronoi Debug Scripts'));
 
+clear all; close all;
 
 format long;
 SIM_PARAM = SimulationParameter();
@@ -94,5 +95,10 @@ for iteration = 1: SIM_PARAM.MAX_ITER
 
     %% Logging
     Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, zeros(SIM_PARAM.N_AGENT, 1));
+    
+    if(mod(iteration, 25) == 1)
+        Logger.live_plot(vmCmoord_2d_list, CVT_2d_List, v, c);
+    end
+    
     fprintf("Decentralized. Iter: %d. L: %f \n", iteration, sum(Vk_List)); 
 end

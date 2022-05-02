@@ -17,6 +17,8 @@ classdef DataLogger < handle
         ControlOutput 
         CVT
         V_BLF
+        
+        visHandle
     end
     
     methods
@@ -34,6 +36,9 @@ classdef DataLogger < handle
             obj.ControlOutput = zeros(obj.SIM_PARAM.N_AGENT, obj.maxCnt);
             obj.CVT = zeros(obj.SIM_PARAM.N_AGENT, 2, obj.maxCnt);
             obj.V_BLF = zeros(obj.SIM_PARAM.N_AGENT, obj.maxCnt);
+            
+            obj.visHandle = Visualizer(obj.SIM_PARAM.N_AGENT);
+            obj.visHandle.set_boundary(regionConfig);
         end
         
         %% Log the necessary information for visualization and evaluation
@@ -188,6 +193,13 @@ classdef DataLogger < handle
             end  
         end
  
+        
+        
+        function live_plot(obj, CurPoseVM, CurPoseCVT, v, c)
+            pathGen = obj.PoseVM(:,1:2,1:obj.curCnt);
+            obj.visHandle.live_plot(CurPoseVM, CurPoseCVT, v, c, pathGen)
+        end
+        
         
         
     end
