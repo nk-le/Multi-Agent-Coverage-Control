@@ -18,7 +18,7 @@ vertexes = [0,   0;
             300,   0;
             0,   0];
 REGION_CONFIG.set_vertexes(vertexes);
-REGION_CONFIG.BOUNDARIES_COEFF = REGION_CONFIG.BOUNDARIES_COEFF * 1000;
+REGION_CONFIG.BOUNDARIES_COEFF = REGION_CONFIG.BOUNDARIES_COEFF * 100;
 %REGION_CONFIG.set_manual(3);
 
 CONTROL_PARAM = ControlParameter();
@@ -91,6 +91,8 @@ for iteration = 1: SIM_PARAM.MAX_ITER
 
     %% Logging
     Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, ControlOutput);
-    Logger.live_plot(vmCmoord_2d_list, CVT_2d_List, v, c);
+    if(mod(iteration, 25) == 1)
+        Logger.live_plot(vmCmoord_2d_list, CVT_2d_List, v, c);
+    end
     fprintf("Decentralized. Iter: %d. L: %f \n", iteration, sum(Vk_List)); 
 end
