@@ -1,7 +1,8 @@
 import sys
 import logging
 import time
-sys.path.append('C:\\Users\\khanh\\Desktop\\Workspace\\\Multi-Unicycle-Coverage-Control\\Python_Library')
+sys.path.append("./")
+#sys.path.append('C:\\Users\\khanh\\Desktop\\Workspace\\\Multi-Unicycle-Coverage-Control\\Python_Library')
 from VoronoiLib import *
 from controlAlgo import *
 

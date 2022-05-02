@@ -1,0 +1,2744 @@
+{
+"geopoint":
+{
+	"inputs":
+	[
+		{"name":"latitude", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"longitude", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"structArray", "kind":"ordered", "type":"struct"},
+		{"repeating":true, "tuple":
+			[
+				{"name":"field", "kind":"positional", "type":[["char"], ["string", "scalar"]]},
+				{"name":"value", "kind":"positional", "type":[["numeric"], ["logical"], ["char"], ["string", "scalar"]]}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"p", "type":"geopoint"}
+	]
+},
+"geopoint":
+{
+	"inputs":
+	[
+		{"name":"structArray", "kind":"ordered", "type":"struct"}
+	],
+	"outputs":
+	[
+		{"name":"p", "type":"geopoint"}
+	]
+},
+"geopoint.append":
+{
+	"inputs":
+	[
+		{"name":"inPoints", "kind":"required", "type":"geopoint"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"repeating":true, "tuple":
+			[
+				{"name":"field", "kind":"positional", "type":[["char"], ["string", "scalar"]]},
+				{"name":"value", "kind":"positional", "type":[["numeric"], ["logical"], ["char"], ["string", "scalar"]]}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"outPoints", "type":"geopoint"}
+	]
+},
+"map.internal.DynamicVector.rmfield":
+{
+	"inputs":
+	[
+		{"name":"P", "kind":"required", "type":"map.internal.DynamicVector"},
+		{"name":"fields", "kind":"required", "type":[["choices=P.fieldnames"], ["char"], ["string"], ["cellstr"]]}
+	],
+	"outputs":
+	[
+		{"name":"P", "type":"geopoint"}
+	]
+},
+"map.internal.DynamicVector.rmprop":
+{
+	"inputs":
+	[
+		{"name":"P", "kind":"required", "type":"map.internal.DynamicVector"},
+		{"name":"propnames", "kind":"required", "type":[["choices=setdiff(P.properties,{'Geometry','Metadata','Latitude','Longitude','X','Y'})"], ["char"], ["string"], ["cellstr"]]}
+	],
+	"outputs":
+	[
+		{"name":"PF", "type":"geopoint"}
+	]
+},
+"mappoint":
+{
+	"inputs":
+	[
+		{"name":"x", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"y", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"structArray", "kind":"ordered", "type":"struct"},
+		{"repeating":true, "tuple":
+			[
+				{"name":"field", "kind":"positional", "type":[["char"], ["string", "scalar"]]},
+				{"name":"value", "kind":"positional", "type":[["numeric"], ["logical"], ["char"], ["string", "scalar"]]}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"p", "type":"mappoint"}
+	]
+},
+"mappoint":
+{
+	"inputs":
+	[
+		{"name":"structArray", "kind":"ordered", "type":"struct"}
+	],
+	"outputs":
+	[
+		{"name":"p", "type":"mappoint"}
+	]
+},
+"mappoint.append":
+{
+	"inputs":
+	[
+		{"name":"inPoints", "kind":"required", "type":"mappoint"},
+		{"name":"x", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"y", "kind":"required", "type":[["single"],["double"]]},
+		{"repeating":true, "tuple":
+			[
+				{"name":"field", "kind":"positional", "type":[["char"], ["string", "scalar"]]},
+				{"name":"value", "kind":"positional", "type":[["numeric"], ["logical"], ["char"], ["string", "scalar"]]}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"outPoints", "type":"mappoint"}
+	]
+},
+"geoshape":
+{
+	"inputs":
+	[
+		{"name":"latitude", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"longitude", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"structArray", "kind":"ordered", "type":"struct"},
+		{"repeating":true, "tuple":
+			[
+				{"name":"field", "kind":"positional", "type":[["char"], ["string", "scalar"]]},
+				{"name":"value", "kind":"positional", "type":[["numeric"], ["logical"], ["char"], ["string", "scalar"]]}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"p", "type":"geoshape"}
+	]
+},
+"geoshape":
+{
+	"inputs":
+	[
+		{"name":"structArray", "kind":"ordered", "type":"struct"}
+	],
+	"outputs":
+	[
+		{"name":"p", "type":"geoshape"}
+	]
+},
+"geoshape.append":
+{
+	"inputs":
+	[
+		{"name":"inPoints", "kind":"required", "type":"geoshape"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"repeating":true, "tuple":
+			[
+				{"name":"field", "kind":"positional", "type":[["char"], ["string", "scalar"]]},
+				{"name":"value", "kind":"positional", "type":[["numeric"], ["logical"], ["char"], ["string", "scalar"]]}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"outPoints", "type":"geoshape"}
+	]
+},
+"mapshape":
+{
+	"inputs":
+	[
+		{"name":"x", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"y", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"structArray", "kind":"ordered", "type":"struct"},
+		{"repeating":true, "tuple":
+			[
+				{"name":"field", "kind":"positional", "type":[["char"], ["string", "scalar"]]},
+				{"name":"value", "kind":"positional", "type":[["numeric"], ["logical"], ["char"], ["string", "scalar"]]}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"p", "type":"mapshape"}
+	]
+},
+"mapshape":
+{
+	"inputs":
+	[
+		{"name":"structArray", "kind":"ordered", "type":"struct"}
+	],
+	"outputs":
+	[
+		{"name":"p", "type":"mapshape"}
+	]
+},
+"mapshape.append":
+{
+	"inputs":
+	[
+		{"name":"inPoints", "kind":"required", "type":"mapshape"},
+		{"name":"x", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"y", "kind":"required", "type":[["single"],["double"]]},
+		{"repeating":true, "tuple":
+			[
+				{"name":"field", "kind":"positional", "type":[["char"], ["string", "scalar"]]},
+				{"name":"value", "kind":"positional", "type":[["numeric"], ["logical"], ["char"], ["string", "scalar"]]}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"outPoints", "type":"mapshape"}
+	]
+},
+"map.rasterref.GeographicRasterReference.contains":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.GeographicRasterReference"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"tf", "type":"logical"}
+	]
+},
+"map.rasterref.GeographicRasterReference.geographicToDiscrete":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.GeographicRasterReference"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"I", "type":"numeric"},
+		{"name":"J", "type":"numeric"}
+	]
+},
+"map.rasterref.GeographicRasterReference.geographicToIntrinsic":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.GeographicRasterReference"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"xIntrinsic", "type":"numeric"},
+		{"name":"yIntrinsic", "type":"numeric"}
+	]
+},
+"map.rasterref.GeographicRasterReference.intrinsicToGeographic":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.GeographicRasterReference"},
+		{"name":"xIntrinsic", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"yIntrinsic", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"map.rasterref.GeographicRasterReference.geographicGrid":
+{
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"map.rasterref.GeographicRasterReference.intrinsicXToLongitude":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.GeographicRasterReference"},
+		{"name":"xIntrinsic", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"map.rasterref.GeographicRasterReference.intrinsicYToLatitude":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.GeographicRasterReference"},
+		{"name":"yIntrinsic", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"}
+	]
+},
+"map.rasterref.GeographicRasterReference.latitudeToIntrinsicY":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.GeographicRasterReference"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"yIntrinsic", "type":"numeric"}
+	]
+},
+"map.rasterref.GeographicRasterReference.longitudeToIntrinsicX":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.GeographicRasterReference"},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"xIntrinsic", "type":"numeric"}
+	]
+},
+"map.rasterref.GeographicRasterReference.sizesMatch":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.GeographicRasterReference"},
+		{"name":"A", "kind":"required", "type":[["numeric"],["logical"]]}
+	],
+	"outputs":
+	[
+		{"name":"tf", "type":"logical"}
+	]
+},
+"map.rasterref.MapRasterReference.contains":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.MapRasterReference"},
+		{"name":"xWorld", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"yWorld", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"tf", "type":"logical"}
+	]
+},
+"map.rasterref.MapRasterReference.firstCornerX":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.MapRasterReference"}
+	],
+	"outputs":
+	[
+		{"name":"x", "type":"numeric"}
+	]
+},
+"map.rasterref.MapRasterReference.firstCornerY":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.MapRasterReference"}
+	],
+	"outputs":
+	[
+		{"name":"y", "type":"numeric"}
+	]
+},
+"map.rasterref.MapRasterReference.intrinsicToWorld":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.MapRasterReference"},
+		{"name":"xIntrinsic", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"yIntrinsic", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"xWorld", "type":"numeric"},
+		{"name":"yWorld", "type":"numeric"}
+	]
+},
+"map.rasterref.MapRasterReference.worldGrid":
+{
+	"outputs":
+	[
+		{"name":"X", "type":"numeric"},
+		{"name":"Y", "type":"numeric"}
+	]
+},
+"map.rasterref.MapRasterReference.worldToDiscrete":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.MapRasterReference"},
+		{"name":"xWorld", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"yWorld", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"I", "type":"numeric"},
+		{"name":"J", "type":"numeric"}
+	]
+},
+"map.rasterref.MapRasterReference.worldToIntrinsic":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.MapRasterReference"},
+		{"name":"xWorld", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"yWorld", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"xIntrinsic", "type":"numeric"},
+		{"name":"yIntrinsic", "type":"numeric"}
+	]
+},
+"map.rasterref.MapRasterReference.sizesMatch":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":"map.rasterref.MapRasterReference"},
+		{"name":"A", "kind":"required", "type":[["numeric"],["logical"]]}
+	],
+	"outputs":
+	[
+		{"name":"tf", "type":"logical"}
+	]
+},
+"angl2str":
+{
+	"inputs":
+	[
+		{"name":"angle", "kind":"required", "type":"numeric"},
+		{"name":"signcode", "kind":"positional", "type":"choices={'ew','ns','pm','none'}"},
+		{"name":"units", "kind":"positional", "type":"choices={'degrees','degrees2dm','degrees2dms','radians'}"},
+		{"name":"n", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"str", "type":"char"}
+	]
+},
+"areaint":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"area", "type":"numeric"}
+	]
+},
+"areamat":
+{
+	"inputs":
+	[
+		{"name":"BW", "kind":"required", "type":[["logical"],["double"]]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]}
+	],
+	"outputs":
+	[
+		{"name":"A", "type":"numeric"},
+		{"name":"cellarea", "type":"numeric"}
+	]
+},
+"areaquad":
+{
+	"inputs":
+	[
+		{"name":"lat1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lat2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"ellipsoid", "kind":"positional", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"area", "type":"numeric"}
+	]
+},
+"azimuth":
+{
+	"inputs":
+	[
+		{"name":"track", "kind":"ordered", "type":"choices={'gc','rh'}"},
+		{"name":"lat1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lat2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"az", "type":"numeric"}
+	]
+},
+"bufferm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"bufwidth", "kind":"required", "type":"numeric"},
+		{"name":"direction", "kind":"ordered", "type":"choices={'in','out','outPlusInterior'}"}
+	],
+	"outputs":
+	[
+		{"name":"latb", "type":"numeric"},
+		{"name":"lonb", "type":"numeric"}
+	]
+},
+"bufferm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"dist", "kind":"required", "type":"numeric"},
+		{"name":"direction", "kind":"required", "type":"choices={'in','out','outPlusInterior'}"},
+		{"name":"npts", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"latb", "type":"numeric"},
+		{"name":"lonb", "type":"numeric"}
+	]
+},
+"bufgeoquad":
+{
+	"inputs":
+	[
+		{"name":"latlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"lonlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"buflat", "kind":"required", "type":"numeric"},
+		{"name":"buflon", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"latlim", "type":"numeric"},
+		{"name":"lonlim", "type":"numeric"}
+	]
+},
+"closePolygonParts":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"angleunits", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"closePolygonParts":
+{
+	"inputs":
+	[
+		{"name":"xdata", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"ydata", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"xdata", "type":"numeric"},
+		{"name":"ydata", "type":"numeric"}
+	]
+},
+"deg2km":
+{
+	"inputs":
+	[
+		{"name":"deg", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"km", "type":"numeric"}
+	]
+},
+"deg2nm":
+{
+	"inputs":
+	[
+		{"name":"deg", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"nm", "type":"numeric"}
+	]
+},
+"deg2sm":
+{
+	"inputs":
+	[
+		{"name":"deg", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"sm", "type":"numeric"}
+	]
+},
+"degrees2dm":
+{
+	"inputs":
+	[
+		{"name":"angleInDegrees", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"DM", "type":"numeric"}
+	]
+},
+"degrees2dms":
+{
+	"inputs":
+	[
+		{"name":"angleInDegrees", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"DMS", "type":"numeric"}
+	]
+},
+"distance":
+{
+	"inputs":
+	[
+		{"name":"track", "kind":"ordered", "type":"choices={'gc','rh'}"},
+		{"name":"lat1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lat2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"arclen", "type":"numeric"},
+		{"name":"az", "type":"numeric"}
+	]
+},
+"distance":
+{
+	"inputs":
+	[
+		{"name":"track", "kind":"ordered", "type":"choices={'gc','rh'}"},
+		{"name":"pt1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"pt2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"arclen", "type":"numeric"},
+		{"name":"az", "type":"numeric"}
+	]
+},
+"dm2degrees":
+{
+	"inputs":
+	[
+		{"name":"DM", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"angleInDegrees", "type":"numeric"}
+	]
+},
+"dms2degrees":
+{
+	"inputs":
+	[
+		{"name":"DMS", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"angleInDegrees", "type":"numeric"}
+	]
+},
+"ellipse1":
+{
+	"inputs":
+	[
+		{"name":"trackstr", "kind":"ordered", "type":"choices={'gc','rh'}"},
+		{"name":"lat0", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon0", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"ellipse", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"offset", "kind":"ordered", "type":[["single"],["double"]]},
+		{"name":"az", "kind":"ordered", "type":[["single"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"angleUnit", "kind":"positional", "type":"choices={'degrees','radians'}"},
+		{"name":"npts", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"extractfield":
+{
+	"inputs":
+	[
+		{"name":"s", "kind":"required", "type":"struct"},
+		{"name":"name", "kind":"required", "type":"char"}
+	],
+	"outputs":
+	[
+		{"name":"a", "type":"cell"}
+	]
+},
+"flatearthpoly":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"longitudeOrigin", "kind":"ordered", "type":["numeric","scalar"]}
+	],
+	"outputs":
+	[
+		{"name":"latf", "type":"numeric"},
+		{"name":"lonf", "type":"numeric"}
+	]
+},
+"gc2sc":
+{
+	"inputs":
+	[
+		{"name":"lat0", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon0", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"az", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"angleunits", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"},
+		{"name":"radius", "type":"numeric"}
+	]
+},
+"gcxgc":
+{
+	"inputs":
+	[
+		{"name":"lat1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"az1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lat2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"az2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"newlat", "type":"numeric"},
+		{"name":"newlon", "type":"numeric"}
+	]
+},
+"gcxgc":
+{
+	"inputs":
+	[
+		{"name":"gclat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"gclon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"gcaz", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"sclat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"sclon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"scrange", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"newlat", "type":"numeric"},
+		{"name":"newlon", "type":"numeric"}
+	]
+},
+"geocontourxy":
+{
+	"inputs":
+	[
+		{"name":"X", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Y", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lat0", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon0", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"h0", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"LevelList", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"XYRotation", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"Spheroid", "kind":"namevalue", "type":[["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]}
+	],
+	"outputs":
+	[
+		{"name":"contourLines", "type":"geoshape"},
+		{"name":"contourPolygons", "type":"geoshape"}
+	]
+},
+"geocrop":
+{
+	"inputs":
+	[
+		{"name":"A", "kind":"required", "type":[["numeric"],["logical"]]},
+		{"name":"RA", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]},
+		{"name":"latlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"lonlim", "kind":"required", "type":["numeric","numel=2"]}
+	],
+	"outputs":
+	[
+		{"name":"B", "type":[["numeric"],["logical"]]},
+		{"name":"RB", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]}
+	]
+},
+"geointerp":
+{
+	"inputs":
+	[
+		{"name":"V", "kind":"required", "type":[["numeric","2d"],["logical","2d"]]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]},
+		{"name":"latq", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lonq", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"method", "kind":"positional", "type":"choices={'nearest','linear','cubic','spline'}"}
+	],
+	"outputs":
+	[
+		{"name":"Vq", "type":"numeric"}
+	]
+},
+"georesize":
+{
+	"inputs":
+	[
+		{"name":"A", "kind":"required", "type":[["numeric"],["logical"]]},
+		{"name":"RA", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]},
+		{"name":"scale", "kind":"required", "type":["numeric","scalar","positive"]},
+		{"name":"method", "kind":"positional", "type":"choices={'nearest','bilinear','cubic'}"},
+		{"name":"Antialiasing", "kind":"namevalue", "type":[["choices={'on','off'}"],["logical"]]}
+	],
+	"outputs":
+	[
+		{"name":"B", "type":[["numeric"],["logical"]]},
+		{"name":"RB", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]}
+	]
+},
+"geoloc2grid":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"A", "kind":"required", "type":"numeric"},
+		{"name":"cellsize", "kind":"required", "type":["numeric","scalar"]}
+	],
+	"outputs":
+	[
+		{"name":"B", "type":"numeric"},
+		{"name":"R", "type":"map.rasterref.GeographicCellsReference"}
+	]
+},
+"geopeaks":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]},
+		{"name":"spheroid", "kind":"ordered", "type":[["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]}
+	],
+	"outputs":
+	[
+		{"name":"Z", "type":"numeric"}
+	]
+},
+"geopeaks":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"spheroid", "kind":"ordered", "type":[["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]}
+	],
+	"outputs":
+	[
+		{"name":"Z", "type":"numeric"}
+	]
+},
+"geoquadline":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"latlim", "type":"numeric"},
+		{"name":"lonlim", "type":"numeric"}
+	]
+},
+"geoquadpt":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"latlim", "type":"numeric"},
+		{"name":"lonlim", "type":"numeric"}
+	]
+},
+"georasterref":
+{
+	"inputs":
+	[
+		{"name":"W", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"rasterSize", "kind":"required", "type":["numeric","vector"]},
+		{"name":"rasterInterpretation", "kind":"required", "type":"choices={'cells','postings'}"},
+		{"name":"RasterSize", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"RasterInterpretation", "kind":"namevalue", "type":"choices={'cells','postings'}"},
+		{"name":"ColumnsStartFrom", "kind":"namevalue", "type":"choices={'north','south'}"},
+		{"name":"RowsStartFrom", "kind":"namevalue", "type":"choices={'east','west'}"},
+		{"name":"LatitudeLimits", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"LongitudeLimits", "kind":"namevalue", "type":["numeric","numel=2"]}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]}
+	]
+},
+"georefcells":
+{
+	"inputs":
+	[
+		{"name":"latlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"lonlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"rasterSize", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"ColumnsStartFrom", "kind":"namevalue", "type":"choices={'north','south'}"},
+		{"name":"RowsStartFrom", "kind":"namevalue", "type":"choices={'east','west'}"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":"map.rasterref.GeographicCellsReference"}
+	]
+},
+"georefcells":
+{
+	"inputs":
+	[
+		{"name":"latlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"lonlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"cellExtentInLatitude", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"cellExtentInLongitude", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"ColumnsStartFrom", "kind":"namevalue", "type":"choices={'north','south'}"},
+		{"name":"RowsStartFrom", "kind":"namevalue", "type":"choices={'east','west'}"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":"map.rasterref.GeographicCellsReference"}
+	]
+},
+"georefpostings":
+{
+	"inputs":
+	[
+		{"name":"latlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"lonlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"rasterSize", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"ColumnsStartFrom", "kind":"namevalue", "type":"choices={'north','south'}"},
+		{"name":"RowsStartFrom", "kind":"namevalue", "type":"choices={'east','west'}"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":"map.rasterref.GeographicPostingsReference"}
+	]
+},
+"georefpostings":
+{
+	"inputs":
+	[
+		{"name":"latlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"lonlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"sampleSpacingInLatitude", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"sampleSpacingInLongitude", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"ColumnsStartFrom", "kind":"namevalue", "type":"choices={'north','south'}"},
+		{"name":"RowsStartFrom", "kind":"namevalue", "type":"choices={'east','west'}"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":"map.rasterref.GeographicPostingsReference"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'point','multipoint','line'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'polygon'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Patch"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"S", "kind":"required", "type":[["struct","@(S) isfield(S,'Geometry') && isfield(S,'Lat') && isfield(S,'Lon')"],["geoshape"],["geopoint"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'point','multipoint','line'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"S", "kind":"required", "type":[["struct","@(S) isfield(S,'Geometry') && isfield(S,'Lat') && isfield(S,'Lon')"],["geoshape"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'polygon'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Patch"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'surface','mesh','texturemap'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'contour'}"},
+		{"name":"Fill", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"LabelSpacing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LevelList", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"LevelStep", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LineColor", "kind":"namevalue", "type":[["choices={'flat','none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"LineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"LineWidth", "kind":"namevalue", "type":"numeric"},
+		{"name":"ShowText", "kind":"namevalue", "type":"choices={'on','off'}"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'image','surface','mesh','texturemap'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'contour'}"},
+		{"name":"Fill", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"LabelSpacing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LevelList", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"LevelStep", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LineColor", "kind":"namevalue", "type":[["choices={'flat','none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"LineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"LineWidth", "kind":"namevalue", "type":"numeric"},
+		{"name":"ShowText", "kind":"namevalue", "type":"choices={'on','off'}"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"image", "kind":"required", "type":[["numeric","@(image,lat) size(image,1) == size(lat,1) && size(image,2) == size(lat,2)"],["logical","@(image,lat) size(image,1) == size(lat,1) && size(image,2) == size(lat,2)"]]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'image'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"A", "kind":"required", "type":[["numeric","@(A,lat) size(A,1) == size(lat,1) && size(A,2) == size(lat,2)"],["logical","@(A,lat) size(A,1) == size(lat,1) && size(A,2) == size(lat,2)"]]},
+		{"name":"cmap", "kind":"required", "type":["numeric", "ncols=3", ">=0", "<=1"]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'image'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"image", "kind":"required", "type":[["numeric","3d"],["logical","@ismatrix"]]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'image'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"A", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"cmap", "kind":"required", "type":["numeric", "ncols=3", ">=0", "<=1"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'image'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"filename", "kind":"required", "type":[["file=*.shp"],["matlabpathfile=*.shp"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"filename", "kind":"required", "type":[["file=*.shp"],["matlabpathfile=*.shp"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Patch"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"geoshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"filename", "kind":"required", "type":[["file=*.tif,*.tiff,*.jpeg,*.jpg,*.png,*.flt,*.grd,*.txt,*.ddf"],["matlabpathfile=*.tif,*.tiff,*.jpeg,*.jpg,*.png,*.flt,*.grd,*.txt,*.ddf"]]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"gradientm":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"ASPECT", "type":"numeric"},
+		{"name":"SLOPE", "type":"numeric"},
+		{"name":"gradN", "type":"numeric"},
+		{"name":"gradE", "type":"numeric"}
+	]
+},
+"gradientm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"ASPECT", "type":"numeric"},
+		{"name":"SLOPE", "type":"numeric"},
+		{"name":"gradN", "type":"numeric"},
+		{"name":"gradE", "type":"numeric"}
+	]
+},
+"imbedm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"value", "kind":"required", "type":"numeric"},
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"Z", "type":"numeric"},
+		{"name":"indxPointOutsideGrid", "type":"numeric"}
+	]
+},
+"ingeoquad":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":"numeric"},
+		{"name":"lon", "kind":"required", "type":"numeric"},
+		{"name":"latlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"lonlim", "kind":"required", "type":["numeric","numel=2"]}
+	],
+	"outputs":
+	[
+		{"name":"tf", "type":"logical"}
+	]
+},
+"interpm":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"maxdiff", "kind":"required", "type":"numeric"},
+		{"name":"method", "kind":"positional", "type":"choices={'gc','rh','lin'}"},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"latout", "type":"numeric"},
+		{"name":"lonout", "type":"numeric"}
+	]
+},
+"intersectgeoquad":
+{
+	"inputs":
+	[
+		{"name":"latlim1", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"lonlim1", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"latlim2", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"lonlim2", "kind":"required", "type":["numeric","numel=2"]}
+	],
+	"outputs":
+	[
+		{"name":"latlim", "type":"numeric"},
+		{"name":"lonlim", "type":"numeric"}
+	]
+},
+"intrplat":
+{
+	"inputs":
+	[
+		{"name":"long", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"newlong", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"method", "kind":"positional", "type":"choices={'gc','rh','linear','pchip'}"},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"newlat", "type":"numeric"}
+	]
+},
+"intrplon":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"newlat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"method", "kind":"positional", "type":"choices={'gc','rh','linear','pchip'}"},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"newlon", "type":"numeric"}
+	]
+},
+"isShapeMultipart":
+{
+	"inputs":
+	[
+		{"name":"xdata", "kind":"required", "type":"numeric"},
+		{"name":"ydata", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"tf", "type":"logical"}
+	]
+},
+"ispolycw":
+{
+	"inputs":
+	[
+		{"name":"x", "kind":"required", "type":"numeric"},
+		{"name":"y", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"tf", "type":"logical"}
+	]
+},
+"km2nm":
+{
+	"inputs":
+	[
+		{"name":"km", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"nm", "type":"numeric"}
+	]
+},
+"km2sm":
+{
+	"inputs":
+	[
+		{"name":"km", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"sm", "type":"numeric"}
+	]
+},
+"km2deg":
+{
+	"inputs":
+	[
+		{"name":"km", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"deg", "type":"numeric"}
+	]
+},
+"km2rad":
+{
+	"inputs":
+	[
+		{"name":"km", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"rad", "type":"numeric"}
+	]
+},
+"limitm":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"latlim", "type":"numeric"},
+		{"name":"lonlim", "type":"numeric"}
+	]
+},
+"linecirc":
+{
+	"inputs":
+	[
+		{"name":"slope", "kind":"required", "type":"numeric"},
+		{"name":"intercpt", "kind":"required", "type":"numeric"},
+		{"name":"centerx", "kind":"required", "type":"numeric"},
+		{"name":"centery", "kind":"required", "type":"numeric"},
+		{"name":"radius", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"xout", "type":"numeric"},
+		{"name":"yout", "type":"numeric"}
+	]
+},
+"los2":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"lat1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lat2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"alt1", "kind":"positional", "type":[["single"],["double"]]},
+		{"name":"alt2", "kind":"positional", "type":[["single"],["double"]]},
+		{"name":"alt1opt", "kind":"positional", "type":"choices={'AGL','MSL'}"},
+		{"name":"alt2opt", "kind":"positional", "type":"choices={'AGL','MSL'}"},
+		{"name":"actualradius", "kind":"positional", "type":"numeric"},
+		{"name":"effectiveradius", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"vis", "type":"numeric"},
+		{"name":"visprofile", "type":"numeric"},
+		{"name":"dist", "type":"numeric"},
+		{"name":"H", "type":"numeric"},
+		{"name":"lattrk", "type":"numeric"},
+		{"name":"lontrk", "type":"numeric"}
+	]
+},
+"ltln2val":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"method", "kind":"positional", "type":"choices={'nearest','bilinear','bicubic'}"}
+	],
+	"outputs":
+	[
+		{"name":"val", "type":"numeric"}
+	]
+},
+"makerefmat":
+{
+	"inputs":
+	[
+		{"name":"RasterSize", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"ColumnsStartFrom", "kind":"namevalue", "type":"choices={'north','south'}"},
+		{"name":"RowsStartFrom", "kind":"namevalue", "type":"choices={'east','west'}"},
+		{"name":"LatitudeLimits", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"LongitudeLimits", "kind":"namevalue", "type":["numeric","numel=2"]}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":"numeric"}
+	]
+},
+"makerefmat":
+{
+	"inputs":
+	[
+		{"name":"x11", "kind":"required", "type":"numeric"},
+		{"name":"y11", "kind":"required", "type":"numeric"},
+		{"name":"dx", "kind":"required", "type":"numeric"},
+		{"name":"dy", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":"numeric"}
+	]
+},
+"makesymbolspec":
+{
+	"inputs":
+	[
+		{"name":"geometry", "kind":"required", "type":"choices={'Point','Line','PolyLine','Polygon','Patch'}"},
+		{"name":"rule", "kind":"required", "type":"cell", "repeating":true}
+	],
+	"outputs":
+	[
+		{"name":"symbolspec", "type":"struct"}
+	]
+},
+"mapcrop":
+{
+	"inputs":
+	[
+		{"name":"A", "kind":"required", "type":[["numeric"],["logical"]]},
+		{"name":"RA", "kind":"required", "type":[["map.rasterref.MapPostingsReference"],["map.rasterref.MapCellsReference"]]},
+		{"name":"xlimits", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"ylimits", "kind":"required", "type":["numeric","numel=2"]}
+	],
+	"outputs":
+	[
+		{"name":"B", "type":[["numeric"],["logical"]]},
+		{"name":"RB", "type":[["map.rasterref.MapPostingsReference"],["map.rasterref.MapCellsReference"]]}
+	]
+},
+"mapinterp":
+{
+	"inputs":
+	[
+		{"name":"V", "kind":"required", "type":[["numeric"],["logical"]]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.MapRasterReference"]]},
+		{"name":"xq", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"yq", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"method", "kind":"positional", "type":"choices={'nearest','linear','cubic','spline'}"}
+	],
+	"outputs":
+	[
+		{"name":"Vq", "type":"numeric"}
+	]
+},
+"mapresize":
+{
+	"inputs":
+	[
+		{"name":"A", "kind":"required", "type":[["numeric"],["logical"]]},
+		{"name":"RA", "kind":"required", "type":[["map.rasterref.MapPostingsReference"],["map.rasterref.MapCellsReference"]]},
+		{"name":"scale", "kind":"required", "type":["numeric","scalar","positive"]},
+		{"name":"method", "kind":"positional", "type":"choices={'nearest','bilinear','cubic'}"},
+		{"name":"Antialiasing", "kind":"namevalue", "type":[["choices={'on','off'}"],["logical"]]}
+	],
+	"outputs":
+	[
+		{"name":"B", "type":[["numeric"],["logical"]]},
+		{"name":"RB", "type":[["map.rasterref.MapPostingsReference"],["map.rasterref.MapCellsReference"]]}
+	]
+},
+"mapoutline":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":[["map.rasterref.MapCellsReference"],["map.rasterref.MapPostingsReference"],["double"]]},
+		{"name":"height", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"width", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"'close'", "kind":"ordered", "type":"choices={'close'}"}
+	],
+	"outputs":
+	[
+		{"name":"x", "type":"numeric"},
+		{"name":"y", "type":"numeric"}
+	]
+},
+"mapoutline":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":[["map.rasterref.MapCellsReference"],["map.rasterref.MapPostingsReference"],["double"]]},
+		{"name":"sizea", "kind":"required", "type":["numeric","vector"]},
+		{"name":"'close'", "kind":"ordered", "type":"choices={'close'}"}
+	],
+	"outputs":
+	[
+		{"name":"x", "type":"numeric"},
+		{"name":"y", "type":"numeric"}
+	]
+},
+"mapoutline":
+{
+	"inputs":
+	[
+		{"name":"info", "kind":"required", "type":"struct"},
+		{"name":"'close'", "kind":"ordered", "type":"choices={'close'}"}
+	],
+	"outputs":
+	[
+		{"name":"x", "type":"numeric"},
+		{"name":"y", "type":"numeric"}
+	]
+},
+"mapoutline":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]},
+		{"name":"height", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"width", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"'close'", "kind":"ordered", "type":"choices={'close'}"}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"mapoutline":
+{
+	"inputs":
+	[
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]},
+		{"name":"sizea", "kind":"required", "type":["numeric","vector"]},
+		{"name":"'close'", "kind":"ordered", "type":"choices={'close'}"}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"mapprofile":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"ellipsoid", "kind":"positional", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+				{"name":"units", "kind":"positional", "type":"choices={'degrees','radians'}"}
+			]
+		},
+		{"name":"'trackmethod'", "kind":"positional", "type":"choices={'gc','rh'}"},
+		{"name":"'interpmethod'", "kind":"positional", "type":"choices={'nearest','bilinear','bicubic'}"}
+	],
+	"outputs":
+	[
+		{"name":"zi", "type":"numeric"},
+		{"name":"ri", "type":"numeric"},
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"maprasterref":
+{
+	"inputs":
+	[
+		{"name":"W", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"rasterSize", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"rasterInterpretation", "kind":"required", "type":"choices={'cells','postings'}"},
+		{"name":"RasterSize", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"RasterInterpretation", "kind":"namevalue", "type":"choices={'cells','postings'}"},
+		{"name":"ColumnsStartFrom", "kind":"namevalue", "type":"choices={'north','south'}"},
+		{"name":"RowsStartFrom", "kind":"namevalue", "type":"choices={'east','west'}"},
+		{"name":"XLimWorld", "kind":"namevalue", "type":["numeric","numel=2"]},
+		{"name":"YLimWorld", "kind":"namevalue", "type":["numeric","numel=2"]}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":[["map.rasterref.MapRasterReference"]]}
+	]
+},
+"maprefcells":
+{
+	"inputs":
+	[
+		{"name":"xWorldLimits", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"yWorldLimits", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"rasterSize", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"ColumnsStartFrom", "kind":"namevalue", "type":"choices={'north','south'}"},
+		{"name":"RowsStartFrom", "kind":"namevalue", "type":"choices={'east','west'}"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":"map.rasterref.MapCellsReference"}
+	]
+},
+"maprefcells":
+{
+	"inputs":
+	[
+		{"name":"xWorldLimits", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"yWorldLimits", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"cellExtentInWorldX", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"cellExtentInWorldY", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"ColumnsStartFrom", "kind":"namevalue", "type":"choices={'north','south'}"},
+		{"name":"RowsStartFrom", "kind":"namevalue", "type":"choices={'east','west'}"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":"map.rasterref.MapCellsReference"}
+	]
+},
+"maprefpostings":
+{
+	"inputs":
+	[
+		{"name":"xWorldLimits", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"yWorldLimits", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"rasterSize", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"ColumnsStartFrom", "kind":"namevalue", "type":"choices={'north','south'}"},
+		{"name":"RowsStartFrom", "kind":"namevalue", "type":"choices={'east','west'}"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":"map.rasterref.MapPostingsReference"}
+	]
+},
+"maprefpostings":
+{
+	"inputs":
+	[
+		{"name":"xWorldLimits", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"yWorldLimits", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"sampleSpacingInWorldX", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"sampleSpacingInWorldY", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"ColumnsStartFrom", "kind":"namevalue", "type":"choices={'north','south'}"},
+		{"name":"RowsStartFrom", "kind":"namevalue", "type":"choices={'east','west'}"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":"map.rasterref.MapPostingsReference"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"x", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"y", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'point','multipoint','line'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"x", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"y", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'polygon'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Patch"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"S", "kind":"required", "type":[["struct","@(S) isfield(S,'Geometry') && isfield(S,'X') && isfield(S,'Y')"],["mapshape"],["mappoint"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'point','multipoint','line'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"S", "kind":"required", "type":[["struct","@(S) isfield(S,'Geometry') && isfield(S,'X') && isfield(S,'Y')"],["mapshape"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'polygon'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Patch"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"x", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"y", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'surface','mesh','texturemap'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"x", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"y", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'contour'}"},
+		{"name":"Fill", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"LabelSpacing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LevelList", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"LevelStep", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LineColor", "kind":"namevalue", "type":[["choices={'flat','none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"LineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"LineWidth", "kind":"namevalue", "type":"numeric"},
+		{"name":"ShowText", "kind":"namevalue", "type":"choices={'on','off'}"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.MapRasterReference"],["double"]]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'image','surface','mesh','texturemap'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.MapRasterReference"],["double"]]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'contour'}"},
+		{"name":"Fill", "kind":"namevalue", "type":"choices={'on','off'}"},
+		{"name":"LabelSpacing", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LevelList", "kind":"namevalue", "type":["numeric","vector"]},
+		{"name":"LevelStep", "kind":"namevalue", "type":["numeric","scalar"]},
+		{"name":"LineColor", "kind":"namevalue", "type":[["choices={'flat','none','yellow','magenta','cyan','red','green','blue','white','black'}"],["numeric", "vector", "ncols=3", ">=0", "<=1"],["char", "@matlab.graphics.internal.isColorSpec"]]},
+		{"name":"LineStyle", "kind":"namevalue", "type":[["char", "choices={'-','--',':','-.','none'}"],["char", "@matlab.graphics.internal.isLineSpec"]]},
+		{"name":"LineWidth", "kind":"namevalue", "type":"numeric"},
+		{"name":"ShowText", "kind":"namevalue", "type":"choices={'on','off'}"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"x", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"y", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"image", "kind":"required", "type":[["numeric","@(image,x) size(image,1) == size(x,1) && size(image,2) == size(x,2)"],["logical","@(image,x) size(image,1) == size(x,1) && size(image,2) == size(x,2)"]]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'image'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"x", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"y", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"A", "kind":"required", "type":[["numeric","@(A,x) size(A,1) == size(x,1) && size(A,2) == size(x,2)"],["logical","@(A,x) size(A,1) == size(x,1) && size(A,2) == size(x,2)"]]},
+		{"name":"cmap", "kind":"required", "type":["numeric", "ncols=3", ">=0", "<=1"]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'image'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"image", "kind":"required", "type":[["numeric","3d"],["logical","@ismatrix"]]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.MapRasterReference"],["double"]]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'image'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"A", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"cmap", "kind":"required", "type":["numeric", "ncols=3", ">=0", "<=1"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.MapRasterReference"],["double"]]},
+		{"name":"DisplayType", "kind":"namevalue", "type":"choices={'image'}"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"filename", "kind":"required", "type":[["file=*.shp"],["matlabpathfile=*.shp"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Line"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"filename", "kind":"required", "type":[["file=*.shp"],["matlabpathfile=*.shp"]]},
+		{"name":"SymbolSpec", "kind":"namevalue", "type":"struct"},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Patch"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"mapshow":
+{
+	"inputs":
+	[
+		{"name":"ax", "kind":"ordered", "type":"matlab.graphics.axis.Axes"},
+		{"name":"filename", "kind":"required", "type":[["file=*.tif,*.tiff,*.jpeg,*.jpg,*.png,*.flt,*.grd,*.txt,*.ddf"],["matlabpathfile=*.tif,*.tiff,*.jpeg,*.jpg,*.png,*.flt,*.grd,*.txt,*.ddf"]]},
+		{"name":"opts", "kind":"properties", "type":"matlab.graphics.primitive.Surface"}
+	],
+	"outputs":
+	[
+		{"name":"h", "type":"handle"}
+	]
+},
+"maptrims":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"latlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"lonlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"cellDensity", "kind":"ordered", "type":["numeric","scalar"]}
+	],
+	"outputs":
+	[
+		{"name":"Z_trimmed", "type":"numeric"},
+		{"name":"R_trimmed", "type":"numeric"}
+	]
+},
+"newpole":
+{
+	"inputs":
+	[
+		{"name":"polelat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"polelon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"origin", "type":"numeric"}
+	]
+},
+"nm2km":
+{
+	"inputs":
+	[
+		{"name":"nm", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"km", "type":"numeric"}
+	]
+},
+"nm2sm":
+{
+	"inputs":
+	[
+		{"name":"nm", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"sm", "type":"numeric"}
+	]
+},
+"nm2deg":
+{
+	"inputs":
+	[
+		{"name":"nm", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"deg", "type":"numeric"}
+	]
+},
+"nm2rad":
+{
+	"inputs":
+	[
+		{"name":"nm", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"rad", "type":"numeric"}
+	]
+},
+"org2pol":
+{
+	"inputs":
+	[
+		{"name":"origin", "kind":"required", "type":["numeric","numel=3"]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"pole", "type":"numeric"}
+	]
+},
+"outlinegeoquad":
+{
+	"inputs":
+	[
+		{"name":"latlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"lonlim", "kind":"required", "type":["numeric","numel=2"]},
+		{"name":"dlat", "kind":"required", "type":["numeric","scalar","positive"]},
+		{"name":"dlon", "kind":"required", "type":["numeric","scalar","positive"]}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"poly2ccw":
+{
+	"inputs":
+	[
+		{"name":"x1", "kind":"required", "type":"numeric"},
+		{"name":"y1", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"x2", "type":"numeric"},
+		{"name":"y2", "type":"numeric"}
+	]
+},
+"poly2cw":
+{
+	"inputs":
+	[
+		{"name":"x1", "kind":"required", "type":"numeric"},
+		{"name":"y1", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"x2", "type":"numeric"},
+		{"name":"y2", "type":"numeric"}
+	]
+},
+"poly2fv":
+{
+	"inputs":
+	[
+		{"name":"x", "kind":"required", "type":"numeric"},
+		{"name":"y", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"F", "type":"numeric"},
+		{"name":"V", "type":"numeric"}
+	]
+},
+"polybool":
+{
+	"inputs":
+	[
+		{"name":"flag", "kind":"required", "type":[["choices={'intersection','union','subtraction','exclusiveor'}"],["char"]]},
+		{"name":"x1", "kind":"required", "type":"numeric"},
+		{"name":"y1", "kind":"required", "type":"numeric"},
+		{"name":"x2", "kind":"required", "type":"numeric"},
+		{"name":"y2", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"x", "type":"numeric"},
+		{"name":"y", "type":"numeric"}
+	]
+},
+"polyjoin":
+{
+	"inputs":
+	[
+		{"name":"latcells", "kind":"required", "type":"cell"},
+		{"name":"loncells", "kind":"required", "type":"cell"}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"polymerge":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"tol", "kind":"positional", "type":"numeric"},
+		{"name":"outputFormat", "kind":"ordered", "type":"choices={'cell','vector'}"}
+	],
+	"outputs":
+	[
+		{"name":"latMerged", "type":"numeric"},
+		{"name":"lonMerged", "type":"numeric"}
+	]
+},
+"polysplit":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"latcells", "type":"cell"},
+		{"name":"loncells", "type":"cell"}
+	]
+},
+"polyxpoly":
+{
+	"inputs":
+	[
+		{"name":"x1", "kind":"required", "type":"numeric"},
+		{"name":"y1", "kind":"required", "type":"numeric"},
+		{"name":"x2", "kind":"required", "type":"numeric"},
+		{"name":"y2", "kind":"required", "type":"numeric"},
+		{"name":"'unique'", "kind":"ordered", "type":"choices={'unique'}"}
+	],
+	"outputs":
+	[
+		{"name":"xi", "type":"numeric"},
+		{"name":"yi", "type":"numeric"},
+		{"name":"ii", "type":"numeric"}
+	]
+},
+"putpole":
+{
+	"inputs":
+	[
+		{"name":"pole", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"origin", "type":"numeric"}
+	]
+},
+"rad2km":
+{
+	"inputs":
+	[
+		{"name":"rad", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"km", "type":"numeric"}
+	]
+},
+"rad2nm":
+{
+	"inputs":
+	[
+		{"name":"rad", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"nm", "type":"numeric"}
+	]
+},
+"rad2sm":
+{
+	"inputs":
+	[
+		{"name":"rad", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"sm", "type":"numeric"}
+	]
+},
+"reckon":
+{
+	"inputs":
+	[
+		{"name":"track", "kind":"ordered", "type":"choices={'gc','rh'}"},
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"arclen", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"az", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"latout", "type":"numeric"},
+		{"name":"lonout", "type":"numeric"}
+	]
+},
+"reducem":
+{
+	"inputs":
+	[
+		{"name":"latin", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lonin", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"tol", "kind":"positional", "type":[["single"],["double"]]}
+	],
+	"outputs":
+	[
+		{"name":"latout", "type":"numeric"},
+		{"name":"lonout", "type":"numeric"},
+		{"name":"cerr", "type":"numeric"},
+		{"name":"tol", "type":"numeric"}
+	]
+},
+"refmatToGeoRasterReference":
+{
+	"inputs":
+	[
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"refmat", "kind":"required", "type":["numeric","@ismatrix"]},
+				{"name":"Rin", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]}
+			]
+		},
+		{"name":"rasterSize", "kind":"required", "type":["numeric","vector"]},
+		{"name":"rasterInterpretation", "kind":"ordered", "type":"choices={'cells','postings'}"},
+		{"name":"funcName", "kind":"positional", "type":"char"},
+		{"name":"varName", "kind":"positional", "type":"char"},
+		{"name":"argIndex", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]}
+	]
+},
+"refmatToMapRasterReference":
+{
+	"inputs":
+	[
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"refmat", "kind":"required", "type":["numeric","@ismatrix"]},
+				{"name":"Rin", "kind":"required", "type":[["map.rasterref.MapRasterReference"]]}
+			]
+		},
+		{"name":"rasterSize", "kind":"required", "type":["numeric","vector"]},
+		{"name":"rasterInterpretation", "kind":"ordered", "type":"choices={'cells','postings'}"},
+		{"name":"funcName", "kind":"positional", "type":"char"},
+		{"name":"varName", "kind":"positional", "type":"char"},
+		{"name":"argIndex", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":[["map.rasterref.MapRasterReference"]]}
+	]
+},
+"refmatToWorldFileMatrix":
+{
+	"inputs":
+	[
+		{"name":"refmat", "kind":"required", "type":["numeric","@ismatrix"]}
+	],
+	"outputs":
+	[
+		{"name":"W", "type":"numeric"}
+	]
+},
+"refvecToGeoRasterReference":
+{
+	"inputs":
+	[
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"refvec", "kind":"required", "type":["numeric","vector"]},
+				{"name":"Rin", "kind":"required", "type":"map.rasterref.GeographicCellsReference"}
+			]
+		},
+		{"name":"rasterSize", "kind":"required", "type":["numeric","vector"]},
+		{"name":"funcName", "kind":"positional", "type":"char"},
+		{"name":"varName", "kind":"positional", "type":"char"},
+		{"name":"argIndex", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"R", "type":"map.rasterref.GeographicCellsReference"}
+	]
+},
+"removeExtraNanSeparators":
+{
+	"inputs":
+	[
+		{"name":"xdata", "kind":"required", "type":"numeric"},
+		{"name":"ydata", "kind":"required", "type":"numeric"},
+		{"name":"zdata", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"xdata", "type":"numeric"},
+		{"name":"ydata", "type":"numeric"},
+		{"name":"zdata", "type":"numeric"}
+	]
+},
+"resizem":
+{
+	"inputs":
+	[
+		{"name":"Z1", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"[numrows numcolumns]", "kind":"required", "type":["numeric","numel=2"]},
+				{"name":"scale", "kind":"required", "type":["numeric","scalar"]}
+			]
+		},
+		{"name":"R1", "kind":"ordered", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]},
+		{"name":"method", "kind":"positional", "type":"choices={'nearest','bilinear','bicubic'}"}
+	],
+	"outputs":
+	[
+		{"name":"Z", "type":"numeric"},
+		{"name":"R", "type":"numeric"}
+	]
+},
+"rhxrh":
+{
+	"inputs":
+	[
+		{"name":"lat1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"az1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lat2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"az2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"units", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"newlat", "type":"numeric"},
+		{"name":"newlon", "type":"numeric"}
+	]
+},
+"scircle1":
+{
+	"inputs":
+	[
+		{"name":"track", "kind":"ordered", "type":"choices={'gc','rh'}"},
+		{"name":"lat0", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon0", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"rad", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"az", "kind":"ordered", "type":[["single"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"units", "kind":"positional", "type":"choices={'degrees','radians'}"},
+		{"name":"npts", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"scircle2":
+{
+	"inputs":
+	[
+		{"name":"track", "kind":"ordered", "type":"choices={'gc','rh'}"},
+		{"name":"lat1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lat2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"units", "kind":"positional", "type":"choices={'degrees','radians'}"},
+		{"name":"npts", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"scxsc":
+{
+	"inputs":
+	[
+		{"name":"lat1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"range1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lat2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"range2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"units", "kind":"positional", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"newlat", "type":"numeric"},
+		{"name":"newlon", "type":"numeric"}
+	]
+},
+"sm2nm":
+{
+	"inputs":
+	[
+		{"name":"sm", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"nm", "type":"numeric"}
+	]
+},
+"sm2km":
+{
+	"inputs":
+	[
+		{"name":"sm", "kind":"required", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"km", "type":"numeric"}
+	]
+},
+"sm2deg":
+{
+	"inputs":
+	[
+		{"name":"sm", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"deg", "type":"numeric"}
+	]
+},
+"sm2rad":
+{
+	"inputs":
+	[
+		{"name":"sm", "kind":"required", "type":"numeric"},
+		{"mutuallyExclusiveGroup":
+			[
+				{"name":"sphere", "kind":"ordered", "type":"choices={'earth','mercury','venus','moon','mars','jupiter','saturn','uranus','neptune','pluto','sun'}"},
+				{"name":"radius", "kind":"ordered", "type":"numeric"}
+			]
+		}
+	],
+	"outputs":
+	[
+		{"name":"rad", "type":"numeric"}
+	]
+},
+"str2angle":
+{
+	"inputs":
+	[
+		{"name":"strings", "kind":"required", "type":"char"}
+	],
+	"outputs":
+	[
+		{"name":"angles", "type":"numeric"}
+	]
+},
+"track1":
+{
+	"inputs":
+	[
+		{"name":"trackstr", "kind":"ordered", "type":"choices={'gc','rh'}"},
+		{"name":"lat0", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon0", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"az", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"arclen", "kind":"ordered", "type":[["single"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"angleunits", "kind":"positional", "type":"choices={'degrees','radians'}"},
+		{"name":"npts", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"track2":
+{
+	"inputs":
+	[
+		{"name":"track", "kind":"ordered", "type":"choices={'gc','rh'}"},
+		{"name":"lat1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lat2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon2", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"ellipsoid", "kind":"ordered", "type":[["numeric","numel=2"],["oblateSpheroid"],["referenceEllipsoid"],["referenceSphere"]]},
+		{"name":"units", "kind":"positional", "type":"choices={'degrees','radians'}"},
+		{"name":"npts", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"lat", "type":"numeric"},
+		{"name":"lon", "type":"numeric"}
+	]
+},
+"unwrapMultipart":
+{
+	"inputs":
+	[
+		{"name":"p", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"angleUnit", "kind":"ordered", "type":"choices={'degrees','radians'}"}
+	],
+	"outputs":
+	[
+		{"name":"unwrapped", "type":"numeric"}
+	]
+},
+"vec2mtx":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"density", "kind":"required", "type":["numeric","scalar"]},
+		{"name":"latlim", "kind":"positional", "type":["numeric","numel=2"]},
+		{"name":"lonlim", "kind":"positional", "type":["numeric","numel=2"]},
+		{"name":"'filled'", "kind":"positional", "type":"choices={'filled'}"}
+	],
+	"outputs":
+	[
+		{"name":"Z", "type":"numeric"},
+		{"name":"R", "type":"map.rasterref.GeographicCellsReference"}
+	]
+},
+"vec2mtx":
+{
+	"inputs":
+	[
+		{"name":"lat", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"Z1", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R1", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"]]},
+		{"name":"'filled'", "kind":"ordered", "type":"choices={'filled'}"}
+	],
+	"outputs":
+	[
+		{"name":"Z", "type":"numeric"},
+		{"name":"R", "type":"inferredFrom=R1"}
+	]
+},
+"viewshed":
+{
+	"inputs":
+	[
+		{"name":"Z", "kind":"required", "type":["numeric","@ismatrix"]},
+		{"name":"R", "kind":"required", "type":[["map.rasterref.GeographicPostingsReference"],["map.rasterref.GeographicCellsReference"],["double"]]},
+		{"name":"lat1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"lon1", "kind":"required", "type":[["single"],["double"]]},
+		{"name":"observerAltitude", "kind":"positional", "type":[["single"],["double"]]},
+		{"name":"targetAltitude", "kind":"positional", "type":[["single"],["double"]]},
+		{"name":"observerAltitudeOption", "kind":"positional", "type":"choices={'AGL','MSL'}"},
+		{"name":"targetAltitudeOption", "kind":"positional", "type":"choices={'AGL','MSL'}"},
+		{"name":"actualRadius", "kind":"positional", "type":"numeric"},
+		{"name":"effectiveRadius", "kind":"positional", "type":"numeric"}
+	],
+	"outputs":
+	[
+		{"name":"vis", "type":"numeric"},
+		{"name":"R", "type":"numeric"}
+	]
+},
+"worldFileMatrixToRefmat":
+{
+	"inputs":
+	[
+		{"name":"W", "kind":"required", "type":["numeric","@ismatrix"]}
+	],
+	"outputs":
+	[
+		{"name":"refmat", "type":"numeric"}
+	]
+}
+}

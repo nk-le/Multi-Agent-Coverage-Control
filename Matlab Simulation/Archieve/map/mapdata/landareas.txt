@@ -1,0 +1,12 @@
+Low-resolution outlines of land areas worldwide, stored as polygons in
+shapefile format with coordinates in latitude (Y) and longitude (X) in
+degrees.  The polygons include both exterior and interior coastlines.  A
+'Name' attribute provides names for continents and larger islands.  The
+coordinate sampling is equivalent to a scale of 1:30,000,000.  This data
+set is suitable for global displays.
+
+Source
+------
+The raw coordinate data were derived from the Digital Chart of the World
+(DCW) browser layer, published by U.S. National Geospatial-Intelligence
+Agency (NGA), formerly National Imagery and Mapping Agency (NIMA).

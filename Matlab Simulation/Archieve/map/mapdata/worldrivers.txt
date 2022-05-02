@@ -1,0 +1,12 @@
+Low-resolution vectors representing major rivers of the world, stored as
+lines in shapefile format with coordinates in latitude (Y) and longitude
+(X) in degrees.  A 'Name' attribute provides names for most rivers.  The
+coordinate sampling is equivalent to a scale of 1:30,000,000.  This data
+set is suitable for global displays.
+
+Source
+------
+The raw coordinate data were derived from the Digital Chart of the World
+(DCW) browser layer ('Streams, rivers, channelized rivers'), published by
+U.S. National Geospatial-Intelligence Agency (NGA), formerly National
+Imagery and Mapping Agency (NIMA).
