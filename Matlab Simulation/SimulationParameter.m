@@ -7,7 +7,7 @@ classdef SimulationParameter < handle
     
     properties
         MAX_ITER = 50000;
-        N_AGENT = 6;
+        N_AGENT = 2;
         ID_LIST
     end
    

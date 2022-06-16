@@ -17,7 +17,8 @@ classdef DataLogger < handle
         ControlOutput 
         CVT
         V_BLF
-        
+        V
+        C
         visHandle
     end
     
@@ -28,7 +29,7 @@ classdef DataLogger < handle
             obj.vConstList = vList;
             obj.wOrbitList = wList;
             obj.startPose = startPose;
-            obj.curCnt = 0;
+            obj.curCnt = 1;
             
             obj.maxCnt = obj.SIM_PARAM.MAX_ITER + 10;
             obj.PoseAgent = zeros(obj.SIM_PARAM.N_AGENT, 3, obj.maxCnt);
@@ -36,13 +37,15 @@ classdef DataLogger < handle
             obj.ControlOutput = zeros(obj.SIM_PARAM.N_AGENT, obj.maxCnt);
             obj.CVT = zeros(obj.SIM_PARAM.N_AGENT, 2, obj.maxCnt);
             obj.V_BLF = zeros(obj.SIM_PARAM.N_AGENT, obj.maxCnt);
+            obj.V = cell(obj.maxCnt,1);
+            obj.C = cell(obj.maxCnt,1);
             
             obj.visHandle = Visualizer(obj.SIM_PARAM.N_AGENT);
             obj.visHandle.set_boundary(regionConfig);
         end
         
         %% Log the necessary information for visualization and evaluation
-        function log(obj, CurPose, CurPoseVM, CurPoseCVT, LyapunovCost, CurControlOutput)
+        function log(obj, CurPose, CurPoseVM, CurPoseCVT, LyapunovCost, CurControlOutput, v, c)
             obj.curCnt = obj.curCnt + 1;
             if(obj.curCnt <= obj.maxCnt)
                 obj.PoseAgent(:, :,obj.curCnt) = CurPose(:,:);
@@ -50,6 +53,8 @@ classdef DataLogger < handle
                 obj.CVT(:,:, obj.curCnt)  = CurPoseCVT(:,:);
                 obj.ControlOutput(:, obj.curCnt) = CurControlOutput(:);
                 obj.V_BLF(:, obj.curCnt) = LyapunovCost(:);
+                obj.V{obj.curCnt} = v;
+                obj.C{obj.curCnt} = c;
             end
         end 
         
@@ -192,12 +197,51 @@ classdef DataLogger < handle
                 end
             end  
         end
+        
+        function generate_video(obj)
+             %% To video
+            Filename = sprintf('%s', datestr(now,'mm-dd-yyyy HH-MM'));
+            myVideo = VideoWriter(fullfile(pwd, "Sim_Video", Filename)); %open video file
+            myVideo.Quality = 100;
+            myVideo.FrameRate = 30;  
+            open(myVideo)
+            
+            %% Logging
+            handle = Visualizer(obj.SIM_PARAM.N_AGENT);
+            handle.set_boundary(obj.regionConfig);
+            for i = 1:obj.curCnt
+                v = obj.V{i};
+                c = obj.C{i};
+                CurPoseCVT = obj.CVT(:,:,i);
+                CurPoseVM = obj.PoseVM(:,:,i);
+                curPose = obj.PoseAgent(:,:,i);
+                pathGen = obj.PoseAgent(:,1:2,max(2, i - 100):i);
+                curDir = (obj.PoseAgent(:,1:2, i) - obj.PoseAgent(:,1:2, max(1,i - 1))); 
+                curDir = 50 * curDir/norm(curDir);
+                % Pass the current positions and the paths to the visualizer
+                handle.live_plot(i, curPose, CurPoseVM, CurPoseCVT, curDir, v, c, pathGen);
+                
+                frame = getframe(gcf); %get frame
+                writeVideo(myVideo, frame);
+            end
+            
+            %% End
+            close(myVideo)
+        end
  
         
         
-        function live_plot(obj, CurPoseVM, CurPoseCVT, v, c)
-            pathGen = obj.PoseVM(:,1:2,1:obj.curCnt);
-            obj.visHandle.live_plot(CurPoseVM, CurPoseCVT, v, c, pathGen)
+        function live_plot(obj)    
+            v = obj.V{obj.curCnt};
+            c = obj.C{obj.curCnt};
+            CurPoseCVT = obj.CVT(:,:,obj.curCnt);
+            CurPoseVM = obj.PoseVM(:,:,obj.curCnt);
+            curPose = obj.PoseAgent(:,:,obj.curCnt);
+            pathGen = obj.PoseAgent(:,1:2,max(2, obj.curCnt - 100):obj.curCnt);
+            curDir = (obj.PoseAgent(:,1:2, obj.curCnt) - obj.PoseAgent(:,1:2, max(1,obj.curCnt - 1))); 
+            curDir = 50 * curDir/norm(curDir);
+            % Pass the current positions and the paths to the visualizer
+            obj.visHandle.live_plot(obj.curCnt, curPose, CurPoseVM, CurPoseCVT, curDir, v, c, pathGen)
         end
         
         
