@@ -3,7 +3,6 @@ Local/
 *.asv
 videos/
 Sim_Video/
-Log/
 Matlab Simulation/slprj/*
 *.avi
 *.mp4
