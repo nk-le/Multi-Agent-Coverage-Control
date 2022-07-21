@@ -19,8 +19,8 @@ classdef RegionParameter < handle
     
     methods
 
-        function obj = RegionParameter()
-             
+        function obj = RegionParameter(vArr)
+           obj.set_vertexes(vArr);  
         end
         
         
@@ -30,7 +30,8 @@ classdef RegionParameter < handle
             assert(size(vArr,2) == 2);
             [A, b] = vert2con(vArr);
             obj.BOUNDARIES_VERTEXES = vArr;
-            obj.BOUNDARIES_COEFF = [A, b];
+            %obj.BOUNDARIES_COEFF = [A, b];
+            obj.BOUNDARIES_COEFF = normalize([A, b]',"norm")';
             obj.REGION_MAX_X = max(vArr(:,1));
             obj.REGION_MAX_Y = max(vArr(:,2));
         end
