@@ -101,7 +101,7 @@ for fileId = 0:3
         writeVideo(myVideo, frame);
         disp(iter)
     end
-    close(myVideo)
+    close(myVideo);
 end
 
 %% Get the data as patch

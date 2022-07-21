@@ -9,12 +9,14 @@ classdef SimulationParameter < handle
         MAX_ITER = 50000;
         N_AGENT = 6;
         ID_LIST
+        START_POSE
     end
    
     methods 
        function obj = SimulationParameter()
            % Assigned specific IDs for each agents to clarify the coommunication protocol 
            obj.ID_LIST = (1:obj.N_AGENT);
+           obj.START_POSE = RegionParameter.generate_start_pose(obj.N_AGENT);
        end
        
        function obj = set_n_agents(obj, n)

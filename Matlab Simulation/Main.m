@@ -18,24 +18,22 @@ vertexes = [0,   0;
             300,   0;
             0,   0];
 REGION_CONFIG.set_vertexes(vertexes);
-REGION_CONFIG.BOUNDARIES_COEFF = REGION_CONFIG.BOUNDARIES_COEFF * 100;
-%REGION_CONFIG.set_manual(3);
+REGION_CONFIG.BOUNDARIES_COEFF = REGION_CONFIG.BOUNDARIES_COEFF * 100; % TODO: some hidden tuning parameters. idea: normalized them directly in the control function
 
 CONTROL_PARAM = ControlParameter();
 
 %% Some adjustable control parameter, will be moved to Simulation_Parameter later
 rng(4);
-startPose = REGION_CONFIG.generate_start_pose(SIM_PARAM.N_AGENT);
 agentHandle = UnicycleCoverageAgent.empty(SIM_PARAM.N_AGENT, 0);
 
 %% Agent handler
 for k = 1 : SIM_PARAM.N_AGENT
-    agentHandle(k) = UnicycleCoverageAgent(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), startPose(k,:), REGION_CONFIG, CONTROL_PARAM);
+    agentHandle(k) = UnicycleCoverageAgent(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), SIM_PARAM.START_POSE(k,:), REGION_CONFIG, CONTROL_PARAM);
 end
 
 % Instance of Logger for data post processing, persistent over all files
-Logger = DataLogger(SIM_PARAM, REGION_CONFIG, startPose, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
-
+%Logger = DataLogger(SIM_PARAM, REGION_CONFIG, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
+Logger = DataLogger(SIM_PARAM, REGION_CONFIG, CONTROL_PARAM, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
 
 %% MAIN
 
@@ -90,6 +88,7 @@ for iteration = 1: SIM_PARAM.MAX_ITER
     end
 
     %% Logging
+<<<<<<< HEAD
     Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, ControlOutput);
     try
         if(mod(iteration, 25) == 1)
@@ -97,6 +96,11 @@ for iteration = 1: SIM_PARAM.MAX_ITER
         end
     catch
 
+=======
+    Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, ControlOutput, v, c);
+    if(mod(iteration, 25) == 1)
+        Logger.live_plot();
+>>>>>>> 9590c190ab4e6b0933ce7a9f854ca66655627d2d
     end
     fprintf("Decentralized. Iter: %d. L: %f \n", iteration, sum(Vk_List)); 
 end
