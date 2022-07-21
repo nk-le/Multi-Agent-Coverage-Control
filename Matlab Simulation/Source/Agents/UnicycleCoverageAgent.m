@@ -39,7 +39,7 @@ classdef UnicycleCoverageAgent < FixedWingBase & CoverageAgentBase
         function obj = UnicycleCoverageAgent(dt, botID, initPose_3d, regionParam, controlParam)
             obj@FixedWingBase(botID, controlParam, initPose_3d);
             
-            obj.controller = BLFController(controlParam, regionParam);
+            obj.controller = obj.set_controller(controlParam, regionParam);
             obj.voronoiComputer = VoronoiComputer(botID);
             
             assert(dt~=0);
@@ -49,6 +49,12 @@ classdef UnicycleCoverageAgent < FixedWingBase & CoverageAgentBase
             obj.controlParam = controlParam;
         end
 
+        function out = set_controller(obj, controlParam, regionParam)
+            %%% Set the specific controller
+            % TODO: bring this method to the base class
+            out = BLFController(controlParam, regionParam);
+        end
+        
         function move(obj, w)
             move@FixedWingBase(obj, obj.controlParam.V_CONST, w);
         end

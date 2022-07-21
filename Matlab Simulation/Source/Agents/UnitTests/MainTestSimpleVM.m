@@ -26,11 +26,11 @@ CONTROL_PARAM = ControlParameter();
 
 %% Some adjustable control parameter, will be moved to Simulation_Parameter later
 rng(4);
-agentHandle = UnicycleCoverageAgent.empty(SIM_PARAM.N_AGENT, 0);
+agentHandle = UnicycleSimpleCoverageAgent.empty(SIM_PARAM.N_AGENT, 0);
 
 %% Agent handler
 for k = 1 : SIM_PARAM.N_AGENT
-    agentHandle(k) = UnicycleCoverageAgent(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), SIM_PARAM.START_POSE(k,:), REGION_CONFIG, CONTROL_PARAM);
+    agentHandle(k) = UnicycleSimpleCoverageAgent(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), SIM_PARAM.START_POSE(k,:), REGION_CONFIG, CONTROL_PARAM);
 end
 
 % Instance of Logger for data post processing, persistent over all files
@@ -93,7 +93,7 @@ for iteration = 1: SIM_PARAM.MAX_ITER
     Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, ControlOutput, v, c);
     try
         if(mod(iteration, 25) == 1)
-            Logger.live_plot(vmCmoord_2d_list, CVT_2d_List, v, c);
+            Logger.live_plot();
         end
     catch
     end

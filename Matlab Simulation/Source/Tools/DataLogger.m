@@ -428,17 +428,19 @@ classdef DataLogger < handle
             close(myVideo)
         end
 
-        function live_plot(obj)    
-            v = obj.V{obj.curCnt};
-            c = obj.C{obj.curCnt};
-            CurPoseCVT = obj.CVT(:,:,obj.curCnt);
-            CurPoseVM = obj.PoseVM(:,:,obj.curCnt);
-            curPose = obj.PoseAgent(:,:,obj.curCnt);
-            pathGen = obj.PoseAgent(:,1:2,max(2, obj.curCnt - 100):obj.curCnt);
-            curDir = (obj.PoseAgent(:,1:2, obj.curCnt) - obj.PoseAgent(:,1:2, max(1,obj.curCnt - 1))); 
+        function live_plot(obj)
+            idx = obj.curCnt - 1;
+            v = obj.V{idx};
+            c = obj.C{idx};
+            CurPoseCVT = obj.CVT(:,:,idx);
+            CurPoseVM = obj.PoseVM(:,:,idx);
+            curPose = obj.PoseAgent(:,:,idx);
+            pathGen = obj.PoseAgent(:,1:2,max(2, idx - 100):idx);
+            curDir = (obj.PoseAgent(:,1:2, idx) - obj.PoseAgent(:,1:2, max(1,idx - 1))); 
             curDir = 50 * curDir/norm(curDir);
             % Pass the current positions and the paths to the visualizer
-            obj.visHandle.live_plot(obj.curCnt, curPose, CurPoseVM, CurPoseCVT, curDir, v, c, pathGen)
+            obj.visHandle.live_plot(obj.curCnt, curPose, CurPoseVM, CurPoseCVT, curDir, v, c, pathGen);
+            drawnow();
         end
         
         
