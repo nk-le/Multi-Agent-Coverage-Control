@@ -2,3 +2,11 @@ Matlab Simulation/Result/Video/*
 Local/
 *.asv
 videos/
+Sim_Video/
+Log/
+Matlab Simulation/slprj/*
+*.avi
+*.mp4
+Documents_and_Publications/
+
+Matlab Simulation/Library/mathworks-robotics-mobile-robotics-simulation-toolbox-7066fa0/

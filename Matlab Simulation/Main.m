@@ -19,23 +19,21 @@ vertexes = [0,   0;
             0,   0];
 REGION_CONFIG.set_vertexes(vertexes);
 REGION_CONFIG.BOUNDARIES_COEFF = REGION_CONFIG.BOUNDARIES_COEFF * 100; % TODO: some hidden tuning parameters. idea: normalized them directly in the control function
-%REGION_CONFIG.set_manual(3);
 
 CONTROL_PARAM = ControlParameter();
 
 %% Some adjustable control parameter, will be moved to Simulation_Parameter later
 rng(4);
-startPose = REGION_CONFIG.generate_start_pose(SIM_PARAM.N_AGENT);
 agentHandle = UnicycleCoverageAgent.empty(SIM_PARAM.N_AGENT, 0);
 
 %% Agent handler
 for k = 1 : SIM_PARAM.N_AGENT
-    agentHandle(k) = UnicycleCoverageAgent(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), startPose(k,:), REGION_CONFIG, CONTROL_PARAM);
+    agentHandle(k) = UnicycleCoverageAgent(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), SIM_PARAM.START_POSE(k,:), REGION_CONFIG, CONTROL_PARAM);
 end
 
 % Instance of Logger for data post processing, persistent over all files
-Logger = DataLogger(SIM_PARAM, REGION_CONFIG, startPose, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
-
+%Logger = DataLogger(SIM_PARAM, REGION_CONFIG, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
+Logger = DataLogger(SIM_PARAM, REGION_CONFIG, CONTROL_PARAM, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
 
 %% MAIN
 

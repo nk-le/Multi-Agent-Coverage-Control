@@ -14,6 +14,7 @@ classdef Visualizer < handle
         titleHandle
         figHandle
         
+        botColors 
         recordFlag
     end
     
@@ -33,19 +34,19 @@ classdef Visualizer < handle
             obj.goalHandle = cell(n,1);
             obj.genHandle = cell(n,1);
             obj.dirHandle = cell(n,1);
-            cellColors = cool(n);
+            obj.botColors = cool(n);
             for i = 1:n % color according to
-                obj.posPathHandle{i} = plot(posePos_3(i,1), posePos_3(i,2), 'color',cellColors(i,:)*.8, 'linewidth',2, 'LineStyle', '-');  
+                obj.posPathHandle{i} = plot(posePos_3(i,1), posePos_3(i,2), 'color',obj.botColors(i,:)*.8, 'linewidth',2, 'LineStyle', '-');  
                 hold on; 
 
                 obj.posPathHandle{i}.Color(4) = 1;
-                obj.verCellHandle{i} = patch(poseGen_3(i,1), poseGen_3(i,2),cellColors(i,:)); 
+                obj.verCellHandle{i} = patch(poseGen_3(i,1), poseGen_3(i,2),obj.botColors(i,:)); 
                 obj.verCellHandle{i}.FaceAlpha = 0.3;
-                obj.genPathHandle{i}  = plot(poseGen_3(i,1), poseGen_3(i,2), 'color',cellColors(i,:)*.8, 'linewidth',2, 'LineStyle', '-');
+                obj.genPathHandle{i}  = plot(poseGen_3(i,1), poseGen_3(i,2), 'color',obj.botColors(i,:)*.8, 'linewidth',2, 'LineStyle', '-');
                 obj.genPathHandle{i}.Color(4) = 1;
-                obj.dirHandle{i} = quiver(poseGen_3(i,1), poseGen_3(i,2), 0, 0, 'color', cellColors(i,:), 'Marker','*','LineWidth',2, 'MaxHeadSize', 2);
-                obj.goalHandle{i} = plot(poseCVT_3(i,1),poseCVT_3(i,2),'o','linewidth',2, 'color',cellColors(i,:)*.8);
-                obj.genHandle{i} = plot(poseGen_3(i,1), poseGen_3(i,2),'+','linewidth',2, 'color',cellColors(i,:)*.8);
+                obj.dirHandle{i} = quiver(poseGen_3(i,1), poseGen_3(i,2), 0, 0, 'color', obj.botColors(i,:), 'Marker','*','LineWidth',2, 'MaxHeadSize', 2);
+                obj.goalHandle{i} = plot(poseCVT_3(i,1), poseCVT_3(i,2),'o','linewidth',2, 'color',obj.botColors(i,:)*.8);
+                obj.genHandle{i} = plot(poseGen_3(i,1), poseGen_3(i,2),'+','linewidth',2, 'color',obj.botColors(i,:)*.8);
             end
             obj.titleHandle = title(['+ = Robots, o = Goals', num2str(0)]);
             
@@ -90,7 +91,7 @@ classdef Visualizer < handle
                 set(obj.dirHandle{i},'XData', curPose(i,1), 'YData', curPose(i,2),'udata',curDir(i,1),'vdata',curDir(i,2));
             end
 
-            set(obj.titleHandle,'string',['* = Agents | o = Virtual Mass | + = CVT | Iteration: ', num2str(iter,'%3d')]);
+            set(obj.titleHandle,'string',['* = Agents | + = Virtual Mass | o = CVT | Iteration: ', num2str(iter,'%3d')]);
             %drawnow
             
         end
