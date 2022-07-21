@@ -91,8 +91,12 @@ for iteration = 1: SIM_PARAM.MAX_ITER
 
     %% Logging
     Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, ControlOutput);
-    if(mod(iteration, 25) == 1)
-        Logger.live_plot(vmCmoord_2d_list, CVT_2d_List, v, c);
+    try
+        if(mod(iteration, 25) == 1)
+            Logger.live_plot(vmCmoord_2d_list, CVT_2d_List, v, c);
+        end
+    catch
+
     end
     fprintf("Decentralized. Iter: %d. L: %f \n", iteration, sum(Vk_List)); 
 end

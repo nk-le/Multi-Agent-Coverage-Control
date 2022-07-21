@@ -14,8 +14,9 @@ SIM_PARAM.set_n_agents(10);
 COVERAGE_PARAM = CoverageParameter();
 
 REGION_CONFIG = RegionParameter();
-vertexes = [0,   0; 
+vertexes = [0,   0;
             0,   300; 
+            150, 500;
             300, 600; 
             800, 300;
             700,   0;
