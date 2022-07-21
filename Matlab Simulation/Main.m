@@ -1,49 +1,6 @@
-addpath(genpath('./Source/Agents'));
-addpath(genpath('./Source/Controller'));
-addpath(genpath('./Source/DataStructure'));
-addpath(genpath('./Source/Tools'));
-addpath(genpath('./Source/Algorithm'));
-addpath(genpath('./Library'));
-addpath(genpath('./Source/Coverage'));
-addpath(genpath('./Source'));
+Config
 
-clear all; close all;
-
-format long;
-SIM_PARAM = SimulationParameter();
-COVERAGE_PARAM = CoverageParameter();
-REGION_CONFIG = RegionParameter();
-vertexes = [0,   0; 
-            0,   300; 
-            300, 600; 
-            800, 300;
-            300,   0;
-            0,   0];
-REGION_CONFIG.set_vertexes(vertexes);
-REGION_CONFIG.BOUNDARIES_COEFF = REGION_CONFIG.BOUNDARIES_COEFF * 100; % TODO: some hidden tuning parameters. idea: normalized them directly in the control function
-
-CONTROL_PARAM = ControlParameter();
-
-%% Some adjustable control parameter, will be moved to Simulation_Parameter later
-rng(4);
-agentHandle = UnicycleCoverageAgent.empty(SIM_PARAM.N_AGENT, 0);
-
-%% Agent handler
-for k = 1 : SIM_PARAM.N_AGENT
-    agentHandle(k) = UnicycleCoverageAgent(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), SIM_PARAM.START_POSE(k,:), REGION_CONFIG, CONTROL_PARAM);
-end
-
-% Instance of Logger for data post processing, persistent over all files
-%Logger = DataLogger(SIM_PARAM, REGION_CONFIG, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
-Logger = DataLogger(SIM_PARAM, REGION_CONFIG, CONTROL_PARAM, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
-
-%% MAIN
-
-%% Voronoi Computer
-VoronoiCom = Voronoi2D_Handler(9999, REGION_CONFIG.BOUNDARIES_VERTEXES);
-
-%% Communication Link for data broadcasting (GBS : global broadcasting service)
-GBS = CommunicationLink(SIM_PARAM.N_AGENT, SIM_PARAM.ID_LIST); 
+% Main Loop
 for iteration = 1: SIM_PARAM.MAX_ITER
     %% Logging instances
     pose_3d_list = zeros(SIM_PARAM.N_AGENT, 3);
@@ -80,8 +37,6 @@ for iteration = 1: SIM_PARAM.MAX_ITER
        if(isAvailable)
            % Barrier Lyapunov based controller 
            [Vk_List(k), ControlOutput(k)] = agentHandle(k).compute_control_input(report);
-           % Controller proposed by Qingchen
-           %[Vk_List(k), ControlOutput(k)] = agentHandle(k).computeControlSimple(); 
            agentHandle(k).move(ControlOutput(k));
        else
            % Pass through so
@@ -93,9 +48,10 @@ for iteration = 1: SIM_PARAM.MAX_ITER
     Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, ControlOutput, v, c);
     try
         if(mod(iteration, 25) == 1)
-            Logger.live_plot(vmCmoord_2d_list, CVT_2d_List, v, c);
+            Logger.live_plot();
         end
     catch
+        
     end
     fprintf("Decentralized. Iter: %d. L: %f \n", iteration, sum(Vk_List)); 
 end

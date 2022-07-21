@@ -81,8 +81,8 @@ for iteration = 1: SIM_PARAM.MAX_ITER
            % Barrier Lyapunov based controller 
            [Vk_List(k), ControlOutput(k)] = agentHandle(k).compute_control_input(report);
            % Controller proposed by Qingchen
-           %[Vk_List(k), ControlOutput(k)] = agentHandle(k).computeControlSimple(); 
-           agentHandle(k).move(ControlOutput(k));
+%            [Vk_List(k), ControlOutput(k)] = agentHandle(k).computeControlSimple(); 
+            agentHandle(k).move(ControlOutput(k));
        else
            % Pass through so
            error("Unavailable information required by agent %d", SIM_PARAM.ID_LIST(k));

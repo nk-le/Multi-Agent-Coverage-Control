@@ -81,6 +81,7 @@ classdef UnicycleCoverageAgent < FixedWingBase & CoverageAgentBase
             format long;
             obj.voronoiComputer.update_partial_derivative_info(report)
             [Vk, wOut] = obj.controller.compute(obj.AgentPose_3d, obj.voronoiComputer);
+            assert(Vk >= 0);
         end
         
         %% Simple controller
