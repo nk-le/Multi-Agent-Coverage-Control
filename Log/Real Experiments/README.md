@@ -1,4 +1,6 @@
-Data format of the log file: *.log
+## Data format 
+
+* Raw log file: *.log
 
 AgentID, Timestamp [ms], CoordX [mm], CoordY [mm], Theta [rad], VirtualMassX [mm], VirtualMassY [mm], CVTX [mm], CVTY [mm], W [rad/s], Vk [nounit] (Lyapunov of each agent)
 
