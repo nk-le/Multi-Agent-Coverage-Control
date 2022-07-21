@@ -23,6 +23,11 @@ vertexes = [0,   0;
             800, 300;
             300,   0;
             0,   0];
+vertexes = [0,   0; 
+            0, 600; 
+            800, 600;
+            800,   0;
+            0,   0];
 REGION_CONFIG = RegionParameter(vertexes);
 
 % Controller Parameters
