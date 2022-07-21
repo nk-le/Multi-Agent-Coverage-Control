@@ -38,7 +38,7 @@ for k = 1 : SIM_PARAM.N_AGENT
 end
 
 % Instance of Logger for data post processing, persistent over all files
-Logger = DataLogger(SIM_PARAM, REGION_CONFIG, startPose, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
+Logger = DataLogger(SIM_PARAM, REGION_CONFIG, CONTROL_PARAM, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
 
 
 %% MAIN
@@ -94,12 +94,15 @@ for iteration = 1: SIM_PARAM.MAX_ITER
        end    
     end
 
-    %% Logging
-    Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, zeros(SIM_PARAM.N_AGENT, 1));
+    %% Logging  
+    Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, zeros(SIM_PARAM.N_AGENT, 1), v, c);
     
-    if(mod(iteration, 25) == 1)
-        Logger.live_plot(vmCmoord_2d_list, CVT_2d_List, v, c);
-    end
+        if(mod(iteration, 25) == 1)
+            try
+                Logger.live_plot();
+            catch
+            end
+        end
     
     fprintf("Decentralized. Iter: %d. L: %f \n", iteration, sum(Vk_List)); 
 end
