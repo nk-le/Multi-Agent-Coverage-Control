@@ -62,9 +62,7 @@ classdef UnicycleCoverageAgent < FixedWingBase & CoverageAgentBase
         function z = get_voronoi_generator_2(obj)
             z = obj.VMCoord_2d;
         end
-        
-        get_coord
-   
+           
         function [Vk, wOut] = compute_control_input(obj, report)
             assert(isa(report{1}, 'Struct_Neighbor_CVT_PD'));
             

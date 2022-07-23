@@ -1,6 +1,6 @@
 function [dVidzk] = Calc_Adjacent_PD_L(i_zi_2x1, i_Ci_2x1, i_dCi_dzk_2x2 , i_Q_2x2, i_aj_nx2, i_bj_n)
     %Computation of the partial derivative of th edesigned Lyapunov
-    %function according to the coordinate of the neighbot
+    %function
     %% Assertion
     
     %% Computation

@@ -14,7 +14,6 @@ close all;
 Config
        
 %% DEFAULT SETUP **********************************************************
-initPose = RegionParameter.generate_start_pose(6)';
 SIM_PARAM = SimulationParameter(dt, maxIter, nAgent, initPose');
 REGION_CONFIG = RegionParameter(vertexes);
 CONTROL_PARAM = ControlParameter(vConst, wOrbit, wSat, Q, gamma, eps);
@@ -22,9 +21,11 @@ CONTROL_PARAM = ControlParameter(vConst, wOrbit, wSat, Q, gamma, eps);
 %% Type of agent
 % Agent handler
 for k = 1 : SIM_PARAM.N_AGENT
-    if(type == "Simple")
+    if(type == "Simple")   % Simple controller
         agentHandle(k) = UnicycleSimpleCoverageAgent(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), SIM_PARAM.START_POSE(k,:), REGION_CONFIG, CONTROL_PARAM);
-    else    % BLF controller
+    elseif(type == "BLF")    % BLF controller
+        agentHandle(k) = UnicycleCoverageAgent(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), SIM_PARAM.START_POSE(k,:), REGION_CONFIG, CONTROL_PARAM);
+    else
         agentHandle(k) = UnicycleCoverageAgent(SIM_PARAM.TIME_STEP, SIM_PARAM.ID_LIST(k), SIM_PARAM.START_POSE(k,:), REGION_CONFIG, CONTROL_PARAM);
         disp('Used default BLF Controller');
     end
