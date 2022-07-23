@@ -1,6 +1,8 @@
 %% Parsing %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Author: Nhan Khanh Le
 % Date: July 23, 2022
+addpath(genpath('./Matlab_Simulation/Library/'));
+addpath(genpath('./Matlab_Simulation/Source/'));
 addpath('./Log/Real Experiments/');
 
 logFile = "Parsed_TRO_LogSim2.log.mat";
