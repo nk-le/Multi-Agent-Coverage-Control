@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="444px" preserveAspectRatio="none" style="width:1296px;height:444px;background:#FFFFFF;" version="1.1" viewBox="0 0 1296 444" width="1296px" zoomAndPan="magnify"><defs/><g><rect height="26.2969" id="_title" style="stroke:#00000000;stroke-width:1.0;fill:none;" width="250" x="516.25" y="5"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="240" x="521.25" y="22.9951">Multi-Agent Coverage Control</text><!--MD5=[edf7837a02fe3dd505f99127146dd5ff]
+class AgentBase--><g id="elem_AgentBase"><rect codeLine="19" fill="#F1F1F1" height="80.5938" id="AgentBase" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="137" x="390.5" y="44.2969"/><ellipse cx="417.65" cy="60.2969" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M419.9938,55.9688 C419.0563,55.5313 418.4625,55.3906 417.5875,55.3906 C414.9625,55.3906 412.9625,57.4688 412.9625,60.1875 L412.9625,61.3125 C412.9625,63.8906 415.0719,65.7813 417.9625,65.7813 C419.1813,65.7813 420.3375,65.4844 421.0875,64.9375 C421.6656,64.5313 421.9938,64.0781 421.9938,63.6875 C421.9938,63.2344 421.6031,62.8438 421.1344,62.8438 C420.9156,62.8438 420.7125,62.9219 420.525,63.1094 C420.0719,63.5938 420.0719,63.5938 419.8844,63.6875 C419.4625,63.9531 418.775,64.0781 418.0094,64.0781 C415.9625,64.0781 414.6656,62.9844 414.6656,61.2813 L414.6656,60.1875 C414.6656,58.4063 415.9156,57.0938 417.65,57.0938 C418.2281,57.0938 418.8375,57.25 419.3063,57.5 C419.7906,57.7813 419.9625,58 420.0563,58.4063 C420.1188,58.8125 420.15,58.9375 420.2906,59.0625 C420.4313,59.2031 420.6656,59.3125 420.8844,59.3125 C421.15,59.3125 421.4156,59.1719 421.5875,58.9531 C421.6969,58.7969 421.7281,58.6094 421.7281,58.1875 L421.7281,56.7656 C421.7281,56.3281 421.7125,56.2031 421.6188,56.0469 C421.4625,55.7813 421.1813,55.6406 420.8844,55.6406 C420.5875,55.6406 420.3844,55.7344 420.1656,56.0469 L419.9938,55.9688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="78" x="434.35" y="65.1436">AgentBase</text><line style="stroke:#181818;stroke-width:0.5;" x1="391.5" x2="526.5" y1="76.2969" y2="76.2969"/><line style="stroke:#181818;stroke-width:0.5;" x1="391.5" x2="526.5" y1="84.2969" y2="84.2969"/><polygon fill="#FFFF44" points="401.5,90.2969,405.5,94.2969,401.5,98.2969,397.5,94.2969" style="stroke:#B38D22;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="111" x="410.5" y="101.292">get_coord() = 0</text><polygon fill="#FFFF44" points="401.5,106.5938,405.5,110.5938,401.5,114.5938,397.5,110.5938" style="stroke:#B38D22;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="105" x="410.5" y="117.5889">get_pose() = 0</text></g><!--MD5=[d739a16b4f81069219bfcdae398d0e56]
+class CoverageAgentBase--><g id="elem_CoverageAgentBase"><rect codeLine="24" fill="#F1F1F1" height="64.2969" id="CoverageAgentBase" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="184" x="9" y="225.2969"/><ellipse cx="26.7" cy="241.2969" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M29.0438,236.9688 C28.1063,236.5313 27.5125,236.3906 26.6375,236.3906 C24.0125,236.3906 22.0125,238.4688 22.0125,241.1875 L22.0125,242.3125 C22.0125,244.8906 24.1219,246.7813 27.0125,246.7813 C28.2313,246.7813 29.3875,246.4844 30.1375,245.9375 C30.7156,245.5313 31.0438,245.0781 31.0438,244.6875 C31.0438,244.2344 30.6531,243.8438 30.1844,243.8438 C29.9656,243.8438 29.7625,243.9219 29.575,244.1094 C29.1219,244.5938 29.1219,244.5938 28.9344,244.6875 C28.5125,244.9531 27.825,245.0781 27.0594,245.0781 C25.0125,245.0781 23.7156,243.9844 23.7156,242.2813 L23.7156,241.1875 C23.7156,239.4063 24.9656,238.0938 26.7,238.0938 C27.2781,238.0938 27.8875,238.25 28.3563,238.5 C28.8406,238.7813 29.0125,239 29.1063,239.4063 C29.1688,239.8125 29.2,239.9375 29.3406,240.0625 C29.4813,240.2031 29.7156,240.3125 29.9344,240.3125 C30.2,240.3125 30.4656,240.1719 30.6375,239.9531 C30.7469,239.7969 30.7781,239.6094 30.7781,239.1875 L30.7781,237.7656 C30.7781,237.3281 30.7625,237.2031 30.6688,237.0469 C30.5125,236.7813 30.2313,236.6406 29.9344,236.6406 C29.6375,236.6406 29.4344,236.7344 29.2156,237.0469 L29.0438,236.9688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="146" x="41.3" y="246.1436">CoverageAgentBase</text><line style="stroke:#181818;stroke-width:0.5;" x1="10" x2="192" y1="257.2969" y2="257.2969"/><line style="stroke:#181818;stroke-width:0.5;" x1="10" x2="192" y1="265.2969" y2="265.2969"/><polygon fill="#FFFF44" points="20,271.2969,24,275.2969,20,279.2969,16,275.2969" style="stroke:#B38D22;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="158" x="29" y="282.292">get_voronoi_gen() = 0</text></g><!--MD5=[4867a1bb6ec1ef487bf262ea43213ad2]
+class ControllerBase--><g id="elem_ControllerBase"><rect codeLine="28" fill="#F1F1F1" height="48" id="ControllerBase" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="139" x="776.5" y="60.7969"/><ellipse cx="791.5" cy="76.7969" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M793.8438,72.4688 C792.9063,72.0313 792.3125,71.8906 791.4375,71.8906 C788.8125,71.8906 786.8125,73.9688 786.8125,76.6875 L786.8125,77.8125 C786.8125,80.3906 788.9219,82.2813 791.8125,82.2813 C793.0313,82.2813 794.1875,81.9844 794.9375,81.4375 C795.5156,81.0313 795.8438,80.5781 795.8438,80.1875 C795.8438,79.7344 795.4531,79.3438 794.9844,79.3438 C794.7656,79.3438 794.5625,79.4219 794.375,79.6094 C793.9219,80.0938 793.9219,80.0938 793.7344,80.1875 C793.3125,80.4531 792.625,80.5781 791.8594,80.5781 C789.8125,80.5781 788.5156,79.4844 788.5156,77.7813 L788.5156,76.6875 C788.5156,74.9063 789.7656,73.5938 791.5,73.5938 C792.0781,73.5938 792.6875,73.75 793.1563,74 C793.6406,74.2813 793.8125,74.5 793.9063,74.9063 C793.9688,75.3125 794,75.4375 794.1406,75.5625 C794.2813,75.7031 794.5156,75.8125 794.7344,75.8125 C795,75.8125 795.2656,75.6719 795.4375,75.4531 C795.5469,75.2969 795.5781,75.1094 795.5781,74.6875 L795.5781,73.2656 C795.5781,72.8281 795.5625,72.7031 795.4688,72.5469 C795.3125,72.2813 795.0313,72.1406 794.7344,72.1406 C794.4375,72.1406 794.2344,72.2344 794.0156,72.5469 L793.8438,72.4688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="107" x="805.5" y="81.6436">ControllerBase</text><line style="stroke:#181818;stroke-width:0.5;" x1="777.5" x2="914.5" y1="92.7969" y2="92.7969"/><line style="stroke:#181818;stroke-width:0.5;" x1="777.5" x2="914.5" y1="100.7969" y2="100.7969"/></g><!--MD5=[7ec7f062c949232f6eee5e44cfb48a49]
+class CoverageControllerBase--><g id="elem_CoverageControllerBase"><rect codeLine="30" fill="#F1F1F1" height="48" id="CoverageControllerBase" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="207" x="817.5" y="233.2969"/><ellipse cx="832.5" cy="249.2969" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M834.8438,244.9688 C833.9063,244.5313 833.3125,244.3906 832.4375,244.3906 C829.8125,244.3906 827.8125,246.4688 827.8125,249.1875 L827.8125,250.3125 C827.8125,252.8906 829.9219,254.7813 832.8125,254.7813 C834.0313,254.7813 835.1875,254.4844 835.9375,253.9375 C836.5156,253.5313 836.8438,253.0781 836.8438,252.6875 C836.8438,252.2344 836.4531,251.8438 835.9844,251.8438 C835.7656,251.8438 835.5625,251.9219 835.375,252.1094 C834.9219,252.5938 834.9219,252.5938 834.7344,252.6875 C834.3125,252.9531 833.625,253.0781 832.8594,253.0781 C830.8125,253.0781 829.5156,251.9844 829.5156,250.2813 L829.5156,249.1875 C829.5156,247.4063 830.7656,246.0938 832.5,246.0938 C833.0781,246.0938 833.6875,246.25 834.1563,246.5 C834.6406,246.7813 834.8125,247 834.9063,247.4063 C834.9688,247.8125 835,247.9375 835.1406,248.0625 C835.2813,248.2031 835.5156,248.3125 835.7344,248.3125 C836,248.3125 836.2656,248.1719 836.4375,247.9531 C836.5469,247.7969 836.5781,247.6094 836.5781,247.1875 L836.5781,245.7656 C836.5781,245.3281 836.5625,245.2031 836.4688,245.0469 C836.3125,244.7813 836.0313,244.6406 835.7344,244.6406 C835.4375,244.6406 835.2344,244.7344 835.0156,245.0469 L834.8438,244.9688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="175" x="846.5" y="254.1436">CoverageControllerBase</text><line style="stroke:#181818;stroke-width:0.5;" x1="818.5" x2="1023.5" y1="265.2969" y2="265.2969"/><line style="stroke:#181818;stroke-width:0.5;" x1="818.5" x2="1023.5" y1="273.2969" y2="273.2969"/></g><!--MD5=[74edfed5d32ecbb3de5f288b536d5ade]
+class SingleIntegratorBase--><g id="elem_SingleIntegratorBase"><rect codeLine="33" fill="#F1F1F1" height="48" id="SingleIntegratorBase" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="184" x="293" y="233.2969"/><ellipse cx="308" cy="249.2969" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M310.3438,244.9688 C309.4063,244.5313 308.8125,244.3906 307.9375,244.3906 C305.3125,244.3906 303.3125,246.4688 303.3125,249.1875 L303.3125,250.3125 C303.3125,252.8906 305.4219,254.7813 308.3125,254.7813 C309.5313,254.7813 310.6875,254.4844 311.4375,253.9375 C312.0156,253.5313 312.3438,253.0781 312.3438,252.6875 C312.3438,252.2344 311.9531,251.8438 311.4844,251.8438 C311.2656,251.8438 311.0625,251.9219 310.875,252.1094 C310.4219,252.5938 310.4219,252.5938 310.2344,252.6875 C309.8125,252.9531 309.125,253.0781 308.3594,253.0781 C306.3125,253.0781 305.0156,251.9844 305.0156,250.2813 L305.0156,249.1875 C305.0156,247.4063 306.2656,246.0938 308,246.0938 C308.5781,246.0938 309.1875,246.25 309.6563,246.5 C310.1406,246.7813 310.3125,247 310.4063,247.4063 C310.4688,247.8125 310.5,247.9375 310.6406,248.0625 C310.7813,248.2031 311.0156,248.3125 311.2344,248.3125 C311.5,248.3125 311.7656,248.1719 311.9375,247.9531 C312.0469,247.7969 312.0781,247.6094 312.0781,247.1875 L312.0781,245.7656 C312.0781,245.3281 312.0625,245.2031 311.9688,245.0469 C311.8125,244.7813 311.5313,244.6406 311.2344,244.6406 C310.9375,244.6406 310.7344,244.7344 310.5156,245.0469 L310.3438,244.9688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="152" x="322" y="254.1436">SingleIntegratorBase</text><line style="stroke:#181818;stroke-width:0.5;" x1="294" x2="476" y1="265.2969" y2="265.2969"/><line style="stroke:#181818;stroke-width:0.5;" x1="294" x2="476" y1="273.2969" y2="273.2969"/></g><!--MD5=[e3c2be5d10dd66cec31a4d0c991f9f2b]
+class FixedWingBase--><g id="elem_FixedWingBase"><rect codeLine="35" fill="#F1F1F1" height="48" id="FixedWingBase" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="140" x="577" y="233.2969"/><ellipse cx="592" cy="249.2969" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M594.3438,244.9688 C593.4063,244.5313 592.8125,244.3906 591.9375,244.3906 C589.3125,244.3906 587.3125,246.4688 587.3125,249.1875 L587.3125,250.3125 C587.3125,252.8906 589.4219,254.7813 592.3125,254.7813 C593.5313,254.7813 594.6875,254.4844 595.4375,253.9375 C596.0156,253.5313 596.3438,253.0781 596.3438,252.6875 C596.3438,252.2344 595.9531,251.8438 595.4844,251.8438 C595.2656,251.8438 595.0625,251.9219 594.875,252.1094 C594.4219,252.5938 594.4219,252.5938 594.2344,252.6875 C593.8125,252.9531 593.125,253.0781 592.3594,253.0781 C590.3125,253.0781 589.0156,251.9844 589.0156,250.2813 L589.0156,249.1875 C589.0156,247.4063 590.2656,246.0938 592,246.0938 C592.5781,246.0938 593.1875,246.25 593.6563,246.5 C594.1406,246.7813 594.3125,247 594.4063,247.4063 C594.4688,247.8125 594.5,247.9375 594.6406,248.0625 C594.7813,248.2031 595.0156,248.3125 595.2344,248.3125 C595.5,248.3125 595.7656,248.1719 595.9375,247.9531 C596.0469,247.7969 596.0781,247.6094 596.0781,247.1875 L596.0781,245.7656 C596.0781,245.3281 596.0625,245.2031 595.9688,245.0469 C595.8125,244.7813 595.5313,244.6406 595.2344,244.6406 C594.9375,244.6406 594.7344,244.7344 594.5156,245.0469 L594.3438,244.9688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="108" x="606" y="254.1436">FixedWingBase</text><line style="stroke:#181818;stroke-width:0.5;" x1="578" x2="716" y1="265.2969" y2="265.2969"/><line style="stroke:#181818;stroke-width:0.5;" x1="578" x2="716" y1="273.2969" y2="273.2969"/></g><!--MD5=[5c5f7a4e48a0c3bf66c2998a848d27eb]
+class UnicycleCoverageAgent--><g id="elem_UnicycleCoverageAgent"><rect codeLine="37" fill="#F1F1F1" height="48" id="UnicycleCoverageAgent" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="203" x="449.5" y="389.2969"/><ellipse cx="464.5" cy="405.2969" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M466.8438,400.9688 C465.9063,400.5313 465.3125,400.3906 464.4375,400.3906 C461.8125,400.3906 459.8125,402.4688 459.8125,405.1875 L459.8125,406.3125 C459.8125,408.8906 461.9219,410.7813 464.8125,410.7813 C466.0313,410.7813 467.1875,410.4844 467.9375,409.9375 C468.5156,409.5313 468.8438,409.0781 468.8438,408.6875 C468.8438,408.2344 468.4531,407.8438 467.9844,407.8438 C467.7656,407.8438 467.5625,407.9219 467.375,408.1094 C466.9219,408.5938 466.9219,408.5938 466.7344,408.6875 C466.3125,408.9531 465.625,409.0781 464.8594,409.0781 C462.8125,409.0781 461.5156,407.9844 461.5156,406.2813 L461.5156,405.1875 C461.5156,403.4063 462.7656,402.0938 464.5,402.0938 C465.0781,402.0938 465.6875,402.25 466.1563,402.5 C466.6406,402.7813 466.8125,403 466.9063,403.4063 C466.9688,403.8125 467,403.9375 467.1406,404.0625 C467.2813,404.2031 467.5156,404.3125 467.7344,404.3125 C468,404.3125 468.2656,404.1719 468.4375,403.9531 C468.5469,403.7969 468.5781,403.6094 468.5781,403.1875 L468.5781,401.7656 C468.5781,401.3281 468.5625,401.2031 468.4688,401.0469 C468.3125,400.7813 468.0313,400.6406 467.7344,400.6406 C467.4375,400.6406 467.2344,400.7344 467.0156,401.0469 L466.8438,400.9688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="171" x="478.5" y="410.1436">UnicycleCoverageAgent</text><line style="stroke:#181818;stroke-width:0.5;" x1="450.5" x2="651.5" y1="421.2969" y2="421.2969"/><line style="stroke:#181818;stroke-width:0.5;" x1="450.5" x2="651.5" y1="429.2969" y2="429.2969"/></g><!--MD5=[e8bb04a2547fd6da16a65e743c93df56]
+class DroneCoverageAgent--><g id="elem_DroneCoverageAgent"><rect codeLine="38" fill="#F1F1F1" height="48" id="DroneCoverageAgent" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="188" x="38" y="389.2969"/><ellipse cx="53" cy="405.2969" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M55.3438,400.9688 C54.4063,400.5313 53.8125,400.3906 52.9375,400.3906 C50.3125,400.3906 48.3125,402.4688 48.3125,405.1875 L48.3125,406.3125 C48.3125,408.8906 50.4219,410.7813 53.3125,410.7813 C54.5313,410.7813 55.6875,410.4844 56.4375,409.9375 C57.0156,409.5313 57.3438,409.0781 57.3438,408.6875 C57.3438,408.2344 56.9531,407.8438 56.4844,407.8438 C56.2656,407.8438 56.0625,407.9219 55.875,408.1094 C55.4219,408.5938 55.4219,408.5938 55.2344,408.6875 C54.8125,408.9531 54.125,409.0781 53.3594,409.0781 C51.3125,409.0781 50.0156,407.9844 50.0156,406.2813 L50.0156,405.1875 C50.0156,403.4063 51.2656,402.0938 53,402.0938 C53.5781,402.0938 54.1875,402.25 54.6563,402.5 C55.1406,402.7813 55.3125,403 55.4063,403.4063 C55.4688,403.8125 55.5,403.9375 55.6406,404.0625 C55.7813,404.2031 56.0156,404.3125 56.2344,404.3125 C56.5,404.3125 56.7656,404.1719 56.9375,403.9531 C57.0469,403.7969 57.0781,403.6094 57.0781,403.1875 L57.0781,401.7656 C57.0781,401.3281 57.0625,401.2031 56.9688,401.0469 C56.8125,400.7813 56.5313,400.6406 56.2344,400.6406 C55.9375,400.6406 55.7344,400.7344 55.5156,401.0469 L55.3438,400.9688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="156" x="67" y="410.1436">DroneCoverageAgent</text><line style="stroke:#181818;stroke-width:0.5;" x1="39" x2="225" y1="421.2969" y2="421.2969"/><line style="stroke:#181818;stroke-width:0.5;" x1="39" x2="225" y1="429.2969" y2="429.2969"/></g><!--MD5=[8e5fd00b6794ceaa2bffd6e5c96c4a34]
+class ControlParameter--><g id="elem_ControlParameter"><rect codeLine="42" fill="#F1F1F1" height="48" id="ControlParameter" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="159" x="1015.5" y="60.7969"/><ellipse cx="1030.5" cy="76.7969" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M1031.4531,73.5781 L1033.1719,73.5781 C1033.5625,73.5781 1033.75,73.5469 1033.875,73.4688 C1034.1406,73.3125 1034.2813,73.0313 1034.2813,72.7344 C1034.2813,72.4688 1034.1719,72.2031 1033.9375,72.0313 C1033.7656,71.9219 1033.625,71.8906 1033.1719,71.8906 L1028.0313,71.8906 C1027.5938,71.8906 1027.4688,71.9063 1027.3125,72 C1027.0625,72.1563 1026.9063,72.4531 1026.9063,72.7344 C1026.9063,73.0156 1027.0469,73.2656 1027.2656,73.4375 C1027.4219,73.5469 1027.6094,73.5781 1028.0313,73.5781 L1029.75,73.5781 L1029.75,80.0938 L1028.0313,80.0938 C1027.5938,80.0938 1027.4688,80.1094 1027.3125,80.2188 C1027.0625,80.375 1026.9063,80.6563 1026.9063,80.9531 C1026.9063,81.2031 1027.0469,81.4688 1027.2656,81.625 C1027.4219,81.75 1027.625,81.7969 1028.0313,81.7969 L1033.1719,81.7969 C1033.9219,81.7969 1034.2813,81.5156 1034.2813,80.9531 C1034.2813,80.6719 1034.1719,80.4219 1033.9375,80.25 C1033.7656,80.125 1033.625,80.0938 1033.1719,80.0938 L1031.4531,80.0938 L1031.4531,73.5781 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="127" x="1044.5" y="81.6436">ControlParameter</text><line style="stroke:#181818;stroke-width:0.5;" x1="1016.5" x2="1173.5" y1="92.7969" y2="92.7969"/><line style="stroke:#181818;stroke-width:0.5;" x1="1016.5" x2="1173.5" y1="100.7969" y2="100.7969"/></g><!--MD5=[4277b105c558f9f646d550c29b2e9897]
+class SafetyController--><g id="elem_SafetyController"><rect fill="#F1F1F1" height="48" id="SafetyController" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="152" x="814" y="389.2969"/><ellipse cx="829" cy="405.2969" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M831.3438,400.9688 C830.4063,400.5313 829.8125,400.3906 828.9375,400.3906 C826.3125,400.3906 824.3125,402.4688 824.3125,405.1875 L824.3125,406.3125 C824.3125,408.8906 826.4219,410.7813 829.3125,410.7813 C830.5313,410.7813 831.6875,410.4844 832.4375,409.9375 C833.0156,409.5313 833.3438,409.0781 833.3438,408.6875 C833.3438,408.2344 832.9531,407.8438 832.4844,407.8438 C832.2656,407.8438 832.0625,407.9219 831.875,408.1094 C831.4219,408.5938 831.4219,408.5938 831.2344,408.6875 C830.8125,408.9531 830.125,409.0781 829.3594,409.0781 C827.3125,409.0781 826.0156,407.9844 826.0156,406.2813 L826.0156,405.1875 C826.0156,403.4063 827.2656,402.0938 829,402.0938 C829.5781,402.0938 830.1875,402.25 830.6563,402.5 C831.1406,402.7813 831.3125,403 831.4063,403.4063 C831.4688,403.8125 831.5,403.9375 831.6406,404.0625 C831.7813,404.2031 832.0156,404.3125 832.2344,404.3125 C832.5,404.3125 832.7656,404.1719 832.9375,403.9531 C833.0469,403.7969 833.0781,403.6094 833.0781,403.1875 L833.0781,401.7656 C833.0781,401.3281 833.0625,401.2031 832.9688,401.0469 C832.8125,400.7813 832.5313,400.6406 832.2344,400.6406 C831.9375,400.6406 831.7344,400.7344 831.5156,401.0469 L831.3438,400.9688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="120" x="843" y="410.1436">SafetyController</text><line style="stroke:#181818;stroke-width:0.5;" x1="815" x2="965" y1="421.2969" y2="421.2969"/><line style="stroke:#181818;stroke-width:0.5;" x1="815" x2="965" y1="429.2969" y2="429.2969"/></g><!--MD5=[50e5db029e4cd671c34bbe9d63e6bc8b]
+class SingleIntegratorController--><g id="elem_SingleIntegratorController"><rect fill="#F1F1F1" height="48" id="SingleIntegratorController" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="223" x="1066.5" y="389.2969"/><ellipse cx="1081.5" cy="405.2969" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M1083.8438,400.9688 C1082.9063,400.5313 1082.3125,400.3906 1081.4375,400.3906 C1078.8125,400.3906 1076.8125,402.4688 1076.8125,405.1875 L1076.8125,406.3125 C1076.8125,408.8906 1078.9219,410.7813 1081.8125,410.7813 C1083.0313,410.7813 1084.1875,410.4844 1084.9375,409.9375 C1085.5156,409.5313 1085.8438,409.0781 1085.8438,408.6875 C1085.8438,408.2344 1085.4531,407.8438 1084.9844,407.8438 C1084.7656,407.8438 1084.5625,407.9219 1084.375,408.1094 C1083.9219,408.5938 1083.9219,408.5938 1083.7344,408.6875 C1083.3125,408.9531 1082.625,409.0781 1081.8594,409.0781 C1079.8125,409.0781 1078.5156,407.9844 1078.5156,406.2813 L1078.5156,405.1875 C1078.5156,403.4063 1079.7656,402.0938 1081.5,402.0938 C1082.0781,402.0938 1082.6875,402.25 1083.1563,402.5 C1083.6406,402.7813 1083.8125,403 1083.9063,403.4063 C1083.9688,403.8125 1084,403.9375 1084.1406,404.0625 C1084.2813,404.2031 1084.5156,404.3125 1084.7344,404.3125 C1085,404.3125 1085.2656,404.1719 1085.4375,403.9531 C1085.5469,403.7969 1085.5781,403.6094 1085.5781,403.1875 L1085.5781,401.7656 C1085.5781,401.3281 1085.5625,401.2031 1085.4688,401.0469 C1085.3125,400.7813 1085.0313,400.6406 1084.7344,400.6406 C1084.4375,400.6406 1084.2344,400.7344 1084.0156,401.0469 L1083.8438,400.9688 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="191" x="1095.5" y="410.1436">SingleIntegratorController</text><line style="stroke:#181818;stroke-width:0.5;" x1="1067.5" x2="1288.5" y1="421.2969" y2="421.2969"/><line style="stroke:#181818;stroke-width:0.5;" x1="1067.5" x2="1288.5" y1="429.2969" y2="429.2969"/></g><!--MD5=[efb93a5bd9b3643153d2773847c76905]
+reverse link AgentBase to FixedWingBase--><g id="link_AgentBase_FixedWingBase"><path codeLine="46" d="M502.25,145.6769 C502.25,145.6769 502.25,257.2969 502.25,257.2969 C502.25,257.2969 539.865,257.2969 576.745,257.2969 " fill="none" id="AgentBase-backto-FixedWingBase" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="495.25,145.6769,502.25,125.6769,509.25,145.6769,495.25,145.6769" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[3da55c1c8b7f57e90d5095c2b331d74b]
+reverse link AgentBase to SingleIntegratorBase--><g id="link_AgentBase_SingleIntegratorBase"><path codeLine="47" d="M448.167,145.6769 C448.167,145.6769 448.167,233.1979 448.167,233.1979 " fill="none" id="AgentBase-backto-SingleIntegratorBase" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="441.167,145.6769,448.167,125.6769,455.167,145.6769,441.167,145.6769" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[e2d28d071ff7b4e367dd69aed8be7960]
+link ControllerBase to ControlParameter--><g id="link_ControllerBase_ControlParameter"><path codeLine="49" d="M915.691,85.2969 C915.691,85.2969 1010.22,85.2969 1010.22,85.2969 " fill="none" id="ControllerBase-to-ControlParameter" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="1015.22,85.2969,1006.22,81.2969,1010.22,85.2969,1006.22,89.2969,1015.22,85.2969" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[794c8a6f353a9242e2e6888a1bd1e190]
+link AgentBase to ControllerBase--><g id="link_AgentBase_ControllerBase"><path codeLine="52" d="M539.742,85.2969 C539.742,85.2969 763.268,85.2969 763.268,85.2969 " fill="none" id="AgentBase-ControllerBase" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="776.268,85.2969,767.268,81.2969,771.268,85.2969,767.268,89.2969,776.268,85.2969" style="stroke:#181818;stroke-width:1.0;"/><line style="stroke:#181818;stroke-width:1.0;" x1="771.268" x2="763.268" y1="85.2969" y2="85.2969"/><polygon fill="#181818" points="527.742,85.2969,533.742,89.2969,539.742,85.2969,533.742,81.2969,527.742,85.2969" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[31d87f5ae5768913fce29fb4e1197778]
+reverse link ControllerBase to CoverageControllerBase--><g id="link_ControllerBase_CoverageControllerBase"><path codeLine="53" d="M866.5,129.1459 C866.5,129.1459 866.5,233.0719 866.5,233.0719 " fill="none" id="ControllerBase-backto-CoverageControllerBase" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="859.5,129.1459,866.5,109.1459,873.5,129.1459,859.5,129.1459" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[f46f0f290a63839ffed6523fe9dc86f8]
+reverse link FixedWingBase to UnicycleCoverageAgent--><g id="link_FixedWingBase_UnicycleCoverageAgent"><path codeLine="55" d="M627.333,301.3299 C627.333,301.3299 627.333,389.2365 627.333,389.2365 " fill="none" id="FixedWingBase-backto-UnicycleCoverageAgent" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="620.333,301.3299,627.333,281.3299,634.333,301.3299,620.333,301.3299" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[30fdbf1a762b0ff614ff096a53165300]
+reverse link CoverageAgentBase to UnicycleCoverageAgent--><g id="link_CoverageAgentBase_UnicycleCoverageAgent"><path codeLine="56" d="M213.348,287.2969 C213.348,287.2969 463.25,287.2969 463.25,287.2969 C463.25,287.2969 463.25,352.3887 463.25,389.0028 " fill="none" id="CoverageAgentBase-backto-UnicycleCoverageAgent" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="213.348,294.2969,193.348,287.2969,213.348,280.2969,213.348,294.2969" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[98314c9703563a5fb9ee78df19cc4c49]
+reverse link AgentBase to CoverageAgentBase--><!--MD5=[b2dea35165cbd5092803010a144fdf9e]
+link CoverageAgentBase to SingleIntegratorBase--><!--MD5=[e0b5578c75e416bd48b28b643bebd922]
+link CoverageAgentBase to FixedWingBase--><!--MD5=[1547a9d14eaae2bf05073e73c02aaf0e]
+reverse link SingleIntegratorBase to DroneCoverageAgent--><g id="link_SingleIntegratorBase_DroneCoverageAgent"><path codeLine="61" d="M272.881,265.2969 C272.881,265.2969 209.5,265.2969 209.5,265.2969 C209.5,265.2969 209.5,347.2512 209.5,389.1888 " fill="none" id="SingleIntegratorBase-backto-DroneCoverageAgent" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="272.881,258.2969,292.881,265.2969,272.881,272.2969,272.881,258.2969" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[086fbdc34201c1f3b8bf9b2af3455fda]
+reverse link CoverageAgentBase to DroneCoverageAgent--><g id="link_CoverageAgentBase_DroneCoverageAgent"><path codeLine="62" d="M115.5,309.6199 C115.5,309.6199 115.5,389.1731 115.5,389.1731 " fill="none" id="CoverageAgentBase-backto-DroneCoverageAgent" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="108.5001,309.6199,115.5,289.6199,122.5,309.6199,108.5001,309.6199" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[1d19b9573f35125e88c691eb9e0dd280]
+reverse link CoverageControllerBase to SafetyController--><g id="link_CoverageControllerBase_SafetyController"><path codeLine="64" d="M891.75,301.3299 C891.75,301.3299 891.75,389.2365 891.75,389.2365 " fill="none" id="CoverageControllerBase-backto-SafetyController" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="884.75,301.3299,891.75,281.3299,898.75,301.3299,884.75,301.3299" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[f94c0e251fab165b92c992bff813163e]
+reverse link CoverageControllerBase to SingleIntegratorController--><g id="link_CoverageControllerBase_SingleIntegratorController"><path codeLine="65" d="M995.25,301.3299 C995.25,301.3299 995.25,413.2969 995.25,413.2969 C995.25,413.2969 1028.38,413.2969 1066.43,413.2969 " fill="none" id="CoverageControllerBase-backto-SingleIntegratorController" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="988.25,301.3299,995.25,281.3299,1002.25,301.3299,988.25,301.3299" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[07c2408d394ac02403e3d563a149b849]
+@startuml
+' Settings
+' ============================
+
+' use +,#,- instead of icons
+'skinparam classAttributeIconSize 0
+
+' horizontal distance in px
+skinparam nodesep 100 
+
+' vertical distance in px
+skinparam ranksep 100
+
+' use only straight lines (ortho/polyline)
+skinparam linetype ortho
+
+' title
+title Multi-Agent Coverage Control
+
+class AgentBase{
+    # get_coord() = 0
+    # get_pose() = 0
+}
+
+class CoverageAgentBase{
+    # get_voronoi_gen() = 0
+}
+
+class ControllerBase
+
+class CoverageControllerBase{
+}
+
+class SingleIntegratorBase
+
+class FixedWingBase
+
+class UnicycleCoverageAgent
+class DroneCoverageAgent
+
+'class BLFController
+' Interfaces
+Interface ControlParameter
+'Interface VoronoiPartitionInfo
+' Relationship
+
+AgentBase <|-d- FixedWingBase
+AgentBase <|-d- SingleIntegratorBase
+
+ControllerBase -r-> ControlParameter
+'AgentBase *-r-> ControlParameter
+
+AgentBase *-r-> ControllerBase
+CoverageControllerBase -u-|> ControllerBase
+
+UnicycleCoverageAgent -u-|> FixedWingBase
+UnicycleCoverageAgent -u-|> CoverageAgentBase
+CoverageAgentBase -[hidden]u-> AgentBase
+CoverageAgentBase -[hidden]r-> SingleIntegratorBase
+CoverageAgentBase -[hidden]r-> FixedWingBase
+
+DroneCoverageAgent -u-|> SingleIntegratorBase
+DroneCoverageAgent -u-|> CoverageAgentBase
+
+SafetyController -u-|> CoverageControllerBase
+SingleIntegratorController -u-|> CoverageControllerBase
+@enduml
+
+@startuml
+
+
+skinparam nodesep 100 
+
+skinparam ranksep 100
+
+skinparam linetype ortho
+
+title Multi-Agent Coverage Control
+
+class AgentBase{
+    # get_coord() = 0
+    # get_pose() = 0
+}
+
+class CoverageAgentBase{
+    # get_voronoi_gen() = 0
+}
+
+class ControllerBase
+
+class CoverageControllerBase{
+}
+
+class SingleIntegratorBase
+
+class FixedWingBase
+
+class UnicycleCoverageAgent
+class DroneCoverageAgent
+
+Interface ControlParameter
+
+AgentBase <|-d- FixedWingBase
+AgentBase <|-d- SingleIntegratorBase
+
+ControllerBase -r-> ControlParameter
+
+AgentBase *-r-> ControllerBase
+CoverageControllerBase -u-|> ControllerBase
+
+UnicycleCoverageAgent -u-|> FixedWingBase
+UnicycleCoverageAgent -u-|> CoverageAgentBase
+CoverageAgentBase -[hidden]u-> AgentBase
+CoverageAgentBase -[hidden]r-> SingleIntegratorBase
+CoverageAgentBase -[hidden]r-> FixedWingBase
+
+DroneCoverageAgent -u-|> SingleIntegratorBase
+DroneCoverageAgent -u-|> CoverageAgentBase
+
+SafetyController -u-|> CoverageControllerBase
+SingleIntegratorController -u-|> CoverageControllerBase
+@enduml
+
+PlantUML version 1.2022.7beta2(Unknown compile time)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
