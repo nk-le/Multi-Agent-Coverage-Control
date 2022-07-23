@@ -15,8 +15,8 @@ classdef FixedWingBase < handle & AgentBase
     end
     
     methods
-        function obj = FixedWingBase(id, controlParam, startPose)
-            obj@AgentBase(id);
+        function obj = FixedWingBase(dt, id, controlParam, startPose)
+            obj@AgentBase(dt, id);
             obj.controlParam = controlParam;
             obj.AgentPose_3d = startPose;
             
@@ -41,10 +41,15 @@ classdef FixedWingBase < handle & AgentBase
             obj.VMCoord_2d(2) = obj.AgentPose_3d(2) + (obj.v/obj.controlParam.W_ORBIT) * cos(obj.AgentPose_3d(3)); 
         end
         
-        function [Pose_3d, PoseVM_2d] = getPose(obj)
+        function [Pose_3d] = get_pose(obj)
             Pose_3d =  obj.AgentPose_3d;
-            PoseVM_2d = obj.VMCoord_2d;
         end
+ 
+        function [Coord_3] = get_coord_3(obj)
+            % Todo: properly distinguish coord and pose (orientation)
+            Coord_3 = [obj.AgentPose_3d(1:2), 0];
+        end
+
     end
 end
 

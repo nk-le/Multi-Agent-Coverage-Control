@@ -59,7 +59,7 @@ classdef BLFController < CoverageControllerBase
             %% Adjustable variable --> Will move later to constant
             sigmoid_func = @(x,eps) x / (abs(x) + eps);              
             %% Compute the control policy
-            wOut = obj.controlParam.W_ORBIT + obj.controlParam.P * obj.controlParam.W_ORBIT * sigmoid_func(dV_dzk_total' * [cos(curPose(3)) ;sin(curPose(3))], obj.controlParam.EPS_SIGMOID); 
+            wOut = obj.controlParam.W_ORBIT + obj.controlParam.GAMMA * obj.controlParam.W_ORBIT * sigmoid_func(dV_dzk_total' * [cos(curPose(3)) ;sin(curPose(3))], obj.controlParam.EPS_SIGMOID); 
             %wOut = obj.w;
             %% Logging out
             Vk = obj.Vk;

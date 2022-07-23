@@ -11,12 +11,10 @@ classdef SingleIntegratorAgent  < SingleIntegratorBase
     end
     
     methods
-        function obj = SingleIntegratorAgent(botID, initPose_3, regionParam, controlParam)
-            obj@SingleIntegratorBase(botID, initPose_3);
-            
+        function obj = SingleIntegratorAgent(dt, botID, initPose_3, regionParam, controlParam)
+            obj@SingleIntegratorBase(dt, botID, initPose_3);
             obj.controller = SICoverageController(controlParam, regionParam);
             obj.voronoiComputer = VoronoiComputer(botID);
-            
             obj.regionParam = regionParam;
         end
         

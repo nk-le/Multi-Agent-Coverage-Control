@@ -1,4 +1,4 @@
-classdef Control_Parameter_Switching < handle
+classdef ControlParameterBLF < ControlParameter
     properties  (SetAccess = immutable)
         V_CONST     % Constant heading velocity
         W_ORBIT     % Orbital (desired angular) velocity
