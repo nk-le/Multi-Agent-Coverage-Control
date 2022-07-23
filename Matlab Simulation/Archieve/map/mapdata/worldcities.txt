@@ -1,9 +1,0 @@
-Coordinates and names of populated places (PP) worldwide, stored in
-shapefile format with coordinates in latitude (Y) and longitude (X)
-in degrees.
-
-Source
-------
-Data from the Digital Chart of the World (DCW) browser layer,
-published by U.S. National Geospatial-Intelligence Agency (NGA),
-formerly National Imagery and Mapping Agency (NIMA).             
