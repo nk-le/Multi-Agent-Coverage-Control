@@ -40,7 +40,6 @@ User can implement a child class of Logger to clarify how they want to adjust th
 
 
 ## Architecture
-![Alt text](./Documents/Architecture.svg)
 <img src="./Documents/Architecture.svg">
 
 ## License

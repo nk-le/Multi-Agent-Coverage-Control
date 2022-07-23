@@ -1,6 +1,8 @@
 # Optimal Constrained Control of a Multi-Unicycle System
 
 ## Evaluation 
+An example of plotting script is in file "plot_log_file.m"
+
 Declare the Log file name 
 ```
 logFile = "Parsed_TRO_LogSim2.log.mat";
