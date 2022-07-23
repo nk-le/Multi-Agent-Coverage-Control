@@ -1,47 +1,15 @@
-%% Select the log file
-% Please type in the log file name
-logFile = "Parsed_TRO_LogSim2.log.mat";
-
-% Load the constant: parameters, region, controller params, etc.
-LoadParameterExperiment
-
-%% Default constructor
-fileHandle = load(logFile);
-Logger = DataLogger(SIM_PARAM, REGION_CONFIG, CONTROL_PARAM, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
-% Parse the log file of the real information into the logger instance
-Logger = retrieve_info(fileHandle.dataTable, Logger);
-fileStr = erase(logFile, ".mat");
-fileStr = erase(fileStr, ".log");
-folder = fullfile(pwd, "Log", sprintf("Figures_%s",fileStr));
-mkdir(folder);
-
-
-%% Generating figures
-close all;
-Logger.plot_VM_trajectories();
-Logger.plot_BLF();
-Logger.plot_control_output();
-
-% Automated figure generation
-%Logger.generate_figures(fileStr, folder);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function Logger = ProcessLogFile(logFile)
+    LoadParameterExperiment
+    %% Default constructor
+    fileHandle = load(logFile);
+    Logger = DataLoggerRealExp(SIM_PARAM, REGION_CONFIG, CONTROL_PARAM, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
+    % Parse the log file of the real information into the logger instance
+    Logger = retrieve_info(fileHandle.dataTable, Logger);
+    fileStr = erase(logFile, ".mat");
+    fileStr = erase(fileStr, ".log");
+    folder = fullfile(pwd, "Log", sprintf("Figures_%s",fileStr));
+    mkdir(folder);
+end
 
 
 %% Helper function
@@ -65,7 +33,7 @@ function [Logger] = retrieve_info(dataTable, Logger)
             thisAgent = dataTable.(fName{agentID});
             pose_3d_list(agentID, :) = [thisAgent.x(i), thisAgent.y(i), thisAgent.theta(i)];
             CVT_2d_List(agentID,:) = [thisAgent.Cx(i), thisAgent.Cy(i)];
-            ControlOutput(agentID, :) = thisAgent.w(i) * 0.02; % Note that this is currently hard coded due to the imperfections of hardwares
+            ControlOutput(agentID, :) = thisAgent.w(i) * 0.02; % TODO: Note that this is currently hard coded due to the imperfections of hardwares
             Vk_List(agentID) = thisAgent.V(i);
             vmCmoord_2d_list(agentID, :) = [thisAgent.zx(i), thisAgent.zy(i)];
             %ID_LIST(agentID) = thisAgent.ID(i);
@@ -74,6 +42,7 @@ function [Logger] = retrieve_info(dataTable, Logger)
         Logger.log(pose_3d_list, vmCmoord_2d_list, CVT_2d_List, Vk_List, ControlOutput, v, c);
     end
     
-    % Temporary add this execution time (only the real experiments is available)
-    Logger.ExcTime = dataTable.(fName{1}).Time;
+    % Since the real experiments use the real time value, we assign this
+    % into the logger
+    Logger.set_time_axis(dataTable.(fName{1}).Time);
 end

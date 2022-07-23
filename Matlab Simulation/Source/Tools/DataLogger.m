@@ -22,7 +22,7 @@ classdef DataLogger < handle
         C
         visHandle
         
-        ExcTime % This is used for real experiments only
+        ExcTime
         BotColor %
     end
     
@@ -64,7 +64,7 @@ classdef DataLogger < handle
         end 
         
         %% Evaluate the Lyapunov function
-        function plot_Lyapunov(obj)
+        function plot_BLF_single(obj)
             botColors = cool(obj.SIM_PARAM.N_AGENT);
             xAxis = 1:obj.curCnt;
             V = zeros(1, obj.curCnt);
@@ -82,25 +82,6 @@ classdef DataLogger < handle
             title("Barrier Lyapunov Function")
             legend
             set(gca,'FontSize',18)            
-        end
-        
-        %% Plot the computed control output of each agent
-        function plot_ControlOutput(obj)
-            botColors = cool(obj.SIM_PARAM.N_AGENT);
-            xAxis = 1:obj.curCnt;             
-            figure
-            hold on; grid on;
-            for i = 1:obj.SIM_PARAM.N_AGENT
-                plot(xAxis, obj.ControlOutput(i,xAxis), 'Color', botColors(i,:), 'LineWidth',2, 'DisplayName',sprintf("u_%d",i));
-            end
-            %plot(xAxis, -wMax*ones(1, numel(xAxis)), '-r', 'LineWidth',4);
-            %plot(xAxis, wMax*ones(1, numel(xAxis)), '-r', 'LineWidth',4);
-            ylim([-2, 2]);
-            xlabel("Iteration");
-            ylabel("Angular Velocity");
-            title("Control Output Evaluation")
-            legend
-            set(gca,'FontSize',18)
         end
         
         function out = get_bot_colors(obj)
@@ -217,7 +198,8 @@ classdef DataLogger < handle
         end
         
         
-        function retFig = plot_BLF(obj)
+        function retFig = plot_BLF_all(obj)
+            extTime = obj.get_time_axis();
             botColors = obj.get_bot_colors();
             iBegin = 10;
             nIter = obj.curCnt-1;
@@ -225,7 +207,7 @@ classdef DataLogger < handle
             drawAxis = iBegin:nIter;   
             
             sumV = sum(obj.V_BLF(:,drawAxis),1)';
-            timeAxis = (obj.ExcTime(drawAxis) - obj.ExcTime(iBegin)) / 1e3;
+            timeAxis = (extTime(drawAxis) - extTime(iBegin)) / 1e3;
             
             retFig = figure; 
             plt = area(timeAxis, sumV);
@@ -247,12 +229,13 @@ classdef DataLogger < handle
         end
         
         function retFig = plot_control_output(obj)
+            extTime = obj.get_time_axis();
             botColors = obj.get_bot_colors();
             iBegin = 10;
             nIter = obj.curCnt-1;
             
             drawAxis = iBegin:nIter;   
-            timeAxis = (obj.ExcTime(drawAxis) - obj.ExcTime(iBegin)) / 1e3;
+            timeAxis = (extTime(drawAxis) - extTime(iBegin)) / 1e3;
 
             retFig = figure();
             
@@ -322,6 +305,23 @@ classdef DataLogger < handle
             saveas(retFig, filePath);
             print(fullfile(path,sprintf("Lyapunov_%s.eps", expIdStr)),'-depsc2','-r300');
         end
+        
+        % Convert the interation into timestamp
+        function excTime = get_time_axis(obj)
+            obj.ExcTime = (1:obj.curCnt) * obj.SIM_PARAM.TIME_STEP;
+            excTime = obj.ExcTime;
+        end
+        
+        
+        function [botPose, botZ, botCz, botCost, botInput] = get_logged_data(obj)
+            curDataArr = 1:obj.curCnt-1;
+            botPose = obj.PoseAgent(:,:,curDataArr);
+            botZ = obj.PoseVM(:,:,curDataArr);
+            botCz = obj.CVT(:,:, curDataArr);
+            botCost = obj.V_BLF(:, curDataArr);
+            botInput = obj.ControlOutput(:, curDataArr);
+        end
+            
         
 %         function visualize(obj)
 %             env = MultiRobotEnv(obj.SIM_PARAM.N_AGENT);
@@ -442,9 +442,6 @@ classdef DataLogger < handle
             obj.visHandle.live_plot(obj.curCnt, curPose, CurPoseVM, CurPoseCVT, curDir, v, c, pathGen);
             drawnow();
         end
-        
-        
-        
     end
 end
 
