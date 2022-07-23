@@ -23,10 +23,6 @@ classdef RegionParameter < handle
            obj.set_vertexes(vArr);  
         end
         
-        
-         
-        
-        
         function set_vertexes(obj, vArr)
             % Each row is one vertex point
             assert(size(vArr,2) == 2);
