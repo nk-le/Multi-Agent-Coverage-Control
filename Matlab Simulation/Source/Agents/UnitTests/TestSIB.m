@@ -1,53 +1,5 @@
-addpath(genpath('./Classes'));
-addpath(genpath('./Data Structure'));
-addpath(genpath('./Evaluation Scripts'));
-addpath(genpath('./Library'));
-addpath(genpath('./Algorithm'));
-addpath(genpath('./Voronoi Debug Scripts'));
+Config
 
-clear all; close all;
-
-format long;
-SIM_PARAM = SimulationParameter();
-SIM_PARAM.set_n_agents(10);
-
-COVERAGE_PARAM = CoverageParameter();
-
-REGION_CONFIG = RegionParameter();
-vertexes = [0,   0;
-            0,   300; 
-            150, 500;
-            300, 600; 
-            800, 300;
-            700,   0;
-            0,   0];
-REGION_CONFIG.set_vertexes(vertexes);
-
-
-CONTROL_PARAM = ControlParameter();
-CONTROL_PARAM.P = 50;
-
-%% Some adjustable control parameter, will be moved to Simulation_Parameter later
-rng(4);
-startPose = REGION_CONFIG.generate_start_pose(SIM_PARAM.N_AGENT);
-agentHandle = SingleIntegratorAgent.empty(SIM_PARAM.N_AGENT, 0);
-
-%% Agent handler
-for k = 1 : SIM_PARAM.N_AGENT
-    agentHandle(k) = SingleIntegratorAgent(SIM_PARAM.ID_LIST(k), startPose(k,:), REGION_CONFIG, CONTROL_PARAM);
-end
-
-% Instance of Logger for data post processing, persistent over all files
-Logger = DataLogger(SIM_PARAM, REGION_CONFIG, CONTROL_PARAM, CONTROL_PARAM.V_CONST* ones(SIM_PARAM.N_AGENT,1), CONTROL_PARAM.W_ORBIT* ones(SIM_PARAM.N_AGENT,1));
-
-
-%% MAIN
-
-%% Voronoi Computer
-VoronoiCom = Voronoi2D_Handler(9999, REGION_CONFIG.BOUNDARIES_VERTEXES);
-
-%% Communication Link for data broadcasting (GBS : global broadcasting service)
-GBS = CommunicationLink(SIM_PARAM.N_AGENT, SIM_PARAM.ID_LIST); 
 for iteration = 1: SIM_PARAM.MAX_ITER
     %% Logging instances
     pose_3d_list = zeros(SIM_PARAM.N_AGENT, 3);
@@ -58,8 +10,8 @@ for iteration = 1: SIM_PARAM.MAX_ITER
 
     %% Thread Voronoi Update - Agent interacts with the "nature" and receive the partitions information
     for k = 1: SIM_PARAM.N_AGENT
-       [pose_3d_list(k,:)] = agentHandle(k).getPose();
-        vmCmoord_2d_list(k, :) = pose_3d_list(k,1:2);
+       [pose_3d_list(k,:)] = agentHandle(k).get_coord_3();
+        vmCmoord_2d_list(k, :) = agentHandle(k).get_voronoi_generator_2();
     end
     %% Update new coordinates to the Environment
     [v,c] = VoronoiCom.exec_partition(vmCmoord_2d_list, SIM_PARAM.ID_LIST);

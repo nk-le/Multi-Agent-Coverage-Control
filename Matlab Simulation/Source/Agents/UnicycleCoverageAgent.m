@@ -5,7 +5,7 @@ classdef UnicycleCoverageAgent < FixedWingBase & CoverageAgentBase
     properties
         %% Should be private
         % w               % float: current angular velocity
-        logger = LogHandle()
+        % logger = LogHandle()
         
         controller
         voronoiComputer
@@ -37,7 +37,7 @@ classdef UnicycleCoverageAgent < FixedWingBase & CoverageAgentBase
         %% Initalize class handler
         %function obj = Agent_Controller(dt, botID, coverage_region_coeff, initPose_3d, )
         function obj = UnicycleCoverageAgent(dt, botID, initPose_3d, regionParam, controlParam)
-            obj@FixedWingBase(botID, controlParam, initPose_3d);
+            obj@FixedWingBase(dt, botID, controlParam, initPose_3d);
             
             obj.controller = obj.set_controller(controlParam, regionParam);
             obj.voronoiComputer = VoronoiComputer(botID);
@@ -59,22 +59,10 @@ classdef UnicycleCoverageAgent < FixedWingBase & CoverageAgentBase
             move@FixedWingBase(obj, obj.controlParam.V_CONST, w);
         end
         
-%         function [CVT, dCk_dzi_For_Neighbor] = computePartialDerivativeCVT(obj, i_received_VoronoiPartitionInfo)
-%             assert(isa(i_received_VoronoiPartitionInfo, 'Struct_Voronoi_Partition_Info'));  
-%             [assignedID, ~, ~] = i_received_VoronoiPartitionInfo.getValue();
-%             assert(assignedID == obj.ID);
-%             obj.prev_received_VoronoiPartitionInfo = obj.received_VoronoiPartitionInfo;
-%             obj.received_VoronoiPartitionInfo = i_received_VoronoiPartitionInfo;
-%             z_2d = obj.VMCoord_2d;
-%             [CVT, dCk_dzi_For_Neighbor] = obj.voronoiComputer.computePartialDerivativeCVT(z_2d, i_received_VoronoiPartitionInfo);
-%         end
-        
         function z = get_voronoi_generator_2(obj)
             z = obj.VMCoord_2d;
         end
-
-        
-        
+           
         function [Vk, wOut] = compute_control_input(obj, report)
             assert(isa(report{1}, 'Struct_Neighbor_CVT_PD'));
             
@@ -214,33 +202,33 @@ classdef UnicycleCoverageAgent < FixedWingBase & CoverageAgentBase
     end
 end
 
-
-function [p1, p2, flag] = findVertexes(posX, posY, boundaries)
-    distance = zeros(1, numel(boundaries(1,:)) - 1);
-    for i = 1:numel(boundaries(1,:))-1
-        p1(1) = boundaries(1,i);
-        p1(2) = boundaries(2,i);
-        p2(1) = boundaries(1, i + 1);
-        p2(2) = boundaries(2, i + 1); 
-
-        p1Tod =  [posX, posY,0] - [p1(1), p1(2),0];
-        p1Top2 = [p2(1),p2(2),0] - [p1(1), p1(2), 0];   
-        
-        angle = atan2(norm(cross(p1Tod,p1Top2)), dot(p1Tod,p1Top2));
-        distance(i) = norm(p1Tod) * sin(angle); % Find distance 
-    end  
-    [value, minIndex] = min(distance(1,:));
-    p1(1) = boundaries(1,minIndex);
-    p1(2) = boundaries(2,minIndex);
-    p2(1) = boundaries(1,minIndex + 1);
-    p2(2) = boundaries(2,minIndex + 1);
-    if(value < 3) % Stop before going outbound
-        flag = 1;
-    else 
-        flag = 0;
-    end
-end
-
+% 
+% function [p1, p2, flag] = findVertexes(posX, posY, boundaries)
+%     distance = zeros(1, numel(boundaries(1,:)) - 1);
+%     for i = 1:numel(boundaries(1,:))-1
+%         p1(1) = boundaries(1,i);
+%         p1(2) = boundaries(2,i);
+%         p2(1) = boundaries(1, i + 1);
+%         p2(2) = boundaries(2, i + 1); 
+% 
+%         p1Tod =  [posX, posY,0] - [p1(1), p1(2),0];
+%         p1Top2 = [p2(1),p2(2),0] - [p1(1), p1(2), 0];   
+%         
+%         angle = atan2(norm(cross(p1Tod,p1Top2)), dot(p1Tod,p1Top2));
+%         distance(i) = norm(p1Tod) * sin(angle); % Find distance 
+%     end  
+%     [value, minIndex] = min(distance(1,:));
+%     p1(1) = boundaries(1,minIndex);
+%     p1(2) = boundaries(2,minIndex);
+%     p2(1) = boundaries(1,minIndex + 1);
+%     p2(2) = boundaries(2,minIndex + 1);
+%     if(value < 3) % Stop before going outbound
+%         flag = 1;
+%     else 
+%         flag = 0;
+%     end
+% end
+% 
 
 
 

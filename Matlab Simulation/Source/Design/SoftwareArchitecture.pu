@@ -1,0 +1,68 @@
+@startuml
+' Settings
+' ============================
+
+' use +,#,- instead of icons
+'skinparam classAttributeIconSize 0
+
+' horizontal distance in px
+skinparam nodesep 100 
+
+' vertical distance in px
+skinparam ranksep 100
+
+' use only straight lines (ortho/polyline)
+skinparam linetype ortho
+
+' title
+title Multi-Agent Coverage Control
+
+class AgentBase{
+    # get_coord() = 0
+    # get_pose() = 0
+}
+
+class CoverageAgentBase{
+    # get_voronoi_gen() = 0
+}
+
+class ControllerBase
+
+class CoverageControllerBase{
+}
+
+class SingleIntegratorBase
+
+class FixedWingBase
+
+class UnicycleCoverageAgent
+class DroneCoverageAgent
+
+'class BLFController
+' Interfaces
+Interface ControlParameter
+'Interface VoronoiPartitionInfo
+' Relationship
+
+AgentBase <|-d- FixedWingBase
+AgentBase <|-d- SingleIntegratorBase
+
+ControllerBase -r-> ControlParameter
+'AgentBase *-r-> ControlParameter
+
+AgentBase *-r-> ControllerBase
+CoverageControllerBase -u-|> ControllerBase
+
+UnicycleCoverageAgent -u-|> FixedWingBase
+UnicycleCoverageAgent -u-|> CoverageAgentBase
+CoverageAgentBase -[hidden]u-> AgentBase
+CoverageAgentBase -[hidden]r-> SingleIntegratorBase
+CoverageAgentBase -[hidden]r-> FixedWingBase
+
+DroneCoverageAgent -u-|> SingleIntegratorBase
+DroneCoverageAgent -u-|> CoverageAgentBase
+
+SafetyController -u-|> CoverageControllerBase
+SingleIntegratorController -u-|> CoverageControllerBase
+
+@enduml
