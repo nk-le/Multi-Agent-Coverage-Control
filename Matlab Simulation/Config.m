@@ -8,9 +8,9 @@ addpath(genpath('./Source/Controller'));
 addpath(genpath('./Source/DataStructure'));
 addpath(genpath('./Source/Tools'));
 addpath(genpath('./Source/Algorithm'));
-addpath(genpath('./Library'));
 addpath(genpath('./Source/Coverage'));
-addpath(genpath('./Source'));
+
+addpath(genpath('./Library/vert2con'));
 
 %% Parameter
 % Simulation Parameters
