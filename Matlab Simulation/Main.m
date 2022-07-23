@@ -1,12 +1,6 @@
 %% Adding path
-addpath(genpath('./Source/Agents'));
-addpath(genpath('./Source/Controller'));
-addpath(genpath('./Source/DataStructure'));
-addpath(genpath('./Source/Tools'));
-addpath(genpath('./Source/Algorithm'));
-addpath(genpath('./Source/Coverage'));
-addpath(genpath('./Source/Parameters'));
-addpath(genpath('./Library/vert2con'));
+addpath(genpath('./Library/'));
+addpath(genpath('./Source/'));
 
 %% Load User Setup Parameters
 clear all; 
