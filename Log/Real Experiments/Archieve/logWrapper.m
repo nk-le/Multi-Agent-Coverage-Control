@@ -1,18 +1,7 @@
-SIM_PARAM = SimulationParameter();
-REGION_CONFIG = RegionParameter();
-CONTROL_PARAM = ControlParameter();
+clear all;
+close all;
 
-SIM_PARAM.N_AGENT = 6;
-CONTROL_PARAM.V_CONST = 16;
-CONTROL_PARAM.W_ORBIT = 0.8;
-CONTROL_PARAM.W_LIMIT = 1.6;
-
-vertexes = [ 20, 20;    
-        20, 2800;
-        4000, 2800;  % a world with a narrow passage
-        4000, 20;
-        20, 20];
-REGION_CONFIG.set_vertexes(vertexes);
+LoadParameterExperiment
 
 for fileID = 0:4
     logFile = sprintf("Parsed_TRO_LogSim%d.log.mat", fileID);

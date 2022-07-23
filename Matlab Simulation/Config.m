@@ -10,11 +10,11 @@ animation = 1;      % Live Animation Flag. 0:off/ 1:on
 % Agent Parameters
 nAgent = 6;
 % Initial Pose Format: each column is the pose of one agent [x,y,theta]
-% Case 3
+% Case 1
 initPose = ...
-[349.1 20.24 439.9 348.4 336.6 263.8;
-123.2 371.5 180.3 159.6 372.3 317.5;
-0.845 3.227 1.159 4.934 5.366 3.105];
+[60.68 624.4 350.6 579.2 782.5 430.3;
+ 301.0 43.43 161.5 299.7 408.0 482.4;
+ 2.394 0.414 1.810 5.715 1.341 2.84];
 
 % Region Parameters
 % vertexes = [0,   0;     % Vertexes of the coverage region
