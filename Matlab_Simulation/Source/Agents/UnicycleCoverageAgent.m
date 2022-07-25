@@ -73,42 +73,42 @@ classdef UnicycleCoverageAgent < FixedWingBase & CoverageAgentBase
         end
         
         %% Simple controller
-        function [Hk] = computeControlSimple(obj)
-            IntDomain = struct('type','polygon','x',obj.received_VoronoiPartitionInfo.Vertex2D_List(1: end -1,1)','y',obj.received_VoronoiPartitionInfo.Vertex2D_List(1: end - 1,2)');
-            param = struct('method','gauss','points',6);
-            normSquared = @(x,y) (x - obj.VMCoord_2d(1))^2 + (y - obj.VMCoord_2d(2))^2;
-            Hk = doubleintegral(normSquared, IntDomain, param);
-            
-            %% Some temporary parameter here
-            gamma = 5;
-            obj.controlParam.W_ORBIT = 0.4;
-            sigmoid_func = @(x,eps) x / (abs(x) + eps);  
-            epsSigmoid = 10;
-            calc_W = obj.controlParam.W_ORBIT + gamma * obj.controlParam.W_ORBIT * obj.controlParam.V_CONST *sigmoid_func((obj.VMCoord_2d - obj.CVTCoord_2d)' * [cos(obj.AgentPose_3d(3)) ; sin(obj.AgentPose_3d(3))],epsSigmoid); 
-            
-            % Predict the next state            
-            predict_Pose_3d = zeros(3,1);
-            predict_Pose_VM = zeros(2,1);
-            predict_Pose_3d(1) = obj.AgentPose_3d(1) + obj.dt * (obj.controlParam.V_CONST * cos(obj.AgentPose_3d(3)));
-            predict_Pose_3d(2) = obj.AgentPose_3d(2) + obj.dt * (obj.controlParam.V_CONST * sin(obj.AgentPose_3d(3)));
-            predict_Pose_3d(3) = obj.AgentPose_3d(3) + obj.dt * calc_W;
-            predict_Pose_VM(1) = predict_Pose_3d(1) - (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * sin(predict_Pose_3d(3)); 
-            predict_Pose_VM(2) = predict_Pose_3d(2) + (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * cos(predict_Pose_3d(3)); 
-            
-            isValid = true;
-            for j = 1: size(obj.regionParam.BOUNDARIES_COEFF, 1)
-                if(obj.regionParam.BOUNDARIES_COEFF(j,3)- (obj.regionParam.BOUNDARIES_COEFF(j,1:2) * predict_Pose_VM) <= 0)
-                   isValid = false; 
-                end
-            end
-                
-            if(isValid)
-                obj.w = calc_W;
-            else
-                %disp("OUT BOUND ALERT");
-                obj.w = obj.controlParam.W_ORBIT;
-            end
-        end 
+%         function [Hk] = computeControlSimple(obj)
+%             IntDomain = struct('type','polygon','x',obj.received_VoronoiPartitionInfo.Vertex2D_List(1: end -1,1)','y',obj.received_VoronoiPartitionInfo.Vertex2D_List(1: end - 1,2)');
+%             param = struct('method','gauss','points',6);
+%             normSquared = @(x,y) (x - obj.VMCoord_2d(1))^2 + (y - obj.VMCoord_2d(2))^2;
+%             Hk = doubleintegral(normSquared, IntDomain, param);
+%             
+%             %% Some temporary parameter here
+%             gamma = 5;
+%             obj.controlParam.W_ORBIT = 0.4;
+%             sigmoid_func = @(x,eps) x / (abs(x) + eps);  
+%             epsSigmoid = 10;
+%             calc_W = obj.controlParam.W_ORBIT + gamma * obj.controlParam.W_ORBIT * obj.controlParam.V_CONST *sigmoid_func((obj.VMCoord_2d - obj.CVTCoord_2d)' * [cos(obj.AgentPose_3d(3)) ; sin(obj.AgentPose_3d(3))],epsSigmoid); 
+%             
+%             % Predict the next state            
+%             predict_Pose_3d = zeros(3,1);
+%             predict_Pose_VM = zeros(2,1);
+%             predict_Pose_3d(1) = obj.AgentPose_3d(1) + obj.dt * (obj.controlParam.V_CONST * cos(obj.AgentPose_3d(3)));
+%             predict_Pose_3d(2) = obj.AgentPose_3d(2) + obj.dt * (obj.controlParam.V_CONST * sin(obj.AgentPose_3d(3)));
+%             predict_Pose_3d(3) = obj.AgentPose_3d(3) + obj.dt * calc_W;
+%             predict_Pose_VM(1) = predict_Pose_3d(1) - (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * sin(predict_Pose_3d(3)); 
+%             predict_Pose_VM(2) = predict_Pose_3d(2) + (obj.controlParam.V_CONST/obj.controlParam.W_ORBIT) * cos(predict_Pose_3d(3)); 
+%             
+%             isValid = true;
+%             for j = 1: size(obj.regionParam.BOUNDARIES_COEFF, 1)
+%                 if(obj.regionParam.BOUNDARIES_COEFF(j,3)- (obj.regionParam.BOUNDARIES_COEFF(j,1:2) * predict_Pose_VM) <= 0)
+%                    isValid = false; 
+%                 end
+%             end
+%                 
+%             if(isValid)
+%                 obj.w = calc_W;
+%             else
+%                 %disp("OUT BOUND ALERT");
+%                 obj.w = obj.controlParam.W_ORBIT;
+%             end
+%         end 
         
         function PrintReceivedReport(obj)
             fprintf("============ CURRENT REPORT OF AGENT %d =================== \n", obj.ID);
